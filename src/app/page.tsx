@@ -10,6 +10,11 @@ import NavigationBar from '@/components/NavigationBar';
 import StatsSection from '@/components/StatsSection';
 import ProcessSection from '@/components/ProcessSection';
 import ContactSection from '@/components/ContactSection';
+import LoadingScreen from '@/components/LoadingScreen';
+import GallerySection from '@/components/GallerySection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import FAQSection from '@/components/FAQSection';
+import BackToTopButton from '@/components/BackToTopButton';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook } from 'lucide-react';
 
@@ -63,6 +68,7 @@ export default function Home() {
 
   return (
     <SmoothScroll>
+      <LoadingScreen />
       <div className="min-h-screen flex flex-col bg-[#0a0a14]">
         {/* Navigation Bar */}
         <NavigationBar />
@@ -206,6 +212,9 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Gallery Section */}
+        <GallerySection />
+
         {/* Stats Section */}
         <StatsSection />
 
@@ -214,6 +223,12 @@ export default function Home() {
 
         {/* Section 4: Features */}
         <FeaturesSection />
+
+        {/* Testimonials Section */}
+        <TestimonialsSection />
+
+        {/* FAQ Section */}
+        <FAQSection />
 
         {/* Contact Form Section */}
         <ContactSection />
@@ -287,6 +302,8 @@ export default function Home() {
                     { label: 'Konfigurator', href: '#module-selector' },
                     { label: 'Entdecken', href: '#reveal' },
                     { label: 'Vorteile', href: '#features' },
+                    { label: 'Referenzen', href: '#testimonials' },
+                    { label: 'FAQ', href: '#faq' },
                     { label: 'Kontakt', href: '#contact' },
                   ].map((link) => (
                     <a
@@ -354,6 +371,9 @@ export default function Home() {
             </div>
           </div>
         </footer>
+
+        {/* Back to Top Button */}
+        <BackToTopButton />
       </div>
     </SmoothScroll>
   );

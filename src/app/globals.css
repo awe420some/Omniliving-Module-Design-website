@@ -175,3 +175,116 @@ html {
   pointer-events: none;
   z-index: 1;
 }
+
+/* Decorative section divider */
+.section-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 110, 0.3) 50%, transparent 100%);
+  margin: 0 auto;
+  max-width: 12rem;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #c9a96e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(201, 169, 110, 0.6);
+}
+
+/* Gold glow effect for interactive elements */
+.gold-glow {
+  box-shadow: 0 0 0 0 rgba(201, 169, 110, 0);
+  transition: box-shadow 0.4s ease;
+}
+
+.gold-glow:hover {
+  box-shadow: 0 0 20px rgba(201, 169, 110, 0.15), 0 0 40px rgba(201, 169, 110, 0.05);
+}
+
+/* Subtle hover lift effect */
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(201, 169, 110, 0.08);
+}
+
+/* Gold border reveal on hover */
+.border-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.border-reveal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  transition: border-color 0.4s ease;
+  pointer-events: none;
+}
+
+.border-reveal:hover::after {
+  border-color: rgba(201, 169, 110, 0.2);
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #12121f 25%, #1a1a2e 50%, #12121f 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Pulse dot for live/active indicators */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Focus ring for form inputs */
+input:focus,
+textarea:focus,
+select:focus,
+[role="combobox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2);
+}
+
+/* Smooth image loading */
+img {
+  transition: opacity 0.3s ease;
+}
+
+img[loading] {
+  opacity: 0;
+}
+
+img[loading="loaded"],
+img.complete {
+  opacity: 1;
+}
+
+/* Selection highlight */
+::selection {
+  background: rgba(201, 169, 110, 0.3);
+  color: white;
+}

@@ -87,7 +87,7 @@ export default function FeaturesSection() {
             const Icon = feature.icon;
             return (
               <motion.div key={feature.title} variants={cardVariants}>
-                <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full">
+                <Card className="group hover-lift bg-[#12121f]/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full">
                   <div className="p-6 sm:p-8">
                     {/* Icon */}
                     <div
