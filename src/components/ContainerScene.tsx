@@ -230,6 +230,77 @@ export default function ContainerScene({
       stripe2.position.y = containerHeight * 0.15;
       mesh.add(stripe2);
 
+      // Window cutouts on front face (2 glowing rectangles)
+      const windowWidth = 0.3;
+      const windowHeight = 0.35;
+      const windowMat = new THREE.MeshBasicMaterial({
+        color: 0xffeedd,
+        transparent: true,
+        opacity: 0.15,
+        side: THREE.DoubleSide,
+      });
+
+      // Left window
+      const window1 = new THREE.Mesh(
+        new THREE.PlaneGeometry(windowWidth, windowHeight),
+        windowMat.clone()
+      );
+      window1.position.set(-0.4, 0.15, containerDepth / 2 + 0.012);
+      mesh.add(window1);
+
+      // Right window
+      const window2 = new THREE.Mesh(
+        new THREE.PlaneGeometry(windowWidth, windowHeight),
+        windowMat.clone()
+      );
+      window2.position.set(0.4, 0.15, containerDepth / 2 + 0.012);
+      mesh.add(window2);
+
+      // Window frames (thin rectangles around windows)
+      const frameMat = new THREE.MeshBasicMaterial({
+        color: config.color,
+        transparent: true,
+        opacity: 0.5,
+        side: THREE.DoubleSide,
+      });
+
+      // Window 1 frame - horizontal top
+      const hFrameGeom = new THREE.PlaneGeometry(windowWidth + 0.04, 0.015);
+      const w1ft = new THREE.Mesh(hFrameGeom, frameMat);
+      w1ft.position.set(-0.4, 0.15 + windowHeight / 2 + 0.007, containerDepth / 2 + 0.013);
+      mesh.add(w1ft);
+      const w1fb = new THREE.Mesh(hFrameGeom, frameMat);
+      w1fb.position.set(-0.4, 0.15 - windowHeight / 2 - 0.007, containerDepth / 2 + 0.013);
+      mesh.add(w1fb);
+
+      // Window 1 frame - vertical sides
+      const vFrameGeom = new THREE.PlaneGeometry(0.015, windowHeight + 0.04);
+      const w1vl = new THREE.Mesh(vFrameGeom, frameMat);
+      w1vl.position.set(-0.4 - windowWidth / 2 - 0.007, 0.15, containerDepth / 2 + 0.013);
+      mesh.add(w1vl);
+      const w1vr = new THREE.Mesh(vFrameGeom, frameMat);
+      w1vr.position.set(-0.4 + windowWidth / 2 + 0.007, 0.15, containerDepth / 2 + 0.013);
+      mesh.add(w1vr);
+
+      // Window 2 frame
+      const w2ft = new THREE.Mesh(hFrameGeom, frameMat);
+      w2ft.position.set(0.4, 0.15 + windowHeight / 2 + 0.007, containerDepth / 2 + 0.013);
+      mesh.add(w2ft);
+      const w2fb = new THREE.Mesh(hFrameGeom, frameMat);
+      w2fb.position.set(0.4, 0.15 - windowHeight / 2 - 0.007, containerDepth / 2 + 0.013);
+      mesh.add(w2fb);
+      const w2vl = new THREE.Mesh(vFrameGeom, frameMat);
+      w2vl.position.set(0.4 - windowWidth / 2 - 0.007, 0.15, containerDepth / 2 + 0.013);
+      mesh.add(w2vl);
+      const w2vr = new THREE.Mesh(vFrameGeom, frameMat);
+      w2vr.position.set(0.4 + windowWidth / 2 + 0.007, 0.15, containerDepth / 2 + 0.013);
+      mesh.add(w2vr);
+
+      // Interior point light (visible through windows when selected)
+      const interiorLight = new THREE.PointLight(0xffeedd, 0, 3);
+      interiorLight.position.set(0, 0, 0);
+      mesh.add(interiorLight);
+
       return {
         id: config.id,
         name: config.name,
@@ -302,6 +373,21 @@ export default function ContainerScene({
             targetEmissiveIntensity,
             0.05
           );
+
+          // Interior light glow for selected modules
+          mod.mesh.children.forEach((child) => {
+            if (child instanceof THREE.PointLight) {
+              const targetIntensity = isSelected ? 2.0 : 0;
+              child.intensity = THREE.MathUtils.lerp(child.intensity, targetIntensity, 0.05);
+            }
+            // Window glow brightness for selected modules
+            if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
+              if (child.material.color.getHex() === 0xffeedd) {
+                const targetOpacity = isSelected ? 0.6 : 0.15;
+                child.material.opacity = THREE.MathUtils.lerp(child.material.opacity, targetOpacity, 0.05);
+              }
+            }
+          });
 
           // Edge opacity
           if (mod.edges) {

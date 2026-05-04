@@ -6,8 +6,12 @@ import SmoothScroll from '@/components/SmoothScroll';
 import HeroSection from '@/components/HeroSection';
 import ModuleSelector from '@/components/ModuleSelector';
 import FeaturesSection from '@/components/FeaturesSection';
+import NavigationBar from '@/components/NavigationBar';
+import StatsSection from '@/components/StatsSection';
+import ProcessSection from '@/components/ProcessSection';
+import ContactSection from '@/components/ContactSection';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook } from 'lucide-react';
 
 // Dynamic imports for Three.js components (SSR disabled)
 const ContainerScene = dynamic(() => import('@/components/ContainerScene'), {
@@ -60,6 +64,9 @@ export default function Home() {
   return (
     <SmoothScroll>
       <div className="min-h-screen flex flex-col bg-[#0a0a14]">
+        {/* Navigation Bar */}
+        <NavigationBar />
+
         {/* Section 1: Hero */}
         <HeroSection />
 
@@ -199,11 +206,20 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Stats Section */}
+        <StatsSection />
+
+        {/* Process Section */}
+        <ProcessSection />
+
         {/* Section 4: Features */}
         <FeaturesSection />
 
-        {/* Section 5: Contact / Footer */}
-        <footer className="relative bg-[#060610] border-t border-white/5 mt-auto">
+        {/* Contact Form Section */}
+        <ContactSection />
+
+        {/* Footer */}
+        <footer id="footer-section" className="relative bg-[#060610] border-t border-white/5 mt-auto">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12">
               {/* Company Info */}
@@ -271,6 +287,7 @@ export default function Home() {
                     { label: 'Konfigurator', href: '#module-selector' },
                     { label: 'Entdecken', href: '#reveal' },
                     { label: 'Vorteile', href: '#features' },
+                    { label: 'Kontakt', href: '#contact' },
                   ].map((link) => (
                     <a
                       key={link.label}
@@ -280,6 +297,36 @@ export default function Home() {
                       {link.label}
                     </a>
                   ))}
+                </div>
+                {/* Social Media */}
+                <h4 className="text-sm font-medium tracking-[0.15em] text-white uppercase mb-4 mt-8">
+                  Folgen Sie uns
+                </h4>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] transition-all duration-300 group"
+                  >
+                    <Instagram size={16} className="text-[#8888a8] group-hover:text-[#c9a96e] transition-colors" />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] transition-all duration-300 group"
+                  >
+                    <Linkedin size={16} className="text-[#8888a8] group-hover:text-[#c9a96e] transition-colors" />
+                  </a>
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] transition-all duration-300 group"
+                  >
+                    <Facebook size={16} className="text-[#8888a8] group-hover:text-[#c9a96e] transition-colors" />
+                  </a>
                 </div>
               </div>
             </div>
