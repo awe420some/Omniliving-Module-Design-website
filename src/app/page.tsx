@@ -323,17 +323,16 @@ export default function Home() {
                 </h4>
                 <div className="flex items-center gap-3">
                   {[
-                    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
-                    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
-                    { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
+                    { icon: Instagram, href: '#contact', label: 'Instagram' },
+                    { icon: Linkedin, href: '#contact', label: 'LinkedIn' },
+                    { icon: Facebook, href: '#contact', label: 'Facebook' },
                   ].map((social) => {
                     const SocialIcon = social.icon;
                     return (
                       <a
                         key={social.label}
                         href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        title="Demnächst verfügbar – bitte kontaktieren Sie uns direkt"
                         aria-label={social.label}
                         className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center social-icon-hover hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] group"
                       >
@@ -399,15 +398,13 @@ export default function Home() {
                 </p>
                 <div className="flex items-center gap-6">
                   <a
-                    href="#footer-section"
-                    onClick={(e) => { e.preventDefault(); document.getElementById('footer-section')?.scrollIntoView({ behavior: 'smooth' }); }}
+                    href="/impressum"
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
                   >
                     {t('footer.imprint')}
                   </a>
                   <a
-                    href="#footer-section"
-                    onClick={(e) => { e.preventDefault(); document.getElementById('footer-section')?.scrollIntoView({ behavior: 'smooth' }); }}
+                    href="/datenschutz"
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
                   >
                     {t('footer.privacy')}

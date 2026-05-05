@@ -108,6 +108,14 @@ export default function TargetAudienceSection() {
                         background: `linear-gradient(to right, ${audience.accent}, transparent)`,
                       }}
                     />
+                    <a
+                      href="#contact"
+                      className="inline-flex items-center gap-1.5 mt-5 text-xs tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ color: audience.accent }}
+                    >
+                      {t('target.cta')}
+                      <span>→</span>
+                    </a>
                   </div>
                 </Card>
               </motion.div>

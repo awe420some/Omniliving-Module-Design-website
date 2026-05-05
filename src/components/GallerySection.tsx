@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { useTranslation } from '@/lib/i18n';
 
@@ -152,6 +153,7 @@ export default function GallerySection() {
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">{currentImage.title}</DialogTitle>
+          <DialogDescription className="sr-only">{currentImage.description}</DialogDescription>
           {/* Close button */}
           <button
             onClick={() => setIsLightboxOpen(false)}

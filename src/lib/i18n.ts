@@ -276,6 +276,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'floorplan.moduleDimensions': 'Modulabmessungen',
     'floorplan.length': 'Länge',
     'floorplan.width': 'Breite',
+    'floorplan.height': 'Höhe',
 
     // ── Floor Plan extended ──
     'floorplan.fullDesc': 'Jedes Modul misst 6 m × 2,5 m × 3 m und bietet optimal nutzbaren Wohnraum. Entdecken Sie die Grundrisse unserer vier Standardmodule.',
@@ -363,6 +364,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'target.ownersDesc': 'Pacht, Kauf oder individuelle Kombination. Fassade, Dachform, Farben und Materialien auf Ortsbild und Standort abgestimmt. Erweiterbar und versetzbar.',
     'target.militaryDesc': 'Robuste, schnell aufbaubare Unterkünfte für militärische Standorte. Dauerhaft oder zeitlich befristete Lösungen, serielle Vorfertigung für kurze Realisierungszeiten.',
     'target.subtitle': 'Modulare Wohnlösungen für Kommunen, Eigentümer und die Bundeswehr.',
+    'target.cta': 'Anfrage stellen',
 
     // ── Stats ──
     'stats.label': 'In Zahlen',
@@ -999,6 +1001,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     'target.ownersDesc': 'Lease, purchase or individual combination. Facade, roof shape, colors and materials matched to the local character and location. Expandable and relocatable.',
     'target.militaryDesc': 'Robust, quickly assembled accommodations for military locations. Permanent or time-limited solutions, serial prefabrication for short realization times.',
     'target.subtitle': 'Modular housing solutions for municipalities, owners and the military.',
+    'target.cta': 'Send inquiry',
 
     // ── Stats ──
     'stats.label': 'In numbers',

@@ -542,34 +542,17 @@ img.complete {
   width: 100%;
 }
 
-/* Floating label animation for form inputs */
+/* Form label — static above input (floating failed due to DOM order) */
 .floating-label-group {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
 }
 
 .floating-label-group label {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.875rem;
-  color: #8888a8;
-  pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background: transparent;
-  padding: 0 4px;
-}
-
-.floating-label-group input:focus ~ label,
-.floating-label-group input:not(:placeholder-shown) ~ label,
-.floating-label-group textarea:focus ~ label,
-.floating-label-group textarea:not(:placeholder-shown) ~ label {
-  top: 0;
-  transform: translateY(-50%);
   font-size: 0.7rem;
-  color: #c9a96e;
-  background: #0f0f20;
-  letter-spacing: 0.05em;
+  color: #8888a8;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
