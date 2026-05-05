@@ -46,8 +46,8 @@ export default function ImpressumPage() {
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Unternehmensangaben</h2>
             <p>
               Omniliving Module Design GmbH<br />
-              Musterstraße 1<br />
-              10115 Berlin<br />
+              Teutoburger Straße 23a<br />
+              33330 Gütersloh<br />
               Deutschland
             </p>
           </section>
@@ -55,16 +55,25 @@ export default function ImpressumPage() {
           <section>
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Kontakt</h2>
             <p>
-              Telefon: +49 (0) 30 000 000 00<br />
-              E-Mail: <a href="mailto:info@omniliving.de" className="text-[#c9a96e] hover:underline">info@omniliving.de</a>
+              Telefon: <a href="tel:+4915129530369" className="text-[#c9a96e] hover:underline">+49 151 29530369</a><br />
+              E-Mail: <a href="mailto:kontakt@omniliving-moduledesign-gmbh.com" className="text-[#c9a96e] hover:underline">kontakt@omniliving-moduledesign-gmbh.com</a>
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-white font-medium tracking-wide mb-3 text-base">Vertretungsberechtigte Geschäftsführung</h2>
+            <p>
+              Nicole-Christine von Hardenberg – Gründung &amp; Geschäftsführung, Projektierung<br />
+              Ilhan Das – Gründung &amp; Geschäftsführung, Elektrotechnik &amp; Solar<br />
+              Edip Das – Gründung &amp; Geschäftsführung, Bauleitung
             </p>
           </section>
 
           <section>
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Handelsregister</h2>
             <p>
-              Registergericht: Amtsgericht Berlin-Charlottenburg<br />
-              Registernummer: HRB 000000 B
+              Registergericht: Amtsgericht Gütersloh<br />
+              Registernummer: wird nach Eintragung ergänzt
             </p>
           </section>
 
@@ -72,23 +81,16 @@ export default function ImpressumPage() {
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Umsatzsteuer-ID</h2>
             <p>
               Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
-              DE000000000
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-white font-medium tracking-wide mb-3 text-base">Vertretungsberechtigte Geschäftsführung</h2>
-            <p>
-              [Name des Geschäftsführers]
+              wird nach Erteilung ergänzt
             </p>
           </section>
 
           <section>
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
             <p>
-              [Name des Verantwortlichen]<br />
-              Musterstraße 1<br />
-              10115 Berlin
+              Nicole-Christine von Hardenberg<br />
+              Teutoburger Straße 23a<br />
+              33330 Gütersloh
             </p>
           </section>
 

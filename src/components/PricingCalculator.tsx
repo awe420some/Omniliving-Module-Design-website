@@ -171,7 +171,7 @@ export default function PricingCalculator() {
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
               <Label className="text-sm text-white tracking-wide mb-3 block">{t('pricing.moduleType')}</Label>
               <Select value={moduleType} onValueChange={(v) => setModuleType(v as ModuleType)}>
-                <SelectTrigger className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
+                <SelectTrigger aria-label={t('pricing.moduleType')} className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-[#12121f] border border-white/10 text-white">
@@ -214,6 +214,7 @@ export default function PricingCalculator() {
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <Checkbox
                         id={extra.id}
+                        aria-label={extra.label}
                         checked={selectedExtras.has(extra.id)}
                         onCheckedChange={() => toggleExtra(extra.id)}
                         className="data-[state=checked]:bg-[#c9a96e] data-[state=checked]:border-[#c9a96e] data-[state=checked]:text-[#0a0a14] border-white/20 h-4 w-4"
@@ -237,7 +238,7 @@ export default function PricingCalculator() {
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
               <Label className="text-sm text-white tracking-wide mb-3 block">{t('pricing.location')}</Label>
               <Select value={location} onValueChange={(v) => setLocation(v as Location)}>
-                <SelectTrigger className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
+                <SelectTrigger aria-label={t('pricing.location')} className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-[#12121f] border border-white/10 text-white">

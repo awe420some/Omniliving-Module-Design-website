@@ -56,11 +56,11 @@ export default function DatenschutzPage() {
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">2. Verantwortliche Stelle</h2>
             <p>
               Omniliving Module Design GmbH<br />
-              Musterstraße 1<br />
-              10115 Berlin<br />
+              Teutoburger Straße 23a<br />
+              33330 Gütersloh<br />
               Deutschland<br /><br />
-              E-Mail: <a href="mailto:datenschutz@omniliving.de" className="text-[#c9a96e] hover:underline">datenschutz@omniliving.de</a><br />
-              Telefon: +49 (0) 30 000 000 00
+              E-Mail: <a href="mailto:kontakt@omniliving-moduledesign-gmbh.com" className="text-[#c9a96e] hover:underline">kontakt@omniliving-moduledesign-gmbh.com</a><br />
+              Telefon: <a href="tel:+4915129530369" className="text-[#c9a96e] hover:underline">+49 151 29530369</a>
             </p>
           </section>
 
