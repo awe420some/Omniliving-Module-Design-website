@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Search } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -99,7 +99,7 @@ export default function GallerySection() {
   return (
     <section id="gallery" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
       <div className="max-w-7xl mx-auto">
-        {/* Section header */}
+        {/* Section header with image count indicator */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -107,9 +107,14 @@ export default function GallerySection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            Galerie
-          </p>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase">
+              Galerie
+            </p>
+            <span className="text-[10px] text-[#8888a8]/50 tracking-wider">
+              ({galleryImages.length} Bilder)
+            </span>
+          </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             Unsere <span className="text-gradient-gold">Projekte</span>
           </h2>
@@ -119,8 +124,8 @@ export default function GallerySection() {
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Masonry Grid */}
-        <div className="columns-2 lg:columns-3 gap-4 space-y-4">
+        {/* Masonry Grid with better gap handling */}
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
           {galleryImages.map((image, index) => (
             <motion.div
               key={image.title}
@@ -131,14 +136,19 @@ export default function GallerySection() {
               className="break-inside-avoid group cursor-pointer"
               onClick={() => openLightbox(index)}
             >
-              <div className={`relative rounded-lg overflow-hidden border border-white/5 transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#c9a96e]/20 group-hover:shadow-lg ${aspectClasses[image.aspect]}`}>
+              <div className={`relative rounded-lg overflow-hidden border border-white/5 transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#c9a96e]/20 group-hover:shadow-lg group-hover:shadow-black/30 ${aspectClasses[image.aspect]}`}>
                 <img
                   src={image.src}
                   alt={image.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
+                {/* Hover overlay with magnifying glass */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-end">
+                  {/* Magnifying glass icon center */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-2 border-[#c9a96e]/50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all duration-500 scale-50 group-hover:scale-100 opacity-0 group-hover:opacity-100">
+                    <Search size={20} className="text-[#c9a96e]" />
+                  </div>
+                  {/* Title and hint at bottom */}
                   <div className="p-4 sm:p-6 w-full">
                     <p className="text-sm sm:text-base font-light tracking-wider text-white">
                       {image.title}

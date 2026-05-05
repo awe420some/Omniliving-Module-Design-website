@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/lib/store';
@@ -12,8 +12,18 @@ function seededRandom(seed: number) {
   return x - Math.floor(x);
 }
 
-// CSS floating golden particles with deterministic values
+// CSS floating golden particles - client-only to avoid hydration mismatch
 function FloatingParticles() {
+  // useSyncExternalStore for client-only rendering (avoids hydration mismatch + lint errors)
+  const isClient = useSyncExternalStore(
+    () => () => {},   // subscribe (noop)
+    () => true,       // getSnapshot (client returns true)
+    () => false       // getServerSnapshot (server returns false)
+  );
+
+  if (!isClient) return null;
+
+  // Generate particles with deterministic seeded random (only on client after mount)
   const particles = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     left: `${seededRandom(i) * 100}%`,
@@ -215,15 +225,29 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14]/60 via-transparent to-[#0a0a14]/60 pointer-events-none z-[1]" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-[#0a0a14]/40 pointer-events-none z-[1]" />
 
-      {/* Cinematic letterbox bars (fade on scroll) */}
+      {/* Cinematic letterbox bars with gradient fade */}
       <div
-        className="letterbox-bar letterbox-bar--top"
+        className="absolute left-0 right-0 z-20 pointer-events-none transition-opacity duration-800"
         style={{ opacity: letterboxOpacity }}
-      />
+      >
+        <div
+          className="h-[8vh]"
+          style={{
+            background: 'linear-gradient(to bottom, #0a0a14 40%, rgba(10,10,20,0.6) 75%, transparent 100%)',
+          }}
+        />
+      </div>
       <div
-        className="letterbox-bar letterbox-bar--bottom"
+        className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none transition-opacity duration-800"
         style={{ opacity: letterboxOpacity }}
-      />
+      >
+        <div
+          className="h-[8vh]"
+          style={{
+            background: 'linear-gradient(to top, #0a0a14 40%, rgba(10,10,20,0.6) 75%, transparent 100%)',
+          }}
+        />
+      </div>
 
       {/* Animated gold vertical line on the left */}
       <div
@@ -309,15 +333,34 @@ export default function HeroSection() {
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }}
-        >
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-[0.2em] sm:tracking-[0.3em] text-white mb-4">
-            OMNI<span className="text-gradient-gold">LIVING</span>
-          </h1>
-        </motion.div>
+        {/* Pulsing gold circle behind main title */}
+        <div className="relative inline-block">
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] rounded-full pointer-events-none"
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.04, 0.08, 0.04],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            style={{
+              background: 'radial-gradient(circle, rgba(201, 169, 110, 0.15) 0%, transparent 70%)',
+            }}
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }}
+          >
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-[0.2em] sm:tracking-[0.3em] text-white mb-4 relative">
+              OMNI<span className="text-gradient-gold">LIVING</span>
+            </h1>
+          </motion.div>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -352,7 +395,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1, ease: 'easeOut' }}
         >
-          {/* CTA button with animated gradient shimmer border */}
+          {/* CTA button with animated gradient border */}
           <div className="inline-block gold-border-animate rounded-sm">
             <Button
               size="lg"
@@ -368,19 +411,21 @@ export default function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Scroll down indicator with bouncing animation */}
+      {/* Scroll down indicator with German text - more prominent */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
       >
-        <span className="text-[9px] tracking-[0.3em] text-[#8888a8]/60 uppercase">Scroll</span>
+        <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-[#c9a96e]/50 uppercase">
+          Zum Entdecken scrollen
+        </span>
         <div className="bounce-down">
-          <ChevronDown size={16} className="text-[#c9a96e]/60" />
+          <ChevronDown size={18} className="text-[#c9a96e]/60" />
         </div>
         <motion.div
-          className="w-[1px] h-8 bg-gradient-to-b from-[#c9a96e]/60 to-transparent"
+          className="w-[1px] h-10 bg-gradient-to-b from-[#c9a96e]/60 to-transparent"
           animate={{ scaleY: [0, 1, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           style={{ transformOrigin: 'top' }}

@@ -808,3 +808,62 @@ Stage Summary:
 - Module color updates from configurator via store
 - Zustand store fully integrated without React re-renders
 - Lint clean, dev server operational
+
+---
+Task ID: 5-6-7
+Agent: Full-stack Developer
+Task: Configurator CSS overhaul, styling enhancements, and feature additions
+
+Work Log:
+- ConfiguratorSection.tsx: Complete rewrite - removed SceneCanvas dynamic import entirely, replaced 3D preview with CSS-based modular building illustration
+  - BuildingIllustration component with SVG roof, 3 upper + 3 ground module blocks, connection lines, concrete foundation
+  - Each module block is clickable/hoverable with color coding (wohnen=#2d4a3e, schlafen=#3d3d3d, kueche=#3a3535, bad=#2d3a4a)
+  - Window cutouts, corrugation lines, module type labels, position labels
+  - Hover effects: gold border glow, lift animation
+  - Flash animation feedback when position is assigned
+  - Hint bar at bottom showing which module type is selected
+- ConfiguratorSection.tsx: Fixed state mismatch - pre-populated selectedModules with all 6 default positions on mount using useRef flag
+  - Summary now shows 6/6 by default instead of 0/6
+  - Default assignments set in store (Wohnmodul, Schlafmodul, Küchenmodul, Badmodul, Wohnmodul, Schlafmodul)
+  - Color dots in summary for each assigned module type
+  - Reset re-populates defaults after clearing
+- HeroSection.tsx: Added pulsing gold circle behind main title (radial gradient, scale+opacity animation, 4s cycle)
+  - Changed scroll indicator text from "Scroll" to "Zum Entdecken scrollen" (German)
+  - Made scroll indicator more prominent with larger ChevronDown and taller animated line
+  - Letterbox bars now have gradient fade (linear-gradient instead of solid bg-[#0a0a14])
+  - CTA button retains gold-border-animate class for animated gradient border
+- GallerySection.tsx: Added Search/magnifying glass icon overlay on hover (centered, with scale animation)
+  - Added image count indicator "(6 Bilder)" next to Galerie label in header
+  - Improved masonry grid gap handling (gap-3 sm:gap-4, space-y-3 sm:space-y-4)
+  - Added single-column on small screens (columns-1 sm:columns-2 lg:columns-3)
+- TestimonialsSection.tsx: Added large decorative quote mark behind all testimonials (350px, opacity 4%)
+  - Added "5/5 Sterne" label above each testimonial card
+  - Added gold shimmer effect on card hover (diagonal gradient sweep)
+- FeaturesSection.tsx: Added numbered badges (01-06) to each feature card (top-right, circular with gold on hover)
+  - Enhanced icon animation on hover: scale-125 + -rotate-6 on container, scale-110 + -rotate-12 on icon
+  - Gold border reveal on hover (border transitions to border-[#c9a96e]/20)
+  - Added animated section header line (staggered: line -> label -> heading -> description)
+- FAQSection.tsx: Added gold left border accent on open accordion item (2px solid #c9a96e, bg change)
+  - Improved accordion trigger hover effect (bg change on hover for closed items)
+  - Tracking open item state with useState to apply conditional styling
+- NavigationBar.tsx: Added gold glow/text-shadow on active nav link (12px + 24px rgba gold shadow)
+  - Added "Modulares Bauen" sub-label under logo (7px, tracking-[0.2em], #8888a8/50)
+  - Improved mobile menu slide animation: AnimatePresence with x:40 initial/exit, faster 0.06 stagger, 0.4s duration
+  - Active mobile link has text-shadow glow effect
+  - Added "Modulares Bauen" subtitle in mobile menu header
+- StatsSection.tsx: Fixed counter animation - replaced framer-motion useInView with IntersectionObserver
+  - Uses ref on section element, threshold 0.2, rootMargin '-50px'
+  - Counters now reliably trigger when section scrolls into view
+  - AnimatedNumber component unchanged (already had cubic ease-out + requestAnimationFrame)
+- SustainabilitySection.tsx: Fixed CircularProgress counter animation
+  - Added hasAnimated ref to prevent re-triggering
+  - Replaced simple useEffect with IntersectionObserver-based triggering (threshold 0.15)
+  - Circular progress now reliably animates when section scrolls into view
+- All 9 files modified, lint passes with 0 errors
+
+Stage Summary:
+- ConfiguratorSection fully rewritten: no WebGL context, CSS-based building illustration with real-time updates
+- State mismatch fixed: 6/6 modules shown by default, merges default + user assignments
+- All styling enhancements applied: Hero (pulsing gold, German scroll, letterbox gradients), Gallery (magnifying glass, count), Testimonials (quote mark, 5/5 Sterne, shimmer), Features (numbered badges, icon animation), FAQ (gold left border), NavigationBar (gold glow, sub-label, mobile animation)
+- Counter animations fixed in both StatsSection and SustainabilitySection using IntersectionObserver
+- Lint clean (0 errors), dev server compiling and serving successfully

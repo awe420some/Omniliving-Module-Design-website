@@ -90,8 +90,15 @@ export default function TestimonialsSection() {
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Testimonial cards grid with gradient edge overlays */}
+        {/* Testimonial cards grid */}
         <div className="relative gradient-edge-overlay">
+          {/* Large decorative quote mark behind testimonials */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none" aria-hidden="true">
+            <span className="text-[200px] sm:text-[280px] md:text-[350px] font-serif text-[#c9a96e] opacity-[0.04] leading-none">
+              &ldquo;
+            </span>
+          </div>
+
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -103,12 +110,29 @@ export default function TestimonialsSection() {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="relative bg-[#12121f]/60 border border-white/5 rounded-xl p-6 sm:p-8 hover:border-[#c9a96e]/20 hover:shadow-[0_0_30px_rgba(201,169,110,0.05)] transition-all duration-500 group shimmer-sweep"
+                className="relative bg-[#12121f]/60 border border-white/5 rounded-xl p-6 sm:p-8 hover:border-[#c9a96e]/20 hover:shadow-[0_0_30px_rgba(201,169,110,0.05)] transition-all duration-500 group shimmer-sweep overflow-hidden"
               >
+                {/* Gold shimmer on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(135deg, transparent 40%, rgba(201,169,110,0.03) 50%, transparent 60%)',
+                    }}
+                  />
+                </div>
+
                 {/* Decorative quote mark with rotation animation */}
                 <span className="absolute top-4 right-6 text-6xl font-serif text-[#c9a96e] opacity-20 leading-none select-none pointer-events-none quote-animate">
                   &ldquo;
                 </span>
+
+                {/* 5/5 Sterne label */}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] tracking-[0.15em] text-[#c9a96e]/60 uppercase font-medium">
+                    5/5 Sterne
+                  </span>
+                </div>
 
                 {/* Star rating with fill animation */}
                 <AnimatedStars count={testimonial.stars} delay={index * 0.2} />

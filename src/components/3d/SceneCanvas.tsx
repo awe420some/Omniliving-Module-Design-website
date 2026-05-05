@@ -2,9 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
+// No external loaders needed - using procedural architectural massing
 import { useAppStore, type ModuleDef } from '@/lib/store';
 
 /* ─── Default module definitions ─── */
@@ -48,94 +46,7 @@ function getBuildProgress(progress: number, index: number): number {
   return clamp((progress - index * 0.075) * 1.65);
 }
 
-/* ─── Create loaders ─── */
-function createLoaders() {
-  const draco = new DRACOLoader();
-  draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-
-  const gltf = new GLTFLoader();
-  gltf.setDRACOLoader(draco);
-
-  const hdr = new HDRLoader();
-
-  return { gltf, hdr, draco };
-}
-
-/* ─── Apply architectural materials to loaded GLB models ─── */
-function applyArchitecturalMaterials(root: THREE.Object3D) {
-  root.traverse((object) => {
-    object.frustumCulled = false;
-    if (!(object as THREE.Mesh).isMesh) return;
-
-    const mesh = object as THREE.Mesh;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    const name = mesh.name.toLowerCase();
-    const materialName = mesh.material && 'name' in mesh.material ? (mesh.material as THREE.MeshStandardMaterial).name?.toLowerCase?.() || '' : '';
-    const tag = `${name} ${materialName}`;
-
-    if (tag.includes('glass') || tag.includes('window')) {
-      mesh.material = new THREE.MeshPhysicalMaterial({
-        color: '#d9f3ff',
-        transparent: true,
-        opacity: 0.36,
-        roughness: 0.02,
-        metalness: 0,
-        transmission: 0.55,
-        thickness: 0.18,
-        ior: 1.45,
-        side: THREE.DoubleSide,
-      });
-      return;
-    }
-
-    if (tag.includes('steel') || tag.includes('frame') || tag.includes('rail')) {
-      mesh.material = new THREE.MeshStandardMaterial({
-        color: '#b8c0c8',
-        roughness: 0.36,
-        metalness: 0.82,
-      });
-      return;
-    }
-
-    if (tag.includes('concrete') || tag.includes('slab') || tag.includes('plinth')) {
-      mesh.material = new THREE.MeshStandardMaterial({
-        color: '#9b9b95',
-        roughness: 0.92,
-        metalness: 0.02,
-      });
-      return;
-    }
-
-    if (tag.includes('wood') || tag.includes('floor') || tag.includes('deck')) {
-      mesh.material = new THREE.MeshStandardMaterial({
-        color: '#8a6b4d',
-        roughness: 0.82,
-        metalness: 0.02,
-      });
-      return;
-    }
-
-    if (tag.includes('green') || tag.includes('plant') || tag.includes('moss')) {
-      mesh.material = new THREE.MeshStandardMaterial({
-        color: '#3f6346',
-        roughness: 1,
-        metalness: 0,
-      });
-      return;
-    }
-
-    if (!mesh.material || Array.isArray(mesh.material)) {
-      mesh.material = new THREE.MeshStandardMaterial({ color: '#8f9698', roughness: 0.7, metalness: 0.16 });
-    } else {
-      mesh.material = (mesh.material as THREE.MeshStandardMaterial).clone();
-      const mat = mesh.material as THREE.MeshStandardMaterial;
-      mat.roughness = Math.max(mat.roughness ?? 0.55, 0.48);
-      mat.metalness = Math.min(mat.metalness ?? 0.12, 0.55);
-    }
-  });
-}
+/* ─── Loader functions removed - using procedural architecture ─── */
 
 /* ─── Create realistic fallback architectural massing module ─── */
 function createFallbackArchitecturalMassing(
@@ -393,33 +304,7 @@ function createGroundPlane(scene: THREE.Scene) {
   scene.add(grid);
 }
 
-/* ─── Load GLB model ─── */
-async function loadGLB(loader: GLTFLoader, url: string): Promise<THREE.Group> {
-  const gltf = await loader.loadAsync(url);
-  const scene = gltf.scene || gltf.scenes?.[0];
-  if (!scene) throw new Error(`No scene found in ${url}`);
-  applyArchitecturalMaterials(scene);
-  return scene;
-}
-
-/* ─── Load HDRI environment ─── */
-async function loadHDRI(
-  loader: HDRLoader,
-  renderer: THREE.WebGLRenderer,
-  scene: THREE.Scene,
-  url: string,
-): Promise<THREE.Texture | null> {
-  try {
-    const texture = await loader.loadAsync(url);
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-    scene.environment = texture;
-    renderer.toneMappingExposure = 1.08;
-    return texture;
-  } catch {
-    // HDRI missing - use procedural lighting only
-    return null;
-  }
-}
+/* ─── GLB/HDRI loading removed - no external files needed ─── */
 
 /* ─── Dispose helpers ─── */
 function disposeObject3D(object: THREE.Object3D) {
@@ -477,7 +362,6 @@ export default function SceneCanvas() {
     if (!mount) return;
 
     // ─── Scene setup ───
-    const { gltf, hdr, draco } = createLoaders();
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#050608');
     scene.fog = new THREE.Fog('#050608', 10, 28);
@@ -495,51 +379,31 @@ export default function SceneCanvas() {
 
     // Module objects for assembly animation
     const moduleObjects: THREE.Group[] = [];
-    let environmentTexture: THREE.Texture | null = null;
     let alive = true;
 
-    // ─── Load scene assets ───
-    const loadScene = async () => {
-      // Try HDRI
-      environmentTexture = await loadHDRI(hdr, renderer, scene, '/hdr/architectural_studio_2k.hdr');
+    // ─── Build scene with architectural massing modules ───
+    // Use fallback architectural massing directly (no GLB/HDRI files needed)
+    for (let i = 0; i < 6; i++) {
+      const def = DEFAULT_MODULE_DEFS[i];
+      const target = MODULE_TARGETS[i];
 
-      if (!alive) return;
+      const moduleGroup = createFallbackArchitecturalMassing(def, i);
 
-      // Create 6 fallback modules (since we don't have actual GLB models)
-      for (let i = 0; i < 6; i++) {
-        const def = DEFAULT_MODULE_DEFS[i];
-        const target = MODULE_TARGETS[i];
+      moduleGroup.userData.moduleIndex = i;
+      moduleGroup.userData.moduleDef = def;
+      moduleGroup.userData.targetX = target.x;
+      moduleGroup.userData.targetY = target.y;
+      moduleGroup.userData.targetZ = target.z;
 
-        let moduleGroup: THREE.Group;
+      // Start off-screen with rotation
+      const startSide = i % 2 === 0 ? -1.8 : 1.8;
+      moduleGroup.position.set(target.x + startSide, -4.4, target.z + 2.4);
+      moduleGroup.scale.setScalar(0.001);
+      moduleGroup.rotation.y = (1) * (i % 2 === 0 ? -0.55 : 0.55);
 
-        // Try to load GLB, fall back to architectural massing
-        try {
-          const moduleUrl = `/models/omniliving/modules/${def.type}.glb`;
-          moduleGroup = await loadGLB(gltf, moduleUrl);
-        } catch {
-          moduleGroup = createFallbackArchitecturalMassing(def, i);
-        }
-
-        if (!alive) return;
-
-        moduleGroup.userData.moduleIndex = i;
-        moduleGroup.userData.moduleDef = def;
-        moduleGroup.userData.targetX = target.x;
-        moduleGroup.userData.targetY = target.y;
-        moduleGroup.userData.targetZ = target.z;
-
-        // Start off-screen with rotation
-        const startSide = i % 2 === 0 ? -1.8 : 1.8;
-        moduleGroup.position.set(target.x + startSide, -4.4, target.z + 2.4);
-        moduleGroup.scale.setScalar(0.001);
-        moduleGroup.rotation.y = (1) * (i % 2 === 0 ? -0.55 : 0.55);
-
-        root.add(moduleGroup);
-        moduleObjects.push(moduleGroup);
-      }
-    };
-
-    loadScene();
+      root.add(moduleGroup);
+      moduleObjects.push(moduleGroup);
+    }
 
     // ─── Pointer tracking ───
     const pointerRef = { x: 0, y: 0 };
@@ -792,8 +656,6 @@ export default function SceneCanvas() {
       window.removeEventListener('resize', resize);
       mount.removeEventListener('pointermove', onPointerMove);
       disposeObject3D(scene);
-      if (environmentTexture) environmentTexture.dispose();
-      draco.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === mount) {
         mount.removeChild(renderer.domElement);

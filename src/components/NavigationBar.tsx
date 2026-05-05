@@ -21,7 +21,7 @@ const navLinks = [
   { label: 'Kontakt', href: '#contact' },
 ];
 
-// Magnetic hover link component with sliding underline
+// Magnetic hover link component with sliding underline and gold glow
 function MagneticNavLink({
   label,
   href,
@@ -60,10 +60,16 @@ function MagneticNavLink({
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 nav-underline-slide ${isActive ? 'active text-[#c9a96e]' : 'text-[#8888a8] hover:text-white'}`}
+      className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 nav-underline-slide ${
+        isActive
+          ? 'active text-[#c9a96e]'
+          : 'text-[#8888a8] hover:text-white'
+      }`}
       style={{
         transform: `translate(${offset.x}px, ${offset.y}px)`,
         transition: offset.x === 0 ? 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s' : 'transform 0.15s ease-out, color 0.3s',
+        // Gold glow on active link
+        textShadow: isActive ? '0 0 12px rgba(201, 169, 110, 0.4), 0 0 24px rgba(201, 169, 110, 0.15)' : 'none',
       }}
     >
       {label}
@@ -164,9 +170,14 @@ export default function NavigationBar() {
                 className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110"
               />
             </div>
-            <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#c9a96e] transition-colors duration-300 ${scrolled ? 'text-[#c9a96e]/80' : ''}`}>
-              OMNILIVING
-            </span>
+            <div className="flex flex-col">
+              <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#c9a96e] transition-colors duration-300 ${scrolled ? 'text-[#c9a96e]/80' : ''}`}>
+                OMNILIVING
+              </span>
+              <span className="text-[7px] tracking-[0.2em] text-[#8888a8]/50 uppercase leading-none">
+                Modulares Bauen
+              </span>
+            </div>
           </a>
 
           <div className="hidden md:flex items-center gap-1">
@@ -212,47 +223,53 @@ export default function NavigationBar() {
                   <SheetTitle className="text-left text-sm tracking-[0.3em] text-white font-light uppercase">
                     OMNILIVING
                   </SheetTitle>
+                  <p className="text-left text-[9px] tracking-[0.2em] text-[#c9a96e]/40 uppercase">
+                    Modulares Bauen
+                  </p>
                 </SheetHeader>
                 <nav className="flex flex-col gap-2">
-                  {navLinks.map((link, index) => {
-                    const sectionId = link.href.replace('#', '');
-                    const isActive = activeSection === sectionId;
-                    return (
-                      <motion.div
-                        key={link.label}
-                        initial={{ opacity: 0, x: 30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 30 }}
-                        transition={{
-                          delay: index * 0.08,
-                          duration: 0.35,
-                          ease: [0.25, 0.46, 0.45, 0.94],
-                        }}
-                      >
-                        <SheetClose asChild>
-                          <a
-                            href={link.href}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleNavClick(link.href);
-                            }}
-                            className="flex items-center gap-3 px-4 py-3 rounded-md text-sm tracking-[0.1em] uppercase transition-all duration-300 animated-underline"
-                            style={{
-                              color: isActive ? '#c9a96e' : '#8888a8',
-                              backgroundColor: isActive
-                                ? 'rgba(201, 169, 110, 0.08)'
-                                : 'transparent',
-                              borderLeft: isActive
-                                ? '2px solid #c9a96e'
-                                : '2px solid transparent',
-                            }}
-                          >
-                            {link.label}
-                          </a>
-                        </SheetClose>
-                      </motion.div>
-                    );
-                  })}
+                  <AnimatePresence>
+                    {mobileOpen && navLinks.map((link, index) => {
+                      const sectionId = link.href.replace('#', '');
+                      const isActive = activeSection === sectionId;
+                      return (
+                        <motion.div
+                          key={link.label}
+                          initial={{ opacity: 0, x: 40 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 40 }}
+                          transition={{
+                            delay: index * 0.06,
+                            duration: 0.4,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                        >
+                          <SheetClose asChild>
+                            <a
+                              href={link.href}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleNavClick(link.href);
+                              }}
+                              className="flex items-center gap-3 px-4 py-3 rounded-md text-sm tracking-[0.1em] uppercase transition-all duration-300 animated-underline"
+                              style={{
+                                color: isActive ? '#c9a96e' : '#8888a8',
+                                backgroundColor: isActive
+                                  ? 'rgba(201, 169, 110, 0.08)'
+                                  : 'transparent',
+                                borderLeft: isActive
+                                  ? '2px solid #c9a96e'
+                                  : '2px solid transparent',
+                                textShadow: isActive ? '0 0 10px rgba(201, 169, 110, 0.3)' : 'none',
+                              }}
+                            >
+                              {link.label}
+                            </a>
+                          </SheetClose>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
                 </nav>
                 <div className="absolute bottom-8 left-6 right-6">
                   <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/30 to-transparent mb-4" />

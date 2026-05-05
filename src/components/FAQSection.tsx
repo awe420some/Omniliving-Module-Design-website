@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import {
@@ -43,6 +44,8 @@ const faqItems = [
 ];
 
 export default function FAQSection() {
+  const [openItem, setOpenItem] = useState<string | null>(null);
+
   return (
     <section id="faq" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#0f0f20]">
       <div className="max-w-3xl mx-auto">
@@ -70,14 +73,23 @@ export default function FAQSection() {
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            onValueChange={(value) => setOpenItem(value || null)}
+          >
             {faqItems.map((item, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="bg-[#12121f]/40 border-b border-white/5 px-4 sm:px-6 first:rounded-t-xl last:rounded-b-xl"
+                className={`bg-[#12121f]/40 border-b border-white/5 px-4 sm:px-6 first:rounded-t-xl last:rounded-b-xl transition-all duration-300 ${
+                  openItem === `item-${index}`
+                    ? 'border-l-2 border-l-[#c9a96e] bg-[#12121f]/60'
+                    : 'border-l-2 border-l-transparent hover:bg-[#12121f]/50'
+                }`}
               >
-                <AccordionTrigger className="text-white hover:text-[#c9a96e] hover:no-underline tracking-wide text-sm sm:text-base py-5 [&>svg]:hidden">
+                <AccordionTrigger className="text-white hover:text-[#c9a96e] hover:no-underline tracking-wide text-sm sm:text-base py-5 [&>svg]:hidden transition-colors duration-300">
                   <span className="text-left pr-4">{item.question}</span>
                   <ChevronDown className="text-[#c9a96e] size-5 shrink-0 transition-transform duration-300 group-data-[state=open]:rotate-180 ml-auto" />
                 </AccordionTrigger>

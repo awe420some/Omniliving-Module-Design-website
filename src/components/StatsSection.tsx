@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { TrendingDown, Clock, Calendar, Leaf } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -38,35 +38,39 @@ function AnimatedNumber({
 }) {
   const [displayValue, setDisplayValue] = useState(0);
   const hasAnimated = useRef(false);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
     if (!inView || hasAnimated.current) return;
     hasAnimated.current = true;
 
-    const startTime = performance.now();
-    const totalMs = duration * 1000;
+    // Wait for delay, then animate from 0 to value
     const delayMs = delay * 1000;
+    const totalMs = duration * 1000;
+    let startTimestamp: number | null = null;
 
-    const timeout = setTimeout(() => {
-      const animate = (now: number) => {
-        const elapsed = now - startTime - delayMs;
-        if (elapsed < 0) {
-          requestAnimationFrame(animate);
-          return;
-        }
+    const startAnimation = () => {
+      const animate = (timestamp: number) => {
+        if (startTimestamp === null) startTimestamp = timestamp;
+        const elapsed = timestamp - startTimestamp;
         const progress = Math.min(elapsed / totalMs, 1);
         // Eased animation with cubic ease-out
         const eased = 1 - Math.pow(1 - progress, 3);
         setDisplayValue(Math.round(eased * value));
 
         if (progress < 1) {
-          requestAnimationFrame(animate);
+          rafRef.current = requestAnimationFrame(animate);
         }
       };
-      requestAnimationFrame(animate);
-    }, delayMs);
+      rafRef.current = requestAnimationFrame(animate);
+    };
 
-    return () => clearTimeout(timeout);
+    const delayTimer = setTimeout(startAnimation, delayMs);
+
+    return () => {
+      clearTimeout(delayTimer);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, [inView, value, duration, delay]);
 
   const isCO2 = prefix === 'CO₂';
@@ -109,11 +113,28 @@ const itemVariants = {
 };
 
 export default function StatsSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  // Use IntersectionObserver instead of framer-motion useInView for more reliable triggering
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+        }
+      },
+      { threshold: 0.2, rootMargin: '-50px' }
+    );
+    const el = sectionRef.current;
+    if (el) observer.observe(el);
+    return () => {
+      if (el) observer.unobserve(el);
+    };
+  }, []);
 
   return (
-    <section id="stats" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
+    <section id="stats" ref={sectionRef} className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a14] via-[#0f0f20] to-[#0a0a14]" />
 
       {/* Noise texture overlay */}
@@ -124,7 +145,7 @@ export default function StatsSection() {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent via-[#c9a96e]/20 to-transparent" />
       </div>
 
-      <div ref={ref} className="relative max-w-6xl mx-auto">
+      <div className="relative max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -200,7 +221,7 @@ export default function StatsSection() {
                       value={stat.value}
                       suffix={stat.suffix}
                       prefix={stat.prefix}
-                      inView={isInView}
+                      inView={inView}
                       delay={index * 0.15}
                       duration={2}
                     />

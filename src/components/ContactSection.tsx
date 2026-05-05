@@ -212,8 +212,7 @@ export default function ContactSection() {
                 KONTAKT
               </p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-6 leading-tight">
-                Lassen Sie uns Ihr{' '}
-                <span className="text-gradient-gold">Traumhaus</span> planen
+                Lassen Sie uns Ihr <span className="text-gradient-gold">Traumhaus</span> planen
               </h2>
               <p className="text-sm sm:text-base text-[#8888a8] leading-relaxed mb-10 max-w-md">
                 Vereinbaren Sie ein unverbindliches Beratungsgespräch und erfahren

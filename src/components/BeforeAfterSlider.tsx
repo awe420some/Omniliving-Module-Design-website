@@ -2,7 +2,6 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 export default function BeforeAfterSlider() {
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -98,13 +97,11 @@ export default function BeforeAfterSlider() {
           >
             {/* AFTER image (Modular) - full width behind */}
             <div className="absolute inset-0">
-              <Image
+              <img
                 src="/images/hero-building.png"
                 alt="Modularer Bau - Omniliving Modulhaus"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 1152px"
-                priority={false}
+                className="w-full h-full object-cover"
+                loading="lazy"
               />
               {/* Slight warm tint for modular */}
               <div className="absolute inset-0 bg-[#c9a96e]/5" />

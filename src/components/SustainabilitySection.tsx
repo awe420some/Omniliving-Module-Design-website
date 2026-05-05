@@ -60,19 +60,21 @@ function CircularProgress({
   inView: boolean;
 }) {
   const [animatedValue, setAnimatedValue] = useState(0);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (!inView) return;
-    let start = 0;
+    if (!inView || hasAnimated.current) return;
+    hasAnimated.current = true;
+
     const duration = 1500;
     const startTime = performance.now();
 
     function animate(currentTime: number) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
+      // Cubic ease-out
       const eased = 1 - Math.pow(1 - progress, 3);
-      start = Math.round(eased * value);
-      setAnimatedValue(start);
+      setAnimatedValue(Math.round(eased * value));
       if (progress < 1) {
         requestAnimationFrame(animate);
       }
@@ -125,6 +127,7 @@ export default function SustainabilitySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
+  // Use IntersectionObserver for reliable triggering
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -132,7 +135,7 @@ export default function SustainabilitySection() {
           setInView(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.15, rootMargin: '-30px' }
     );
     const el = sectionRef.current;
     if (el) observer.observe(el);

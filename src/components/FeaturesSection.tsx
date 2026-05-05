@@ -110,7 +110,7 @@ export default function FeaturesSection() {
       <div className="absolute inset-0 diagonal-lines pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative">
-        {/* Section header */}
+        {/* Section header with animated line */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -118,15 +118,40 @@ export default function FeaturesSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mb-4 origin-center"
+          />
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4"
+          >
             Vorteile
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4"
+          >
             Warum <span className="text-gradient-gold">Omniliving</span>
-          </h2>
-          <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4"
+          >
             Modulare Bauweise, die überzeugt – schnell, nachhaltig und flexibel.
-          </p>
+          </motion.p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
@@ -138,16 +163,24 @@ export default function FeaturesSection() {
           viewport={{ once: true, margin: '-50px' }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
-          {features.map((feature) => {
+          {features.map((feature, index) => {
             const Icon = feature.icon;
+            const badgeNumber = String(index + 1).padStart(2, '0');
             return (
               <motion.div key={feature.title} variants={cardVariants}>
                 <TiltCard>
-                  <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full shimmer-sweep feature-card-glow hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.06)]">
+                  <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-[#c9a96e]/20 transition-all duration-500 rounded-lg overflow-hidden h-full shimmer-sweep feature-card-glow hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.06)] relative">
+                    {/* Numbered badge */}
+                    <div className="absolute top-4 right-4 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center bg-[#0a0a14]/50 group-hover:border-[#c9a96e]/30 group-hover:bg-[#c9a96e]/10 transition-all duration-500">
+                      <span className="text-[10px] font-medium text-[#8888a8] group-hover:text-[#c9a96e] tracking-wider transition-colors duration-300">
+                        {badgeNumber}
+                      </span>
+                    </div>
+
                     <div className="p-6 sm:p-8 relative overflow-hidden">
                       {/* Animated icon background (subtle rotating gradient) */}
                       <div
-                        className="icon-animated-bg w-12 h-12 rounded-lg flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110 relative"
+                        className="icon-animated-bg w-12 h-12 rounded-lg flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-125 group-hover:-rotate-6 relative"
                         style={{
                           backgroundColor: `${feature.accent}15`,
                           border: `1px solid ${feature.accent}30`,
@@ -155,7 +188,7 @@ export default function FeaturesSection() {
                       >
                         <Icon
                           size={22}
-                          className="transition-all duration-500 relative z-10 group-hover:scale-110 group-hover:-rotate-6"
+                          className="transition-all duration-500 relative z-10 group-hover:scale-110 group-hover:-rotate-12"
                           style={{ color: feature.accent }}
                         />
                       </div>
