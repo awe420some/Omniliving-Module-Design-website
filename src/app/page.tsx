@@ -22,6 +22,8 @@ import SustainabilitySection from '@/components/SustainabilitySection';
 import PartnersSection from '@/components/PartnersSection';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import FloorPlanSection from '@/components/FloorPlanSection';
+import VirtualTourSection from '@/components/VirtualTourSection';
+import ProjectTimelineSection from '@/components/ProjectTimelineSection';
 import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook, ArrowUp, Send } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -104,6 +106,11 @@ export default function Home() {
 
         <SectionDivider variant="line" />
 
+        {/* Virtual Tour / Module Explorer */}
+        <VirtualTourSection />
+
+        <SectionDivider variant="gradient" />
+
         {/* Target Audiences */}
         <TargetAudienceSection />
 
@@ -126,6 +133,11 @@ export default function Home() {
 
         {/* Process with 6 Steps */}
         <ProcessSection />
+
+        <SectionDivider variant="line" />
+
+        {/* Interactive Project Timeline */}
+        <ProjectTimelineSection />
 
         <SectionDivider variant="dots" />
 
@@ -163,8 +175,8 @@ export default function Home() {
         <ContactSection />
 
         {/* Footer with REAL Data and Enhanced Styling */}
-        <footer id="footer-section" className="relative bg-[#060610] mt-auto footer-pattern">
-          {/* Decorative SVG pattern at top */}
+        <footer id="footer-section" className="relative bg-[#060610] mt-auto geometric-border-top">
+          {/* Decorative SVG pattern at top - elaborate geometric */}
           <div className="absolute -top-[60px] left-0 right-0 overflow-hidden">
             <svg
               viewBox="0 0 1440 60"
@@ -180,15 +192,16 @@ export default function Home() {
             </svg>
           </div>
 
-          {/* Decorative SVG geometric pattern below wave */}
-          <div className="absolute top-0 left-0 right-0 h-4 overflow-hidden opacity-[0.03]">
-            <svg width="100%" height="16" xmlns="http://www.w3.org/2000/svg">
+          {/* Elaborate geometric top border */}
+          <div className="absolute top-0 left-0 right-0 overflow-hidden">
+            <svg width="100%" height="24" xmlns="http://www.w3.org/2000/svg" className="opacity-[0.08]">
               <defs>
-                <pattern id="footerPattern" x="0" y="0" width="40" height="16" patternUnits="userSpaceOnUse">
-                  <path d="M0 8 L20 0 L40 8 L20 16 Z" fill="#c9a96e" />
+                <pattern id="geoBorder" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <rect x="0" y="0" width="12" height="12" fill="#c9a96e" />
+                  <rect x="12" y="12" width="12" height="12" fill="#c9a96e" />
                 </pattern>
               </defs>
-              <rect width="100%" height="16" fill="url(#footerPattern)" />
+              <rect width="100%" height="24" fill="url(#geoBorder)" />
             </svg>
           </div>
 
@@ -328,6 +341,49 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Certifications Row */}
+            <div className="mt-10 pt-8 border-t border-white/5">
+              <p className="text-[10px] tracking-[0.2em] text-[#c9a96e]/40 uppercase mb-4 text-center">
+                Zertifizierungen & Standards
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <div className="cert-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  TÜV Geprüft
+                </div>
+                <div className="cert-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                  DIN 18040
+                </div>
+                <div className="cert-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                  ISO 9001
+                </div>
+                <div className="cert-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+                  </svg>
+                  DGNB
+                </div>
+                <div className="cert-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  EN 1090
+                </div>
+              </div>
+            </div>
+
             {/* Bottom bar with animated top border */}
             <div className="mt-12 pt-8 relative">
               {/* Animated shimmer border */}
@@ -340,13 +396,15 @@ export default function Home() {
                 </p>
                 <div className="flex items-center gap-6">
                   <a
-                    href="#"
+                    href="#footer-section"
+                    onClick={(e) => { e.preventDefault(); document.getElementById('footer-section')?.scrollIntoView({ behavior: 'smooth' }); }}
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
                   >
                     Impressum
                   </a>
                   <a
-                    href="#"
+                    href="#footer-section"
+                    onClick={(e) => { e.preventDefault(); document.getElementById('footer-section')?.scrollIntoView({ behavior: 'smooth' }); }}
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
                   >
                     Datenschutz

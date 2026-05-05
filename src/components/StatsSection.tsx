@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingDown, Clock, Calendar, Leaf } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -25,7 +25,7 @@ function AnimatedNumber({
   value,
   suffix,
   prefix,
-  duration = 2,
+  duration = 2.5,
   delay = 0,
   inView,
 }: {
@@ -44,7 +44,6 @@ function AnimatedNumber({
     if (!inView || hasAnimated.current) return;
     hasAnimated.current = true;
 
-    // Wait for delay, then animate from 0 to value
     const delayMs = delay * 1000;
     const totalMs = duration * 1000;
     let startTimestamp: number | null = null;
@@ -54,8 +53,10 @@ function AnimatedNumber({
         if (startTimestamp === null) startTimestamp = timestamp;
         const elapsed = timestamp - startTimestamp;
         const progress = Math.min(elapsed / totalMs, 1);
-        // Eased animation with cubic ease-out
-        const eased = 1 - Math.pow(1 - progress, 3);
+        // More dramatic ease: slow start, fast middle, slow end
+        const eased = progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
         setDisplayValue(Math.round(eased * value));
 
         if (progress < 1) {
@@ -116,7 +117,6 @@ export default function StatsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
-  // Use IntersectionObserver instead of framer-motion useInView for more reliable triggering
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -134,7 +134,7 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <section id="stats" ref={sectionRef} className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
+    <section id="stats" ref={sectionRef} className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 diagonal-lines">
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a14] via-[#0f0f20] to-[#0a0a14]" />
 
       {/* Noise texture overlay */}
@@ -178,7 +178,6 @@ export default function StatsSection() {
               transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
               className="w-full h-full bg-gradient-to-r from-transparent via-[#c9a96e]/15 to-transparent origin-center"
             />
-            {/* Dots at stat positions */}
             {[0, 1, 2, 3].map((i) => (
               <motion.div
                 key={i}
@@ -222,8 +221,8 @@ export default function StatsSection() {
                       suffix={stat.suffix}
                       prefix={stat.prefix}
                       inView={inView}
-                      delay={index * 0.15}
-                      duration={2}
+                      delay={index * 0.2}
+                      duration={2.5}
                     />
                   </div>
 

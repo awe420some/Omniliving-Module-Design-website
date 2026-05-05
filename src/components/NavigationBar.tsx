@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import {
   Sheet,
   SheetTrigger,
@@ -35,6 +35,7 @@ function MagneticNavLink({
 }) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!linkRef.current) return;
@@ -48,6 +49,7 @@ function MagneticNavLink({
 
   const handleMouseLeave = useCallback(() => {
     setOffset({ x: 0, y: 0 });
+    setIsHovered(false);
   }, []);
 
   return (
@@ -59,8 +61,9 @@ function MagneticNavLink({
         onClick(href);
       }}
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
-      className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 nav-underline-slide ${
+      className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
         isActive
           ? 'active text-[#c9a96e]'
           : 'text-[#8888a8] hover:text-white'
@@ -68,11 +71,19 @@ function MagneticNavLink({
       style={{
         transform: `translate(${offset.x}px, ${offset.y}px)`,
         transition: offset.x === 0 ? 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s' : 'transform 0.15s ease-out, color 0.3s',
-        // Gold glow on active link
         textShadow: isActive ? '0 0 12px rgba(201, 169, 110, 0.4), 0 0 24px rgba(201, 169, 110, 0.15)' : 'none',
       }}
     >
       {label}
+      {/* Smooth underline animation */}
+      <span
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[1.5px] rounded-full transition-all duration-300 ease-out"
+        style={{
+          width: isActive || isHovered ? '80%' : '0%',
+          background: 'linear-gradient(90deg, #c9a96e, #dbb980, #c9a96e)',
+          opacity: isActive || isHovered ? 1 : 0,
+        }}
+      />
     </a>
   );
 }
@@ -87,7 +98,6 @@ export default function NavigationBar() {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       setScrolled(scrollY > 50);
-      // Calculate scroll progress for blur intensity
       const progress = Math.min(scrollY / 300, 1);
       setScrollProgress(progress);
     };
@@ -136,6 +146,22 @@ export default function NavigationBar() {
   const blurAmount = scrollProgress * 20;
   const borderGlowOpacity = scrollProgress * 0.15;
 
+  // Gold glow intensity when scrolling
+  const goldGlowIntensity = scrollProgress * 0.2;
+
+  // Calculate overall scroll progress for the mini indicator
+  const [pageScrollPercent, setPageScrollPercent] = useState(0);
+  useEffect(() => {
+    const handleScroll = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = docHeight > 0 ? Math.min(window.scrollY / docHeight, 1) : 0;
+      setPageScrollPercent(percent);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -148,10 +174,19 @@ export default function NavigationBar() {
         WebkitBackdropFilter: `blur(${blurAmount}px)`,
         borderBottom: `1px solid rgba(201, 169, 110, ${borderGlowOpacity})`,
         boxShadow: scrolled
-          ? `0 4px 30px rgba(0, 0, 0, ${0.2 + scrollProgress * 0.3}), 0 0 20px rgba(201, 169, 110, ${borderGlowOpacity * 0.3})`
+          ? `0 4px 30px rgba(0, 0, 0, ${0.2 + scrollProgress * 0.3}), 0 0 20px rgba(201, 169, 110, ${borderGlowOpacity * 0.3}), 0 0 ${goldGlowIntensity * 40}px rgba(201, 169, 110, ${goldGlowIntensity * 0.15})`
           : 'none',
       }}
     >
+      {/* Scroll progress mini indicator on left edge */}
+      <div
+        className="nav-scroll-indicator"
+        style={{
+          transform: `scaleY(${pageScrollPercent})`,
+          opacity: pageScrollPercent > 0 ? 0.6 : 0,
+        }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo with shimmer effect when scrolled */}
@@ -216,7 +251,6 @@ export default function NavigationBar() {
                   WebkitBackdropFilter: 'blur(20px)',
                 }}
               >
-                {/* Blur overlay behind menu */}
                 <div className="absolute inset-0 bg-[#0a0a14]/80 -z-10" />
 
                 <SheetHeader className="mb-8">

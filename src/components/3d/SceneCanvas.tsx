@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-// No external loaders needed - using procedural architectural massing
 import { useAppStore, type ModuleDef } from '@/lib/store';
 
 /* ─── Default module definitions ─── */
@@ -17,12 +16,12 @@ const DEFAULT_MODULE_DEFS: ModuleDef[] = [
 
 /* ─── Module target positions (matches original layout) ─── */
 const MODULE_TARGETS = [
-  { x: -3.1, y: 0.65, z: 0 },   // ground-0
-  { x: 0, y: 0.65, z: 0 },       // ground-1
-  { x: 3.1, y: 0.65, z: 0 },     // ground-2
-  { x: -3.1, y: 2.0, z: 0 },     // upper-0
-  { x: 0, y: 2.0, z: 0 },        // upper-1
-  { x: 3.1, y: 2.0, z: 0 },      // upper-2
+  { x: -3.1, y: 0.65, z: 0 },
+  { x: 0, y: 0.65, z: 0 },
+  { x: 3.1, y: 0.65, z: 0 },
+  { x: -3.1, y: 2.0, z: 0 },
+  { x: 0, y: 2.0, z: 0 },
+  { x: 3.1, y: 2.0, z: 0 },
 ];
 
 /* ─── Easing functions ─── */
@@ -46,9 +45,66 @@ function getBuildProgress(progress: number, index: number): number {
   return clamp((progress - index * 0.075) * 1.65);
 }
 
-/* ─── Loader functions removed - using procedural architecture ─── */
+/* ─── Create simple gradient environment texture ─── */
+function createGradientEnvironment(): THREE.Texture {
+  const size = 256;
+  const data = new Uint8Array(size * size * 4);
 
-/* ─── Create realistic fallback architectural massing module ─── */
+  for (let y = 0; y < size; y++) {
+    const v = y / size;
+    for (let x = 0; x < size; x++) {
+      const idx = (y * size + x) * 4;
+      // Top: warm sky blue, Bottom: darker cool
+      const r = Math.floor(140 + (1 - v) * 60 + v * 10);
+      const g = Math.floor(160 + (1 - v) * 50 + v * 15);
+      const b = Math.floor(200 + (1 - v) * 40 + v * 20);
+      data[idx] = Math.min(255, r);
+      data[idx + 1] = Math.min(255, g);
+      data[idx + 2] = Math.min(255, b);
+      data[idx + 3] = 255;
+    }
+  }
+
+  const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  texture.needsUpdate = true;
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+/* ─── Create fog particles near base ─── */
+function createGroundFog(scene: THREE.Scene): THREE.Points {
+  const count = 80;
+  const positions = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+
+  for (let i = 0; i < count; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 16;
+    positions[i * 3 + 1] = -0.85 + Math.random() * 0.4;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    sizes[i] = 0.3 + Math.random() * 0.5;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  const material = new THREE.PointsMaterial({
+    color: '#1a2030',
+    size: 0.8,
+    transparent: true,
+    opacity: 0.15,
+    sizeAttenuation: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+
+  const points = new THREE.Points(geometry, material);
+  scene.add(points);
+  return points;
+}
+
+/* ─── Create realistic architectural massing module ─── */
 function createFallbackArchitecturalMassing(
   def: ModuleDef,
   index: number,
@@ -68,9 +124,23 @@ function createFallbackArchitecturalMassing(
   });
   const wallDark = new THREE.MeshStandardMaterial({ color: '#20252a', roughness: 0.9, metalness: 0.08 });
 
-  // Tint wall color based on module type
+  // Tint wall color based on module type with subtle variation
   const wallColor = new THREE.Color(def.color);
+  // Add subtle hue variation per module index
+  const hsl = { h: 0, s: 0, l: 0 };
+  wallColor.getHSL(hsl);
+  wallColor.setHSL(
+    (hsl.h + (index * 0.02) - 0.01) % 1,
+    Math.min(1, hsl.s + 0.03),
+    Math.min(1, hsl.l + (index % 2 === 0 ? 0.02 : -0.02)),
+  );
   const wallMat = new THREE.MeshStandardMaterial({ color: wallColor, roughness: 0.55, metalness: 0.45 });
+
+  // Secondary wall material for variation
+  const wallColor2 = new THREE.Color(def.color);
+  wallColor2.getHSL(hsl);
+  wallColor2.setHSL(hsl.h, Math.min(1, hsl.s + 0.05), Math.min(1, hsl.l + 0.04));
+  const wallMat2 = new THREE.MeshStandardMaterial({ color: wallColor2, roughness: 0.58, metalness: 0.4 });
 
   const add = (size: number[], position: number[], material: THREE.Material, name: string) => {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(size[0], size[1], size[2]), material);
@@ -86,9 +156,9 @@ function createFallbackArchitecturalMassing(
   add([2.8, 0.1, 1.3], [0, -0.55, 0], concrete, 'floor_slab');
   // Roof slab
   add([2.8, 0.1, 1.3], [0, 0.55, 0], concrete, 'roof_slab');
-  // Side walls
+  // Side walls with color variation
   add([0.1, 1.1, 1.3], [-1.35, 0, 0], wallMat, 'side_wall_left');
-  add([0.1, 1.1, 1.3], [1.35, 0, 0], wallMat, 'side_wall_right');
+  add([0.1, 1.1, 1.3], [1.35, 0, 0], wallMat2, 'side_wall_right');
   // Back wall
   add([2.8, 1.1, 0.08], [0, 0, -0.65], wallDark, 'back_wall');
   // Large cutaway glass on front
@@ -100,11 +170,17 @@ function createFallbackArchitecturalMassing(
   add([0.06, 1.25, 0.08], [-1.46, 0, 0.72], steel, 'front_left_steel_frame');
   add([0.06, 1.25, 0.08], [1.46, 0, 0.72], steel, 'front_right_steel_frame');
 
-  // Corrugation ridges on front and back
+  // Corrugation ridges on front and back with slight color variation
   for (let i = 0; i < 10; i++) {
     const y = -0.45 + (i * 0.1);
-    add([2.6, 0.008, 0.004], [0, y, 0.68], new THREE.MeshStandardMaterial({ color: '#1a1a1a', metalness: 0.85, roughness: 0.25 }), `corr-front-${i}`);
-    add([2.6, 0.008, 0.004], [0, y, -0.68], new THREE.MeshStandardMaterial({ color: '#1a1a1a', metalness: 0.85, roughness: 0.25 }), `corr-back-${i}`);
+    const corrRoughness = 0.2 + (i % 3) * 0.05;
+    const corrMat = new THREE.MeshStandardMaterial({
+      color: i % 2 === 0 ? '#1a1a1a' : '#1c1c1c',
+      metalness: 0.85,
+      roughness: corrRoughness,
+    });
+    add([2.6, 0.008, 0.004], [0, y, 0.68], corrMat, `corr-front-${i}`);
+    add([2.6, 0.008, 0.004], [0, y, -0.68], corrMat, `corr-back-${i}`);
   }
 
   // Interior furniture based on module type
@@ -112,7 +188,7 @@ function createFallbackArchitecturalMassing(
   const furnitureMat = new THREE.MeshStandardMaterial({ color: '#626b73', roughness: 0.9 });
   const emissiveColor = new THREE.Color(def.emissiveColor);
 
-  // Floor interior
+  // Floor interior with emissive glow
   const floorMat = new THREE.MeshStandardMaterial({
     color: '#1a1510',
     emissive: emissiveColor,
@@ -122,61 +198,58 @@ function createFallbackArchitecturalMassing(
   });
   add([2.6, 0.02, 1.1], [0, -0.49, 0], floorMat, 'interior_floor');
 
+  // Interior point light
+  const interiorLight = new THREE.PointLight(
+    def.emissiveColor,
+    0.5,
+    3,
+  );
+  interiorLight.position.set(0, 0.2, 0);
+  root.add(interiorLight);
+
   if (def.type === 'wohnen') {
-    // Sofa
     add([0.8, 0.2, 0.35], [-0.5, -0.34, -0.15], furnitureMat, 'interior_sofa');
-    // Sofa back
     add([0.8, 0.12, 0.06], [-0.5, -0.2, -0.3], furnitureMat, 'sofa_back');
-    // Coffee table
     add([0.45, 0.04, 0.25], [-0.3, -0.43, 0.1], woodMat, 'interior_table');
-    // TV
     add([0.5, 0.28, 0.02], [0.6, -0.2, -0.55], new THREE.MeshStandardMaterial({ color: '#111', emissive: '#223344', emissiveIntensity: 0.15 }), 'tv');
   } else if (def.type === 'schlafen') {
-    // Bed
     add([0.9, 0.12, 0.55], [0.1, -0.38, 0], furnitureMat, 'bed');
-    // Headboard
     add([0.05, 0.25, 0.55], [-0.35, -0.22, 0], woodMat, 'headboard');
-    // Pillows
     add([0.18, 0.04, 0.2], [-0.25, -0.28, -0.1], new THREE.MeshStandardMaterial({ color: '#e8e8e8', roughness: 0.5 }), 'pillow_1');
     add([0.18, 0.04, 0.2], [-0.25, -0.28, 0.1], new THREE.MeshStandardMaterial({ color: '#e8e8e8', roughness: 0.5 }), 'pillow_2');
   } else if (def.type === 'kueche') {
-    // Counter
     add([1.0, 0.16, 0.3], [0.3, -0.38, -0.3], furnitureMat, 'counter');
-    // Counter top
     add([1.02, 0.02, 0.32], [0.3, -0.29, -0.3], new THREE.MeshStandardMaterial({ color: '#e8e8e8', roughness: 0.5 }), 'counter_top');
-    // Upper cabinets
     add([0.8, 0.2, 0.12], [0.2, -0.08, -0.55], furnitureMat, 'upper_cabinets');
   } else if (def.type === 'bad') {
-    // Shower glass
     add([0.4, 0.4, 0.02], [-0.7, -0.2, -0.2], new THREE.MeshPhysicalMaterial({ color: '#cce5ff', transmission: 0.6, roughness: 0.1, transparent: true, opacity: 0.4 }), 'shower_glass');
-    // Shower base
     add([0.45, 0.02, 0.4], [-0.7, -0.47, -0.05], new THREE.MeshStandardMaterial({ color: '#ddd', roughness: 0.7 }), 'shower_base');
-    // Vanity
     add([0.4, 0.1, 0.2], [0.6, -0.38, 0.2], woodMat, 'vanity');
-    // Mirror
     add([0.35, 0.22, 0.01], [0.6, -0.12, 0.35], new THREE.MeshStandardMaterial({ color: '#aaccee', metalness: 0.9, roughness: 0.05 }), 'mirror');
   }
 
-  // Window configurations based on type
+  // Window configurations with enhanced glass materials
   const windowFrameMat = new THREE.MeshStandardMaterial({ color: '#555', metalness: 0.8, roughness: 0.2 });
+
+  // Glass with reflective quality for day mode
   const glassMat = new THREE.MeshPhysicalMaterial({
     color: def.type === 'bad' ? '#e0e8f0' : '#cce5ff',
     transmission: def.type === 'bad' ? 0.5 : 0.9,
     roughness: def.type === 'bad' ? 0.6 : 0.05,
     thickness: 0.02,
     ior: 1.5,
-    metalness: 0,
+    metalness: 0.1,
     transparent: true,
     opacity: 0.5,
+    reflectivity: 0.5,
+    envMapIntensity: 0.8,
   });
 
   const addWindow = (wx: number, wy: number, wz: number, ww: number, wh: number) => {
-    // Frame
     add([ww + 0.04, 0.02, 0.01], [wx, wy + wh / 2 + 0.01, wz], windowFrameMat, `win-frame-top`);
     add([ww + 0.04, 0.02, 0.01], [wx, wy - wh / 2 - 0.01, wz], windowFrameMat, `win-frame-bottom`);
     add([0.02, wh + 0.04, 0.01], [wx - ww / 2 - 0.01, wy, wz], windowFrameMat, `win-frame-left`);
     add([0.02, wh + 0.04, 0.01], [wx + ww / 2 + 0.01, wy, wz], windowFrameMat, `win-frame-right`);
-    // Glass
     const winMesh = new THREE.Mesh(new THREE.PlaneGeometry(ww, wh), glassMat);
     winMesh.position.set(wx, wy, wz);
     winMesh.name = `window_glass`;
@@ -199,7 +272,7 @@ function createFallbackArchitecturalMassing(
   // Door for wohnen and schlafen
   if (def.type === 'wohnen' || def.type === 'schlafen') {
     add([0.4, 0.7, 0.01], [-1.1, -0.1, 0.7], new THREE.MeshStandardMaterial({ color: '#444', metalness: 0.6, roughness: 0.3 }), 'door');
-    // Door handle
+    // Door handle in gold
     const handle = new THREE.Mesh(
       new THREE.CylinderGeometry(0.01, 0.01, 0.06, 6),
       new THREE.MeshStandardMaterial({ color: '#c9a96e', metalness: 0.9, roughness: 0.1 }),
@@ -207,7 +280,96 @@ function createFallbackArchitecturalMassing(
     handle.position.set(-1.22, -0.1, 0.72);
     handle.rotation.x = Math.PI / 2;
     root.add(handle);
+
+    // External light fixture above door
+    const lightFixture = new THREE.Group();
+    lightFixture.name = 'door_light';
+    // Mounting plate
+    const mountPlate = new THREE.Mesh(
+      new THREE.BoxGeometry(0.08, 0.06, 0.02),
+      new THREE.MeshStandardMaterial({ color: '#333', metalness: 0.8, roughness: 0.2 }),
+    );
+    mountPlate.position.set(-1.1, 0.32, 0.73);
+    lightFixture.add(mountPlate);
+    // Lamp shade
+    const lampShade = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.02, 0.04, 0.04, 8),
+      new THREE.MeshStandardMaterial({ color: '#222', metalness: 0.6, roughness: 0.3 }),
+    );
+    lampShade.position.set(-1.1, 0.3, 0.74);
+    lightFixture.add(lampShade);
+    // Emissive bulb
+    const bulb = new THREE.Mesh(
+      new THREE.SphereGeometry(0.015, 8, 8),
+      new THREE.MeshStandardMaterial({
+        color: '#ffdd88',
+        emissive: '#ffcc66',
+        emissiveIntensity: 0.6,
+        metalness: 0,
+        roughness: 1,
+      }),
+    );
+    bulb.position.set(-1.1, 0.28, 0.75);
+    lightFixture.add(bulb);
+    // Small point light
+    const doorLight = new THREE.PointLight('#ffcc66', 0.4, 2);
+    doorLight.position.set(-1.1, 0.28, 0.76);
+    lightFixture.add(doorLight);
+    root.add(lightFixture);
+
+    // House number plate
+    const numberPlate = new THREE.Mesh(
+      new THREE.BoxGeometry(0.1, 0.06, 0.005),
+      new THREE.MeshStandardMaterial({ color: '#c9a96e', metalness: 0.7, roughness: 0.3 }),
+    );
+    numberPlate.position.set(-0.95, 0.32, 0.73);
+    numberPlate.name = 'house_number';
+    root.add(numberPlate);
   }
+
+  // Ventilation grills for kitchen and bathroom modules
+  if (def.type === 'kueche' || def.type === 'bad') {
+    const grillMat = new THREE.MeshStandardMaterial({ color: '#444', metalness: 0.7, roughness: 0.3 });
+    // Vent on side wall
+    const ventGroup = new THREE.Group();
+    ventGroup.name = 'ventilation_grill';
+    // Vent frame
+    const ventFrame = new THREE.Mesh(
+      new THREE.BoxGeometry(0.02, 0.15, 0.2),
+      grillMat,
+    );
+    ventFrame.position.set(1.41, 0.15, -0.2);
+    ventGroup.add(ventFrame);
+    // Vent slats
+    for (let s = 0; s < 5; s++) {
+      const slat = new THREE.Mesh(
+        new THREE.BoxGeometry(0.01, 0.004, 0.18),
+        new THREE.MeshStandardMaterial({ color: '#333', metalness: 0.8, roughness: 0.2 }),
+      );
+      slat.position.set(1.42, 0.09 + s * 0.03, -0.2);
+      slat.rotation.z = 0.3;
+      ventGroup.add(slat);
+    }
+    root.add(ventGroup);
+  }
+
+  // Rain gutters along roof edges
+  const gutterMat = new THREE.MeshStandardMaterial({ color: '#555', metalness: 0.7, roughness: 0.3 });
+  // Front gutter
+  add([2.9, 0.03, 0.04], [0, 0.57, 0.7], gutterMat, 'gutter_front');
+  // Back gutter
+  add([2.9, 0.03, 0.04], [0, 0.57, -0.7], gutterMat, 'gutter_back');
+  // Downspout at right corner
+  const downspout = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.015, 0.015, 1.1, 6),
+    gutterMat,
+  );
+  downspout.position.set(1.46, 0, 0.7);
+  downspout.name = 'downspout';
+  root.add(downspout);
+  // Downspout bracket
+  add([0.04, 0.02, 0.04], [1.46, -0.3, 0.7], gutterMat, 'spout_bracket_1');
+  add([0.04, 0.02, 0.04], [1.46, 0.1, 0.7], gutterMat, 'spout_bracket_2');
 
   // Corner posts
   const cornerMat = new THREE.MeshStandardMaterial({ color: '#8a8a8a', metalness: 0.95, roughness: 0.15 });
@@ -230,28 +392,133 @@ function createFallbackArchitecturalMassing(
   return root;
 }
 
-/* ─── Setup renderer ─── */
-function setupRenderer(mount: HTMLDivElement): THREE.WebGLRenderer {
-  const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: false,
-    powerPreference: 'high-performance',
-  });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(mount.clientWidth, mount.clientHeight);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap;
-  mount.appendChild(renderer.domElement);
-  return renderer;
+/* ─── Create external staircase ─── */
+function createExternalStaircase(scene: THREE.Group) {
+  const stairGroup = new THREE.Group();
+  stairGroup.name = 'external_staircase';
+
+  const metalMat = new THREE.MeshStandardMaterial({ color: '#6a6a6a', metalness: 0.85, roughness: 0.25 });
+  const grateMat = new THREE.MeshStandardMaterial({ color: '#555', metalness: 0.8, roughness: 0.3 });
+  const goldAccentMat = new THREE.MeshStandardMaterial({ color: '#c9a96e', metalness: 0.9, roughness: 0.1 });
+
+  // Position staircase on the far right side of the building
+  const baseX = 5.0;
+  const baseZ = 0.3;
+
+  // Steps - from ground to upper floor level
+  const stepCount = 8;
+  const stepHeight = 2.6 / stepCount;
+  const stepDepth = 0.25;
+
+  for (let i = 0; i < stepCount; i++) {
+    // Metal grate step
+    const step = new THREE.Mesh(
+      new THREE.BoxGeometry(0.8, 0.015, stepDepth),
+      grateMat,
+    );
+    step.position.set(baseX, -0.9 + (i + 1) * stepHeight, baseZ - i * stepDepth * 0.3);
+    step.castShadow = true;
+    step.receiveShadow = true;
+    stairGroup.add(step);
+
+    // Grate pattern lines
+    for (let g = 0; g < 4; g++) {
+      const grateLine = new THREE.Mesh(
+        new THREE.BoxGeometry(0.75, 0.008, 0.008),
+        metalMat,
+      );
+      grateLine.position.set(
+        baseX,
+        -0.89 + (i + 1) * stepHeight,
+        baseZ - i * stepDepth * 0.3 - stepDepth / 2 + (g + 1) * stepDepth / 5,
+      );
+      stairGroup.add(grateLine);
+    }
+  }
+
+  // Side railings
+  const railingHeight = 0.85;
+  for (let side = -1; side <= 1; side += 2) {
+    // Vertical railing posts
+    for (let i = 0; i <= stepCount; i += 2) {
+      const post = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.015, 0.015, railingHeight, 6),
+        metalMat,
+      );
+      post.position.set(
+        baseX + side * 0.42,
+        -0.9 + i * stepHeight + railingHeight / 2,
+        baseZ - i * stepDepth * 0.3,
+      );
+      stairGroup.add(post);
+    }
+
+    // Top railing (handrail)
+    const topRail = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.012, 0.012, 3.0, 6),
+      goldAccentMat,
+    );
+    topRail.position.set(
+      baseX + side * 0.42,
+      -0.9 + stepCount * stepHeight + railingHeight - 0.05,
+      baseZ - stepCount * stepDepth * 0.15,
+    );
+    topRail.rotation.x = -0.15;
+    stairGroup.add(topRail);
+  }
+
+  // Landing platform at upper floor level
+  const landing = new THREE.Mesh(
+    new THREE.BoxGeometry(0.9, 0.03, 0.6),
+    grateMat,
+  );
+  landing.position.set(baseX, 2.0 - 0.65 + 0.55, baseZ - 0.3);
+  landing.castShadow = true;
+  landing.receiveShadow = true;
+  stairGroup.add(landing);
+
+  // Landing railing
+  const landingRail = new THREE.Mesh(
+    new THREE.BoxGeometry(0.9, 0.02, 0.02),
+    goldAccentMat,
+  );
+  landingRail.position.set(baseX, 2.0 - 0.65 + 0.55 + 0.8, baseZ - 0.6);
+  stairGroup.add(landingRail);
+
+  scene.add(stairGroup);
+  return stairGroup;
+}
+
+/* ─── Setup renderer with error handling ─── */
+function setupRenderer(mount: HTMLDivElement): THREE.WebGLRenderer | null {
+  try {
+    // Create renderer with failIfMajorPerformanceCaveat: false
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: false,
+      powerPreference: 'high-performance',
+      failIfMajorPerformanceCaveat: false,
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+    mount.appendChild(renderer.domElement);
+    return renderer;
+  } catch (err) {
+    console.warn('WebGL context creation failed:', err);
+    return null;
+  }
 }
 
 /* ─── Add architectural lighting ─── */
 function addArchitecturalLighting(scene: THREE.Scene) {
   // Hemisphere light for ambient fill
-  scene.add(new THREE.HemisphereLight('#dbeafe', '#111827', 0.72));
+  const hemi = new THREE.HemisphereLight('#dbeafe', '#111827', 0.72);
+  scene.add(hemi);
 
   // Directional sun light with shadows
   const sun = new THREE.DirectionalLight('#fff4e6', 3.4);
@@ -265,6 +532,7 @@ function addArchitecturalLighting(scene: THREE.Scene) {
   sun.shadow.camera.top = 10;
   sun.shadow.camera.bottom = -10;
   sun.shadow.bias = -0.001;
+  sun.name = 'sun_light';
   scene.add(sun);
 
   // Interior warm glow
@@ -276,18 +544,60 @@ function addArchitecturalLighting(scene: THREE.Scene) {
   const blueFill = new THREE.PointLight('#8bd3ff', 2.8, 12);
   blueFill.position.set(3.8, 2.2, 3.2);
   scene.add(blueFill);
+
+  // Subtle rim light from behind
+  const rimLight = new THREE.DirectionalLight('#ffeedd', 0.8);
+  rimLight.position.set(-5, 4, -6);
+  scene.add(rimLight);
+
+  // Golden hour accent light (warm, low angle)
+  const goldenLight = new THREE.DirectionalLight('#ffaa55', 1.5);
+  goldenLight.position.set(-8, 3, 2);
+  goldenLight.name = 'golden_hour_light';
+  goldenLight.intensity = 0; // Activated during hero mode
+  scene.add(goldenLight);
+
+  // Cool blue accent light (activated during section cut)
+  const coolLight = new THREE.DirectionalLight('#6688cc', 1.0);
+  coolLight.position.set(4, 6, -3);
+  coolLight.name = 'cool_section_light';
+  coolLight.intensity = 0; // Activated during section cut mode
+  scene.add(coolLight);
 }
 
-/* ─── Create ground plane + concrete plinth ─── */
+/* ─── Create ground plane with reflective surface ─── */
 function createGroundPlane(scene: THREE.Scene) {
+  // Main ground with slight reflectivity
   const ground = new THREE.Mesh(
     new THREE.PlaneGeometry(42, 42),
-    new THREE.MeshStandardMaterial({ color: '#111418', roughness: 0.94, metalness: 0.02 }),
+    new THREE.MeshStandardMaterial({
+      color: '#111418',
+      roughness: 0.85,
+      metalness: 0.08,
+      envMapIntensity: 0.3,
+    }),
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -0.9;
   ground.receiveShadow = true;
   scene.add(ground);
+
+  // Reflective pool near the building base
+  const reflectivePool = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 3),
+    new THREE.MeshStandardMaterial({
+      color: '#0d0e14',
+      roughness: 0.15,
+      metalness: 0.6,
+      envMapIntensity: 0.5,
+      transparent: true,
+      opacity: 0.7,
+    }),
+  );
+  reflectivePool.rotation.x = -Math.PI / 2;
+  reflectivePool.position.set(0, -0.89, 3.5);
+  reflectivePool.receiveShadow = true;
+  scene.add(reflectivePool);
 
   const plinth = new THREE.Mesh(
     new THREE.BoxGeometry(10.2, 0.32, 4.4),
@@ -303,8 +613,6 @@ function createGroundPlane(scene: THREE.Scene) {
   grid.position.y = -0.89;
   scene.add(grid);
 }
-
-/* ─── GLB/HDRI loading removed - no external files needed ─── */
 
 /* ─── Dispose helpers ─── */
 function disposeObject3D(object: THREE.Object3D) {
@@ -322,11 +630,47 @@ function disposeObject3D(object: THREE.Object3D) {
   });
 }
 
+/* ─── Helper to get effective module def ─── */
+function getEffectiveModuleDef(obj: THREE.Object3D, moduleAssignments: Record<string, ModuleDef>): ModuleDef {
+  const idx = obj.userData.moduleIndex ?? 0;
+  const def = DEFAULT_MODULE_DEFS[idx] || DEFAULT_MODULE_DEFS[0];
+  return moduleAssignments[def.id] || def;
+}
+
+/* ═══════════════════════════════════════
+   CSS Fallback for WebGL failure
+   ═══════════════════════════════════════ */
+function CSSFallback() {
+  return (
+    <div className="w-full h-full bg-[#050608] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4 p-8">
+        <div className="w-16 h-16 rounded-lg bg-[#c9a96e]/10 flex items-center justify-center">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" strokeWidth="1.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        </div>
+        <h3 className="text-lg text-white/80 font-light tracking-wider">3D-Ansicht</h3>
+        <p className="text-xs text-[#8888a8] text-center max-w-xs leading-relaxed">
+          Die 3D-Darstellung wird auf diesem Gerät nicht unterstützt.
+          Bitte verwenden Sie einen modernen Browser mit WebGL-Unterstützung.
+        </p>
+        <div className="flex gap-2 mt-2">
+          <div className="w-2 h-2 rounded-full bg-[#c9a96e]/30 animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-[#c9a96e]/20 animate-pulse" style={{ animationDelay: '0.3s' }} />
+          <div className="w-2 h-2 rounded-full bg-[#c9a96e]/10 animate-pulse" style={{ animationDelay: '0.6s' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════
    Main SceneCanvas Component
    ═══════════════════════════════════════ */
 export default function SceneCanvas() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [webglFailed, setWebglFailed] = useState(false);
   const storeRef = useRef({
     scrollProgress: 0,
     buildingPhase: 0,
@@ -346,7 +690,6 @@ export default function SceneCanvas() {
       storeRef.current.experienceMode = state.experienceMode;
       storeRef.current.moduleAssignments = state.moduleAssignments;
     });
-    // Initialize with current state
     const state = useAppStore.getState();
     storeRef.current.scrollProgress = state.scrollProgress;
     storeRef.current.buildingPhase = state.buildingPhase;
@@ -366,12 +709,33 @@ export default function SceneCanvas() {
     scene.background = new THREE.Color('#050608');
     scene.fog = new THREE.Fog('#050608', 10, 28);
 
+    // Add gradient environment texture for reflections
+    const envTexture = createGradientEnvironment();
+    scene.environment = envTexture;
+
     const camera = new THREE.PerspectiveCamera(36, mount.clientWidth / Math.max(1, mount.clientHeight), 0.1, 100);
     camera.position.set(0.8, 1.6, 8.2);
 
-    const renderer = setupRenderer(mount);
+    // ─── Setup renderer with error handling ───
+    let renderer: THREE.WebGLRenderer | null = null;
+    try {
+      renderer = setupRenderer(mount);
+    } catch {
+      // Will be handled below
+    }
+    if (!renderer) {
+      // Schedule state update outside effect body to avoid cascading renders
+      const callbackId = requestAnimationFrame(() => {
+        setWebglFailed(true);
+      });
+      return () => cancelAnimationFrame(callbackId);
+    }
+
     addArchitecturalLighting(scene);
     createGroundPlane(scene);
+
+    // Ground fog particles
+    const fogParticles = createGroundFog(scene);
 
     // Root group for all modules
     const root = new THREE.Group();
@@ -382,7 +746,6 @@ export default function SceneCanvas() {
     let alive = true;
 
     // ─── Build scene with architectural massing modules ───
-    // Use fallback architectural massing directly (no GLB/HDRI files needed)
     for (let i = 0; i < 6; i++) {
       const def = DEFAULT_MODULE_DEFS[i];
       const target = MODULE_TARGETS[i];
@@ -395,7 +758,6 @@ export default function SceneCanvas() {
       moduleGroup.userData.targetY = target.y;
       moduleGroup.userData.targetZ = target.z;
 
-      // Start off-screen with rotation
       const startSide = i % 2 === 0 ? -1.8 : 1.8;
       moduleGroup.position.set(target.x + startSide, -4.4, target.z + 2.4);
       moduleGroup.scale.setScalar(0.001);
@@ -405,12 +767,128 @@ export default function SceneCanvas() {
       moduleObjects.push(moduleGroup);
     }
 
+    // ─── External staircase ───
+    const staircase = createExternalStaircase(root);
+
     // ─── Pointer tracking ───
     const pointerRef = { x: 0, y: 0 };
     const onPointerMove = (event: PointerEvent) => {
       const rect = mount.getBoundingClientRect();
       pointerRef.x = ((event.clientX - rect.left) / Math.max(1, rect.width) - 0.5) * 2;
       pointerRef.y = ((event.clientY - rect.top) / Math.max(1, rect.height) - 0.5) * 2;
+    };
+
+    // ─── Orbit Controls State ───
+    const orbitState = {
+      isDragging: false,
+      isRightDragging: false,
+      prevX: 0,
+      prevY: 0,
+      rotationX: 0,
+      rotationY: 0,
+      targetRotationX: 0,
+      targetRotationY: 0,
+      zoom: 1,
+      targetZoom: 1,
+      panX: 0,
+      panY: 0,
+      targetPanX: 0,
+      targetPanY: 0,
+    };
+
+    const onMouseDown = (event: MouseEvent) => {
+      const s = storeRef.current;
+      if (s.experienceMode !== 'configurator') return;
+      if (event.button === 2) {
+        orbitState.isRightDragging = true;
+      } else if (event.button === 0) {
+        orbitState.isDragging = true;
+      }
+      orbitState.prevX = event.clientX;
+      orbitState.prevY = event.clientY;
+    };
+
+    const onMouseMove = (event: MouseEvent) => {
+      if (!orbitState.isDragging && !orbitState.isRightDragging) return;
+      const dx = event.clientX - orbitState.prevX;
+      const dy = event.clientY - orbitState.prevY;
+
+      if (orbitState.isDragging) {
+        orbitState.targetRotationY += dx * 0.005;
+        orbitState.targetRotationX += dy * 0.003;
+        // Clamp vertical rotation
+        orbitState.targetRotationX = clamp(orbitState.targetRotationX, -0.5, 0.5);
+      }
+
+      if (orbitState.isRightDragging) {
+        orbitState.targetPanX += dx * 0.005;
+        orbitState.targetPanY -= dy * 0.005;
+      }
+
+      orbitState.prevX = event.clientX;
+      orbitState.prevY = event.clientY;
+    };
+
+    const onMouseUp = () => {
+      orbitState.isDragging = false;
+      orbitState.isRightDragging = false;
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      const s = storeRef.current;
+      if (s.experienceMode !== 'configurator') return;
+      event.preventDefault();
+      orbitState.targetZoom = clamp(orbitState.targetZoom + event.deltaY * 0.001, 0.5, 2.0);
+    };
+
+    // Touch events for mobile orbit
+    const touchState = { lastDist: 0, lastX: 0, lastY: 0, touching: false };
+
+    const onTouchStart = (event: TouchEvent) => {
+      const s = storeRef.current;
+      if (s.experienceMode !== 'configurator') return;
+      touchState.touching = true;
+      if (event.touches.length === 1) {
+        touchState.lastX = event.touches[0].clientX;
+        touchState.lastY = event.touches[0].clientY;
+      } else if (event.touches.length === 2) {
+        const dx = event.touches[0].clientX - event.touches[1].clientX;
+        const dy = event.touches[0].clientY - event.touches[1].clientY;
+        touchState.lastDist = Math.sqrt(dx * dx + dy * dy);
+      }
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (!touchState.touching) return;
+      if (event.touches.length === 1) {
+        const dx = event.touches[0].clientX - touchState.lastX;
+        const dy = event.touches[0].clientY - touchState.lastY;
+        orbitState.targetRotationY += dx * 0.005;
+        orbitState.targetRotationX += dy * 0.003;
+        orbitState.targetRotationX = clamp(orbitState.targetRotationX, -0.5, 0.5);
+        touchState.lastX = event.touches[0].clientX;
+        touchState.lastY = event.touches[0].clientY;
+      } else if (event.touches.length === 2) {
+        const dx = event.touches[0].clientX - event.touches[1].clientX;
+        const dy = event.touches[0].clientY - event.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (touchState.lastDist > 0) {
+          orbitState.targetZoom = clamp(orbitState.targetZoom + (touchState.lastDist - dist) * 0.005, 0.5, 2.0);
+        }
+        touchState.lastDist = dist;
+      }
+    };
+
+    const onTouchEnd = () => {
+      touchState.touching = false;
+      touchState.lastDist = 0;
+    };
+
+    const onContextMenu = (event: Event) => {
+      const s = storeRef.current;
+      if (s.experienceMode === 'configurator') {
+        event.preventDefault();
+      }
     };
 
     // ─── Resize handler ───
@@ -425,10 +903,14 @@ export default function SceneCanvas() {
     // ─── Animation loop ───
     let startTime = performance.now();
     let frameId = 0;
+    let lastMode = 'hero';
 
     // Camera smoothing state
     const camPos = new THREE.Vector3(0.8, 1.6, 8.2);
     const camLook = new THREE.Vector3(0, 0.3, 0);
+
+    // Camera shake state
+    const shakeState = { intensity: 0, targetIntensity: 0 };
 
     const animate = () => {
       if (!alive) return;
@@ -439,12 +921,86 @@ export default function SceneCanvas() {
       const px = pointerRef.x;
       const py = pointerRef.y;
 
+      // ─── Mode transition detection ───
+      const modeChanged = s.experienceMode !== lastMode;
+      lastMode = s.experienceMode;
+
+      // ─── Lighting mode transitions ───
+      const sunLight = scene.getObjectByName('sun_light') as THREE.DirectionalLight | undefined;
+      const goldenLight = scene.getObjectByName('golden_hour_light') as THREE.DirectionalLight | undefined;
+      const coolLight = scene.getObjectByName('cool_section_light') as THREE.DirectionalLight | undefined;
+
+      if (s.experienceMode === 'hero') {
+        // Golden hour warm light active
+        if (goldenLight) goldenLight.intensity += (1.5 - goldenLight.intensity) * 0.03;
+        if (coolLight) coolLight.intensity += (0 - coolLight.intensity) * 0.03;
+        if (sunLight) {
+          sunLight.color.lerp(new THREE.Color('#ffddaa'), 0.02);
+          sunLight.intensity += (3.0 - sunLight.intensity) * 0.03;
+        }
+        // Warm background
+        scene.background = new THREE.Color('#080a06');
+        scene.fog = new THREE.Fog('#080a06', 10, 28);
+      } else if (s.experienceMode === 'sectioncut') {
+        // Cool blue tone
+        if (goldenLight) goldenLight.intensity += (0 - goldenLight.intensity) * 0.03;
+        if (coolLight) coolLight.intensity += (1.5 - coolLight.intensity) * 0.03;
+        if (sunLight) {
+          sunLight.color.lerp(new THREE.Color('#ccddff'), 0.02);
+          sunLight.intensity += (2.5 - sunLight.intensity) * 0.03;
+        }
+        scene.background = new THREE.Color('#040610');
+        scene.fog = new THREE.Fog('#040610', 8, 24);
+      } else {
+        // Normal lighting
+        if (goldenLight) goldenLight.intensity += (0 - goldenLight.intensity) * 0.03;
+        if (coolLight) coolLight.intensity += (0 - coolLight.intensity) * 0.03;
+        if (sunLight) {
+          sunLight.color.lerp(new THREE.Color('#fff4e6'), 0.02);
+          sunLight.intensity += (3.4 - sunLight.intensity) * 0.03;
+        }
+        scene.background = new THREE.Color('#050608');
+        scene.fog = new THREE.Fog('#050608', 10, 28);
+      }
+
+      // ─── Camera shake during building phase ───
+      if (s.experienceMode === 'building' && p > 0.05 && p < 0.65) {
+        const buildIntensity = Math.sin(p * Math.PI) * 0.02;
+        shakeState.targetIntensity = buildIntensity;
+      } else {
+        shakeState.targetIntensity = 0;
+      }
+      shakeState.intensity += (shakeState.targetIntensity - shakeState.intensity) * 0.05;
+
+      const shakeX = shakeState.intensity > 0.001 ? (Math.random() - 0.5) * shakeState.intensity : 0;
+      const shakeY = shakeState.intensity > 0.001 ? (Math.random() - 0.5) * shakeState.intensity : 0;
+
+      // ─── Orbit controls interpolation (configurator mode) ───
+      if (s.experienceMode === 'configurator') {
+        orbitState.rotationY += (orbitState.targetRotationY - orbitState.rotationY) * 0.08;
+        orbitState.rotationX += (orbitState.targetRotationX - orbitState.rotationX) * 0.08;
+        orbitState.zoom += (orbitState.targetZoom - orbitState.zoom) * 0.08;
+        orbitState.panX += (orbitState.targetPanX - orbitState.panX) * 0.08;
+        orbitState.panY += (orbitState.targetPanY - orbitState.panY) * 0.08;
+      } else {
+        // Smoothly reset orbit when not in configurator
+        orbitState.targetRotationY *= 0.95;
+        orbitState.targetRotationX *= 0.95;
+        orbitState.targetZoom += (1 - orbitState.targetZoom) * 0.05;
+        orbitState.targetPanX *= 0.95;
+        orbitState.targetPanY *= 0.95;
+        orbitState.rotationY += (orbitState.targetRotationY - orbitState.rotationY) * 0.08;
+        orbitState.rotationX += (orbitState.targetRotationX - orbitState.rotationX) * 0.08;
+        orbitState.zoom += (orbitState.targetZoom - orbitState.zoom) * 0.08;
+        orbitState.panX += (orbitState.targetPanX - orbitState.panX) * 0.08;
+        orbitState.panY += (orbitState.targetPanY - orbitState.panY) * 0.08;
+      }
+
       // ─── Camera modes ───
       let targetCamPos: THREE.Vector3;
       let targetLookAt: THREE.Vector3;
 
       if (s.experienceMode === 'hero') {
-        // Cinematic slow orbit with mouse parallax
         const orbit = t * 0.13;
         targetCamPos = new THREE.Vector3(
           0.8 + px * 0.24 + Math.sin(orbit) * 0.6,
@@ -453,7 +1009,6 @@ export default function SceneCanvas() {
         );
         targetLookAt = new THREE.Vector3(0, 0.22, 0);
       } else if (s.experienceMode === 'building') {
-        // Dolly in as modules assemble
         const dolly = easeInOutCubic(clamp((p - 0.08) * 1.18));
         targetCamPos = new THREE.Vector3(
           px * 0.24,
@@ -462,7 +1017,6 @@ export default function SceneCanvas() {
         );
         targetLookAt = new THREE.Vector3(0, 0.28 + dolly * 0.14, 0);
       } else if (s.experienceMode === 'sectioncut') {
-        // Closer camera from above for section cut view
         targetCamPos = new THREE.Vector3(
           1.5 + px * 0.3,
           3.0 + py * 0.15,
@@ -470,26 +1024,37 @@ export default function SceneCanvas() {
         );
         targetLookAt = new THREE.Vector3(0, 0.8, 0);
       } else {
-        // Configurator: slow orbit with mouse parallax
-        const orbit = t * 0.1;
+        // Configurator: orbit controls
+        const baseDist = 9.0 / orbitState.zoom;
+        const orbitAngle = orbitState.rotationY;
+        const elevAngle = orbitState.rotationX;
         targetCamPos = new THREE.Vector3(
-          5 + Math.sin(orbit) * 2 + px * 1.5,
-          3 + py * 0.5,
-          7 + Math.cos(orbit) * 1.5,
+          orbitState.panX + Math.sin(orbitAngle) * baseDist,
+          2.5 + elevAngle * baseDist * 0.5,
+          orbitState.panY + Math.cos(orbitAngle) * baseDist,
         );
-        targetLookAt = new THREE.Vector3(0, 1.0, 0);
+        targetLookAt = new THREE.Vector3(
+          orbitState.panX,
+          1.0 + elevAngle * 2,
+          orbitState.panY,
+        );
       }
 
-      // Smooth camera
-      camPos.lerp(targetCamPos, 0.025);
-      camLook.lerp(targetLookAt, 0.025);
+      // Apply camera shake
+      targetCamPos.x += shakeX;
+      targetCamPos.y += shakeY;
+
+      // Smooth camera with faster transition on mode change
+      const camLerp = modeChanged ? 0.06 : 0.025;
+      camPos.lerp(targetCamPos, camLerp);
+      camLook.lerp(targetLookAt, camLerp);
       camera.position.copy(camPos);
       camera.lookAt(camLook);
 
-      // Subtle root rotation for parallax feel
+      // Root rotation for parallax feel + orbit
       if (s.experienceMode === 'configurator') {
-        const targetRotY = Math.sin(t * 0.1) * 0.15;
-        root.rotation.y += (targetRotY - root.rotation.y) * 0.02;
+        // In configurator, orbit controls handle rotation
+        root.rotation.y += (orbitState.rotationY - root.rotation.y) * 0.08;
       } else if (s.experienceMode === 'hero') {
         const targetRotY = Math.sin(t * 0.05) * 0.05;
         root.rotation.y += (targetRotY - root.rotation.y) * 0.01;
@@ -498,7 +1063,6 @@ export default function SceneCanvas() {
       }
 
       // ─── Module assembly animation ───
-      // Compute building progress from scroll (0-0.7 range → 0-1 build)
       const buildProgress = clamp(p / 0.7);
 
       moduleObjects.forEach((obj, i) => {
@@ -519,9 +1083,17 @@ export default function SceneCanvas() {
         obj.scale.setScalar(Math.max(0.001, build));
       });
 
+      // Staircase visibility follows building progress
+      if (staircase) {
+        staircase.visible = buildProgress > 0.8;
+        if (staircase.visible) {
+          const stairProgress = clamp((buildProgress - 0.8) * 5);
+          staircase.scale.setScalar(Math.max(0.001, stairProgress));
+        }
+      }
+
       // ─── Section cut effect (opacity-based) ───
       if (s.isSectionCutActive && moduleObjects.length > 0) {
-        // Compute cursor world position approximation
         const cursorWorldX = (s.cursorPosition.x - 0.5) * 8;
         const cursorWorldY = s.cursorPosition.y * 3;
 
@@ -531,7 +1103,6 @@ export default function SceneCanvas() {
             const mesh = child as THREE.Mesh;
             const mat = mesh.material as THREE.MeshStandardMaterial;
 
-            // Compute distance from cursor to mesh center in world
             const worldPos = new THREE.Vector3();
             mesh.getWorldPosition(worldPos);
             const dist = Math.sqrt(
@@ -539,7 +1110,6 @@ export default function SceneCanvas() {
               (worldPos.y - cursorWorldY) ** 2,
             );
 
-            // Make walls/side_walls/back_wall near cursor transparent
             const name = mesh.name.toLowerCase();
             const isWall = name.includes('wall') || name.includes('side_wall') || name.includes('back_wall');
 
@@ -551,7 +1121,6 @@ export default function SceneCanvas() {
               }
               mat.opacity += (targetOpacity - mat.opacity) * 0.08;
 
-              // Add golden rim for close modules
               if (dist < 2.5) {
                 const rimStrength = clamp(1.0 - dist / 2.5, 0, 0.5);
                 const pulse = 0.85 + 0.15 * Math.sin(t * 3.0);
@@ -564,7 +1133,6 @@ export default function SceneCanvas() {
                 }
               }
             } else if (isWall) {
-              // Restore full opacity
               if (mat.transparent) {
                 mat.opacity += (1.0 - mat.opacity) * 0.05;
                 if (mat.opacity > 0.99) {
@@ -572,7 +1140,6 @@ export default function SceneCanvas() {
                   mat.transparent = false;
                 }
               }
-              // Reset emissive
               if (mat.emissive && mat.emissiveIntensity > 0.01) {
                 mat.emissiveIntensity *= 0.95;
               }
@@ -593,7 +1160,7 @@ export default function SceneCanvas() {
                 mat.transparent = false;
               }
             }
-            if (mat.emissive && mat.emissiveIntensity > 0.01 && !mesh.name.includes('floor') && !mesh.name.includes('tv')) {
+            if (mat.emissive && mat.emissiveIntensity > 0.01 && !mesh.name.includes('floor') && !mesh.name.includes('tv') && !mesh.name.includes('bulb')) {
               mat.emissiveIntensity *= 0.95;
             }
           });
@@ -604,7 +1171,6 @@ export default function SceneCanvas() {
       moduleObjects.forEach((obj, i) => {
         const defaultDef = DEFAULT_MODULE_DEFS[i];
         const effectiveDef = s.moduleAssignments[defaultDef.id] || defaultDef;
-        // If the module def changed, we'd rebuild - for now just tint
         obj.traverse((child) => {
           if (!(child as THREE.Mesh).isMesh) return;
           const mesh = child as THREE.Mesh;
@@ -635,8 +1201,37 @@ export default function SceneCanvas() {
                 mat.emissive.lerp(targetEmissive, 0.05);
               }
             }
+            // Window glow variation based on time
+            if (name.includes('window_glass') && mesh.material instanceof THREE.MeshPhysicalMaterial) {
+              const mat = mesh.material as THREE.MeshPhysicalMaterial;
+              const emissiveColor = new THREE.Color(getEffectiveModuleDef(obj, s.moduleAssignments).emissiveColor);
+              const glowIntensity = s.isSectionCutActive ? 0.15 : 0.05 + Math.sin(t * 0.5 + (obj.userData.moduleIndex ?? 0)) * 0.02;
+              if (mat.emissive) {
+                mat.emissive.lerp(emissiveColor, 0.02);
+                mat.emissiveIntensity += (glowIntensity - mat.emissiveIntensity) * 0.05;
+              }
+              // Glass reflectivity varies by mode
+              const targetReflectivity = s.experienceMode === 'hero' ? 0.7 : 0.5;
+              mat.reflectivity += (targetReflectivity - mat.reflectivity) * 0.02;
+            }
           });
         });
+      }
+
+      // ─── Animate ground fog ───
+      if (fogParticles) {
+        const positions = fogParticles.geometry.attributes.position;
+        if (positions) {
+          for (let i = 0; i < positions.count; i++) {
+            const y = positions.getY(i);
+            positions.setY(i, y + Math.sin(t * 0.3 + i) * 0.0005);
+          }
+          positions.needsUpdate = true;
+        }
+        // Fog opacity varies by mode
+        const fogMat = fogParticles.material as THREE.PointsMaterial;
+        const targetOpacity = s.experienceMode === 'hero' ? 0.2 : s.experienceMode === 'sectioncut' ? 0.08 : 0.12;
+        fogMat.opacity += (targetOpacity - fogMat.opacity) * 0.02;
       }
 
       renderer.render(scene, camera);
@@ -646,6 +1241,14 @@ export default function SceneCanvas() {
     // ─── Start ───
     window.addEventListener('resize', resize);
     mount.addEventListener('pointermove', onPointerMove);
+    mount.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    mount.addEventListener('wheel', onWheel, { passive: false });
+    mount.addEventListener('touchstart', onTouchStart, { passive: true });
+    mount.addEventListener('touchmove', onTouchMove, { passive: true });
+    mount.addEventListener('touchend', onTouchEnd);
+    mount.addEventListener('contextmenu', onContextMenu);
     resize();
     animate();
 
@@ -655,7 +1258,16 @@ export default function SceneCanvas() {
       window.cancelAnimationFrame(frameId);
       window.removeEventListener('resize', resize);
       mount.removeEventListener('pointermove', onPointerMove);
+      mount.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      mount.removeEventListener('wheel', onWheel);
+      mount.removeEventListener('touchstart', onTouchStart);
+      mount.removeEventListener('touchmove', onTouchMove);
+      mount.removeEventListener('touchend', onTouchEnd);
+      mount.removeEventListener('contextmenu', onContextMenu);
       disposeObject3D(scene);
+      if (envTexture) envTexture.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === mount) {
         mount.removeChild(renderer.domElement);
@@ -663,16 +1275,44 @@ export default function SceneCanvas() {
     };
   }, []);
 
+  if (webglFailed) {
+    return <CSSFallback />;
+  }
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div
+        ref={mountRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden',
+        }}
+      />
+      {/* Orbit controls hint for configurator mode */}
+      <OrbitHint />
+    </div>
+  );
+}
+
+/* ─── Orbit controls hint overlay ─── */
+function OrbitHint() {
+  const experienceMode = useAppStore((s) => s.experienceMode);
+
+  if (experienceMode !== 'configurator') return null;
+
   return (
     <div
-      ref={mountRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        inset: 0,
-        overflow: 'hidden',
-      }}
-    />
+      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
+      style={{ animation: 'fadeIn 0.8s ease-out' }}
+    >
+      <div className="bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">
+        <p className="text-[11px] text-white/60 tracking-wider whitespace-nowrap">
+          Ziehen zum Drehen &bull; Scrollen zum Zoomen
+        </p>
+      </div>
+    </div>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Star } from 'lucide-react';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const testimonials = [
@@ -32,28 +32,11 @@ const testimonials = [
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
-  },
-};
-
-// Animated star rating component
+// Animated star rating component with hover effect
 function AnimatedStars({ count, delay }: { count: number; delay: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true });
+  const [hoveredStar, setHoveredStar] = useState<number | null>(null);
 
   return (
     <div ref={ref} className="flex gap-1 mb-4">
@@ -61,8 +44,10 @@ function AnimatedStars({ count, delay }: { count: number; delay: number }) {
         <Star
           key={i}
           size={16}
-          className={`fill-[#c9a96e] text-[#c9a96e] ${isInView ? 'star-animated' : 'opacity-0'}`}
+          className={`fill-[#c9a96e] text-[#c9a96e] ${isInView ? 'star-animated' : 'opacity-0'} star-hover-animate cursor-pointer`}
           style={{ animationDelay: `${delay + i * 0.08}s` }}
+          onMouseEnter={() => setHoveredStar(i)}
+          onMouseLeave={() => setHoveredStar(null)}
         />
       ))}
     </div>
@@ -70,9 +55,58 @@ function AnimatedStars({ count, delay }: { count: number; delay: number }) {
 }
 
 export default function TestimonialsSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoPlay = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+  }, []);
+
+  const stopAutoPlay = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAutoPlaying) {
+      startAutoPlay();
+    }
+    return stopAutoPlay;
+  }, [isAutoPlaying, startAutoPlay, stopAutoPlay]);
+
+  const goToPrev = () => {
+    stopAutoPlay();
+    setIsAutoPlaying(false);
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    // Resume auto play after 10s
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const goToNext = () => {
+    stopAutoPlay();
+    setIsAutoPlaying(false);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const goToSlide = (index: number) => {
+    stopAutoPlay();
+    setIsAutoPlaying(false);
+    setCurrentIndex(index);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const currentTestimonial = testimonials[currentIndex];
+
   return (
     <section id="testimonials" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -90,79 +124,109 @@ export default function TestimonialsSection() {
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Testimonial cards grid */}
-        <div className="relative gradient-edge-overlay">
-          {/* Large decorative quote mark behind testimonials */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none" aria-hidden="true">
-            <span className="text-[200px] sm:text-[280px] md:text-[350px] font-serif text-[#c9a96e] opacity-[0.04] leading-none">
+        {/* Carousel */}
+        <div className="relative">
+          {/* Large decorative opening quote */}
+          <div className="absolute -top-6 left-4 sm:left-8 pointer-events-none select-none z-10">
+            <span className="text-[120px] sm:text-[160px] md:text-[200px] font-serif text-[#c9a96e] opacity-[0.06] leading-none">
               &ldquo;
             </span>
           </div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            {testimonials.map((testimonial, index) => (
+          {/* Large decorative closing quote */}
+          <div className="absolute -bottom-12 right-4 sm:right-8 pointer-events-none select-none z-10">
+            <span className="text-[120px] sm:text-[160px] md:text-[200px] font-serif text-[#c9a96e] opacity-[0.06] leading-none">
+              &rdquo;
+            </span>
+          </div>
+
+          {/* Testimonial card */}
+          <div className="relative bg-[#12121f]/60 border border-white/5 rounded-xl p-8 sm:p-12 hover:border-[#c9a96e]/20 hover:shadow-[0_0_30px_rgba(201,169,110,0.05)] transition-all duration-500 overflow-hidden shimmer-sweep">
+            {/* Gold shimmer on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(135deg, transparent 40%, rgba(201,169,110,0.03) 50%, transparent 60%)',
+                }}
+              />
+            </div>
+
+            <AnimatePresence mode="wait">
               <motion.div
-                key={index}
-                variants={cardVariants}
-                className="relative bg-[#12121f]/60 border border-white/5 rounded-xl p-6 sm:p-8 hover:border-[#c9a96e]/20 hover:shadow-[0_0_30px_rgba(201,169,110,0.05)] transition-all duration-500 group shimmer-sweep overflow-hidden"
+                key={currentIndex}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                className="relative z-10"
               >
-                {/* Gold shimmer on hover */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: 'linear-gradient(135deg, transparent 40%, rgba(201,169,110,0.03) 50%, transparent 60%)',
-                    }}
-                  />
-                </div>
-
-                {/* Decorative quote mark with rotation animation */}
-                <span className="absolute top-4 right-6 text-6xl font-serif text-[#c9a96e] opacity-20 leading-none select-none pointer-events-none quote-animate">
-                  &ldquo;
-                </span>
-
-                {/* 5/5 Sterne label */}
+                {/* Star rating */}
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] tracking-[0.15em] text-[#c9a96e]/60 uppercase font-medium">
                     5/5 Sterne
                   </span>
                 </div>
+                <AnimatedStars count={currentTestimonial.stars} delay={0.2} />
 
-                {/* Star rating with fill animation */}
-                <AnimatedStars count={testimonial.stars} delay={index * 0.2} />
-
-                {/* Quote text */}
-                <p className="text-[#8888a8] text-sm leading-relaxed italic mb-6 relative z-10">
-                  &ldquo;{testimonial.quote}&rdquo;
+                {/* Quote text - larger decorative */}
+                <p className="text-[#c9c9d8] text-base sm:text-lg md:text-xl leading-relaxed italic mb-8 relative z-10">
+                  &ldquo;{currentTestimonial.quote}&rdquo;
                 </p>
 
-                {/* Customer info with gold border avatar */}
-                <div className="flex items-center gap-3 mt-auto">
+                {/* Customer info */}
+                <div className="flex items-center gap-4">
                   <div className="avatar-gold-border rounded-full">
-                    <Avatar className="w-10 h-10">
-                      <AvatarFallback className="bg-[#1a1a2e] text-[#c9a96e] text-xs font-medium">
-                        {testimonial.initials}
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-[#1a1a2e] text-[#c9a96e] text-sm font-medium">
+                        {currentTestimonial.initials}
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   <div>
-                    <p className="text-sm text-white font-medium tracking-wide">
-                      {testimonial.name}
+                    <p className="text-base text-white font-medium tracking-wide">
+                      {currentTestimonial.name}
                     </p>
-                    <p className="text-xs text-[#8888a8]">
-                      {testimonial.location}
+                    <p className="text-sm text-[#8888a8]">
+                      {currentTestimonial.location}
                     </p>
                   </div>
                 </div>
               </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation arrows */}
+          <button
+            onClick={goToPrev}
+            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#12121f]/80 border border-white/10 flex items-center justify-center text-[#8888a8] hover:text-[#c9a96e] hover:border-[#c9a96e]/30 transition-all duration-300 z-20"
+            aria-label="Vorherige Bewertung"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={goToNext}
+            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#12121f]/80 border border-white/10 flex items-center justify-center text-[#8888a8] hover:text-[#c9a96e] hover:border-[#c9a96e]/30 transition-all duration-300 z-20"
+            aria-label="Nächste Bewertung"
+          >
+            <ChevronRight size={18} />
+          </button>
+
+          {/* Dots navigation */}
+          <div className="flex items-center justify-center gap-3 mt-8">
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goToSlide(i)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === currentIndex
+                    ? 'bg-[#c9a96e] w-6'
+                    : 'bg-[#8888a8]/30 hover:bg-[#8888a8]/50'
+                }`}
+                aria-label={`Bewertung ${i + 1}`}
+              />
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

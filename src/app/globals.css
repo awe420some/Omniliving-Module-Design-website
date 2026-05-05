@@ -88,8 +88,8 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
+  html, body {
+    @apply bg-background text-foreground overflow-x-hidden;
   }
 }
 
@@ -1345,4 +1345,157 @@ img.complete {
 .gradient-edge-overlay::after {
   right: 0;
   background: linear-gradient(to left, #0a0a14, transparent);
+}
+
+/* ============================================
+   TASK 3-6-7-8 - NEW CSS UTILITIES
+   ============================================ */
+
+/* Gold shimmer text sweep on LIVING */
+@keyframes gold-shimmer-sweep {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-gradient-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #c9a96e 0%,
+    #dbb980 20%,
+    #fff5e0 40%,
+    #dbb980 60%,
+    #c9a96e 80%,
+    #c9a96e 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer-sweep 4s ease-in-out infinite;
+}
+
+/* Nav scroll progress mini indicator on left edge */
+.nav-scroll-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #c9a96e, transparent);
+  transform-origin: top;
+  transition: transform 0.15s ease-out;
+}
+
+/* FAQ animated expand/collapse */
+.faq-content-enter {
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+}
+
+/* Star hover animation for testimonials */
+@keyframes star-hover-pulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.3); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.star-hover-animate:hover {
+  animation: star-hover-pulse 0.4s ease-out;
+}
+
+/* Geometric border pattern for footer */
+.geometric-border-top {
+  position: relative;
+}
+
+.geometric-border-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      #c9a96e 0px,
+      #c9a96e 2px,
+      transparent 2px,
+      transparent 6px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(201, 169, 110, 0.3) 8px,
+      rgba(201, 169, 110, 0.3) 10px
+    );
+  opacity: 0.2;
+}
+
+/* Certification badge styling */
+.cert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 4px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  background: rgba(201, 169, 110, 0.05);
+  transition: all 0.3s ease;
+}
+
+.cert-badge:hover {
+  border-color: rgba(201, 169, 110, 0.4);
+  background: rgba(201, 169, 110, 0.1);
+}
+
+/* Virtual tour parallax container */
+.tour-parallax-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.tour-parallax-layer {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+/* Hotspot tooltip for virtual tour */
+.hotspot-tooltip {
+  position: absolute;
+  padding: 6px 12px;
+  background: rgba(18, 18, 31, 0.95);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 6px;
+  font-size: 11px;
+  color: #e8e8f0;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateY(4px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 30;
+}
+
+.hotspot-trigger:hover + .hotspot-tooltip,
+.hotspot-trigger:hover .hotspot-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Timeline phase glow */
+@keyframes phase-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 110, 0.4); }
+  50% { box-shadow: 0 0 20px 4px rgba(201, 169, 110, 0.2); }
+}
+
+.phase-glow-active {
+  animation: phase-glow 2s ease-in-out infinite;
 }
