@@ -20,6 +20,8 @@ import PricingCalculator from '@/components/PricingCalculator';
 import CookieConsent from '@/components/CookieConsent';
 import SustainabilitySection from '@/components/SustainabilitySection';
 import PartnersSection from '@/components/PartnersSection';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import FloorPlanSection from '@/components/FloorPlanSection';
 import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook, ArrowUp, Send } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -40,14 +42,35 @@ const ScrollExperience = dynamic(() => import('@/components/ScrollExperience'), 
 export default function Home() {
   const [email, setEmail] = useState('');
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      toast({
-        title: 'Newsletter abonniert',
-        description: 'Vielen Dank! Sie erhalten bald die neuesten Updates.',
-      });
-      setEmail('');
+      try {
+        const response = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          toast({
+            title: 'Newsletter abonniert',
+            description: result.message || 'Vielen Dank! Sie erhalten bald die neuesten Updates.',
+          });
+          setEmail('');
+        } else {
+          toast({
+            title: 'Hinweis',
+            description: result.error || result.message || 'Ein Fehler ist aufgetreten.',
+          });
+        }
+      } catch {
+        toast({
+          title: 'Fehler',
+          description: 'Netzwerkfehler. Bitte versuchen Sie es später erneut.',
+        });
+      }
     }
   };
 
@@ -76,8 +99,18 @@ export default function Home() {
 
         <SectionDivider variant="dots" />
 
+        {/* Floor Plan Viewer */}
+        <FloorPlanSection />
+
+        <SectionDivider variant="line" />
+
         {/* Target Audiences */}
         <TargetAudienceSection />
+
+        <SectionDivider variant="gradient" />
+
+        {/* Before/After Comparison */}
+        <BeforeAfterSlider />
 
         <SectionDivider variant="gradient" />
 

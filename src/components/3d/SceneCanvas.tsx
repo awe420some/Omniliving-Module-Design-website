@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import { useAppStore, type ModuleDef } from '@/lib/store';
 
 /* ─── Default module definitions ─── */
@@ -56,9 +56,9 @@ function createLoaders() {
   const gltf = new GLTFLoader();
   gltf.setDRACOLoader(draco);
 
-  const rgbe = new RGBELoader();
+  const hdr = new HDRLoader();
 
-  return { gltf, rgbe, draco };
+  return { gltf, hdr, draco };
 }
 
 /* ─── Apply architectural materials to loaded GLB models ─── */
@@ -332,7 +332,7 @@ function setupRenderer(mount: HTMLDivElement): THREE.WebGLRenderer {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   mount.appendChild(renderer.domElement);
   return renderer;
 }
@@ -404,7 +404,7 @@ async function loadGLB(loader: GLTFLoader, url: string): Promise<THREE.Group> {
 
 /* ─── Load HDRI environment ─── */
 async function loadHDRI(
-  loader: RGBELoader,
+  loader: HDRLoader,
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
   url: string,
@@ -477,7 +477,7 @@ export default function SceneCanvas() {
     if (!mount) return;
 
     // ─── Scene setup ───
-    const { gltf, rgbe, draco } = createLoaders();
+    const { gltf, hdr, draco } = createLoaders();
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#050608');
     scene.fog = new THREE.Fog('#050608', 10, 28);
@@ -501,7 +501,7 @@ export default function SceneCanvas() {
     // ─── Load scene assets ───
     const loadScene = async () => {
       // Try HDRI
-      environmentTexture = await loadHDRI(rgbe, renderer, scene, '/hdr/architectural_studio_2k.hdr');
+      environmentTexture = await loadHDRI(hdr, renderer, scene, '/hdr/architectural_studio_2k.hdr');
 
       if (!alive) return;
 
@@ -559,7 +559,7 @@ export default function SceneCanvas() {
     };
 
     // ─── Animation loop ───
-    const clock = new THREE.Clock();
+    let startTime = performance.now();
     let frameId = 0;
 
     // Camera smoothing state
@@ -569,7 +569,7 @@ export default function SceneCanvas() {
     const animate = () => {
       if (!alive) return;
 
-      const t = clock.getElapsedTime();
+      const t = (performance.now() - startTime) / 1000;
       const s = storeRef.current;
       const p = s.scrollProgress;
       const px = pointerRef.x;

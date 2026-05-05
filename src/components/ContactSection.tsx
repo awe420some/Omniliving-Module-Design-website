@@ -135,17 +135,49 @@ export default function ContactSection() {
     },
   });
 
-  async function onSubmit(_data: ContactFormData) {
+  async function onSubmit(data: ContactFormData) {
     setIsSubmitting(true);
     setSendAnimating(true);
-    // Simulate network delay for loading animation
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    toast({
-      title: 'Nachricht gesendet',
-      description:
-        'Vielen Dank für Ihre Anfrage. Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.',
-    });
-    form.reset();
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: data.vorname,
+          lastName: data.nachname,
+          email: data.email,
+          phone: data.telefon || undefined,
+          interest: data.interesse || undefined,
+          message: data.nachricht || undefined,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: 'Fehler',
+          description: result.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+          variant: 'destructive',
+        });
+        setIsSubmitting(false);
+        setSendAnimating(false);
+        return;
+      }
+
+      toast({
+        title: 'Nachricht gesendet',
+        description:
+          'Vielen Dank für Ihre Anfrage. Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.',
+      });
+      form.reset();
+    } catch {
+      toast({
+        title: 'Fehler',
+        description: 'Netzwerkfehler. Bitte versuchen Sie es später erneut.',
+        variant: 'destructive',
+      });
+    }
     setIsSubmitting(false);
     setTimeout(() => setSendAnimating(false), 600);
   }

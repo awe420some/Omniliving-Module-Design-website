@@ -1,23 +1,27 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/lib/store';
 import { ChevronDown } from 'lucide-react';
 
-// CSS floating golden particles
+// Seeded pseudo-random for consistent SSR/client values (avoids hydration mismatch)
+function seededRandom(seed: number) {
+  const x = Math.sin(seed * 9301 + 49297) * 233280;
+  return x - Math.floor(x);
+}
+
+// CSS floating golden particles with deterministic values
 function FloatingParticles() {
-  const particles = useMemo(() =>
-    Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      duration: `${6 + Math.random() * 8}s`,
-      delay: `${Math.random() * 8}s`,
-      size: `${2 + Math.random() * 3}px`,
-      opacity: 0.3 + Math.random() * 0.5,
-    })),
-  []);
+  const particles = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    left: `${seededRandom(i) * 100}%`,
+    duration: `${6 + seededRandom(i + 100) * 8}s`,
+    delay: `${seededRandom(i + 200) * 8}s`,
+    size: `${2 + seededRandom(i + 300) * 3}px`,
+    opacity: 0.3 + seededRandom(i + 400) * 0.5,
+  }));
 
   return (
     <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
