@@ -306,40 +306,20 @@ export default function BeforeAfterSlider() {
             aria-valuemax={100}
             aria-valuenow={Math.round(sliderPosition)}
           >
-            {/* AFTER image (Modular) - full width behind */}
+            {/* AFTER image (Modular) - clean, warm, full quality */}
             <div className="absolute inset-0">
               <img
                 src="/images/hero-building.png"
                 alt={t('compare.modular')}
                 className="w-full h-full object-cover"
-                loading="lazy"
+                style={{ filter: 'brightness(1.05) saturate(1.1)' }}
               />
-              {/* Bright warm golden tint */}
-              <div className="absolute inset-0" style={{
-                background: 'linear-gradient(135deg, rgba(201,169,110,0.18) 0%, rgba(219,185,128,0.10) 50%, rgba(245,217,144,0.12) 100%)',
-              }} />
-              {/* Strong warm sunlight from top-right */}
-              <div className="absolute inset-0" style={{
-                background: 'radial-gradient(ellipse at 80% 10%, rgba(255,220,120,0.28) 0%, transparent 55%)',
-              }} />
-              {/* Sky blue accent top */}
-              <div className="absolute top-0 left-0 right-0 h-1/3" style={{
-                background: 'linear-gradient(to bottom, rgba(100,160,220,0.12) 0%, transparent 100%)',
-              }} />
-              {/* Green nature ground */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/3" style={{
-                background: 'linear-gradient(to top, rgba(45,90,62,0.25) 0%, transparent 100%)',
-              }} />
-              {/* Sparkle canvas overlay — more prominent */}
+              {/* Sparkle animation */}
               <canvas
                 ref={sparkleCanvasRef}
                 className="absolute inset-0 w-full h-full pointer-events-none"
-                style={{ mixBlendMode: 'screen', opacity: 0.9 }}
+                style={{ mixBlendMode: 'screen', opacity: 0.6 }}
               />
-              {/* Clean modern vignette */}
-              <div className="absolute inset-0" style={{
-                background: 'radial-gradient(ellipse at center, transparent 50%, rgba(10,10,20,0.25) 100%)',
-              }} />
             </div>
 
             {/* BEFORE image (Conventional) - clipped by slider position */}
@@ -347,23 +327,13 @@ export default function BeforeAfterSlider() {
               className="absolute inset-0"
               style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
-              {/* Base image - same building but heavily modified */}
+              {/* Base image — CSS filter makes it look cold, gray, under-construction */}
               <img
                 src="/images/hero-building.png"
                 alt={t('compare.conventional')}
                 className="w-full h-full object-cover"
-                loading="lazy"
+                style={{ filter: 'saturate(0.25) brightness(0.75) hue-rotate(195deg)' }}
               />
-
-              {/* Cold blue/gray desaturation overlay */}
-              <div className="absolute inset-0 bg-[#3a4a5a]/25 mix-blend-saturation" />
-              <div className="absolute inset-0 bg-[#2a3a4a]/25 mix-blend-multiply" />
-
-              {/* Cold blue tint - construction feel */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#1a2a3a]/40 via-[#2a3a5a]/30 to-[#1a2a3a]/40" />
-
-              {/* Additional desaturation */}
-              <div className="absolute inset-0 bg-[#4a5a6a]/20 mix-blend-saturation" />
 
               {/* Concrete/mess texture noise overlay */}
               <div className="absolute inset-0 opacity-[0.12]" style={{
