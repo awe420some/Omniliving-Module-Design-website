@@ -3,8 +3,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 export default function CookieConsent() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -46,28 +48,27 @@ export default function CookieConsent() {
             <button
               onClick={handleClose}
               className="absolute top-3 right-3 sm:top-4 sm:right-4 w-7 h-7 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
-              aria-label="Schließen"
+              aria-label={t('cookie.close')}
             >
               <X size={14} />
             </button>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pr-8">
               <p className="text-sm text-[#8888a8] leading-relaxed flex-1">
-                Wir verwenden Cookies, um Ihnen die bestmögliche Erfahrung zu bieten. Durch die
-                Nutzung unserer Website stimmen Sie unserer Datenschutzerklärung zu.
+                {t('cookie.desc')}
               </p>
               <div className="flex items-center gap-3 shrink-0">
                 <button
                   onClick={handleAccept}
                   className="px-5 py-2 rounded-md text-sm font-medium tracking-wide bg-gradient-to-r from-[#c9a96e] to-[#dbb980] text-[#0a0a14] hover:shadow-lg hover:shadow-[#c9a96e]/20 transition-all duration-300"
                 >
-                  Akzeptieren
+                  {t('cookie.accept')}
                 </button>
                 <button
                   onClick={handleReject}
                   className="px-5 py-2 rounded-md text-sm font-medium tracking-wide border border-white/10 text-white/70 hover:border-[#c9a96e]/30 hover:text-white transition-all duration-300"
                 >
-                  Ablehnen
+                  {t('cookie.reject')}
                 </button>
               </div>
             </div>

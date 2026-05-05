@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, MapPin, Pencil, Factory, Truck, KeyRound } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface TimelinePhase {
   id: number;
@@ -14,58 +15,23 @@ interface TimelinePhase {
   icon: LucideIcon;
 }
 
-const phases: TimelinePhase[] = [
-  {
-    id: 1,
-    title: 'Erstgespräch',
-    timeEstimate: '2 Wochen',
-    percentage: 5,
-    description: 'Kostenlose Erstberatung – wir lernen Ihre Wünsche, Bedürfnisse und Rahmenbedingungen kennen.',
-    icon: MessageSquare,
-  },
-  {
-    id: 2,
-    title: 'Standortprüfung',
-    timeEstimate: '1 Woche',
-    percentage: 3,
-    description: 'Prüfung der örtlichen Gegebenheiten, Bebaubarkeit und Genehmigungsfähigkeit.',
-    icon: MapPin,
-  },
-  {
-    id: 3,
-    title: 'Entwurf & Planung',
-    timeEstimate: '4 Wochen',
-    percentage: 15,
-    description: 'Individuelle Architekturplanung, 3D-Visualisierung und Modulkonfiguration.',
-    icon: Pencil,
-  },
-  {
-    id: 4,
-    title: 'Produktion',
-    timeEstimate: '6 Wochen',
-    percentage: 30,
-    description: 'Serielle Vorfertigung in unserer Halle mit strenger Qualitätskontrolle.',
-    icon: Factory,
-  },
-  {
-    id: 5,
-    title: 'Transport & Montage',
-    timeEstimate: '2 Wochen',
-    percentage: 35,
-    description: 'Logistik zum Standort und professionelle Montage innerhalb von 48 Stunden.',
-    icon: Truck,
-  },
-  {
-    id: 6,
-    title: 'Übergabe',
-    timeEstimate: '1 Woche',
-    percentage: 12,
-    description: 'Qualitätsabnahme, Schlüsselübergabe und Einzug in Ihr neues Zuhause.',
-    icon: KeyRound,
-  },
+const phaseKeys = [
+  { id: 1, titleKey: 'timeline.phase1Title', timeKey: 'timeline.phase1Time', descKey: 'timeline.phase1Desc', percentage: 5, icon: MessageSquare },
+  { id: 2, titleKey: 'timeline.phase2Title', timeKey: 'timeline.phase2Time', descKey: 'timeline.phase2Desc', percentage: 3, icon: MapPin },
+  { id: 3, titleKey: 'timeline.phase3Title', timeKey: 'timeline.phase3Time', descKey: 'timeline.phase3Desc', percentage: 15, icon: Pencil },
+  { id: 4, titleKey: 'timeline.phase4Title', timeKey: 'timeline.phase4Time', descKey: 'timeline.phase4Desc', percentage: 30, icon: Factory },
+  { id: 5, titleKey: 'timeline.phase5Title', timeKey: 'timeline.phase5Time', descKey: 'timeline.phase5Desc', percentage: 35, icon: Truck },
+  { id: 6, titleKey: 'timeline.phase6Title', timeKey: 'timeline.phase6Time', descKey: 'timeline.phase6Desc', percentage: 12, icon: KeyRound },
 ];
 
 export default function ProjectTimelineSection() {
+  const { t } = useTranslation();
+  const phases = phaseKeys.map((p) => ({
+    ...p,
+    title: t(p.titleKey),
+    timeEstimate: t(p.timeKey),
+    description: t(p.descKey),
+  }));
   const [activePhase, setActivePhase] = useState<number | null>(null);
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -112,13 +78,13 @@ export default function ProjectTimelineSection() {
           className="text-center mb-16"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            Projektverlauf
+            {t('timeline.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Ihr Weg zum <span className="text-gradient-gold">Zuhause</span>
+            {t('timeline.title').split(t('timeline.titleAccent'))[0]}<span className="text-gradient-gold">{t('timeline.titleAccent')}</span>{t('timeline.title').split(t('timeline.titleAccent'))[1]}
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-xl mx-auto mt-4">
-            Von der ersten Idee bis zur Schlüsselübergabe – in sechs klar definierten Phasen.
+            {t('timeline.subtitle')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -218,7 +184,7 @@ export default function ProjectTimelineSection() {
                     {/* Progress bar */}
                     <div className="flex items-center gap-3">
                       <span className="text-[10px] text-[#8888a8]/50 uppercase tracking-wider shrink-0">
-                        Projektanteil
+                        {t('timeline.progress')}
                       </span>
                       <div className="flex-1 h-1.5 bg-[#1a1a2e] rounded-full overflow-hidden">
                         <motion.div

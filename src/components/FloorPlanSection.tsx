@@ -4,21 +4,22 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Bed, UtensilsCrossed, Bath } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { useTranslation } from '@/lib/i18n';
 
 interface RoomZone {
   id: string;
-  label: string;
+  labelKey: string;
   x: number;
   y: number;
   width: number;
   height: number;
   area: string;
-  features: string[];
+  featureKeys: string[];
 }
 
 interface ModulePlan {
   id: string;
-  label: string;
+  labelKey: string;
   icon: typeof Home;
   rooms: RoomZone[];
 }
@@ -26,169 +27,169 @@ interface ModulePlan {
 const MODULE_PLANS: ModulePlan[] = [
   {
     id: 'wohnen',
-    label: 'Wohnmodul',
+    labelKey: 'module.wohnen',
     icon: Home,
     rooms: [
       {
         id: 'living',
-        label: 'Wohnbereich',
+        labelKey: 'floorplan.living',
         x: 5,
         y: 5,
         width: 55,
         height: 70,
         area: '7.5 m²',
-        features: ['Großzügige Fensterfront', 'Laminat- oder Holzboden', 'Offene Raumgestaltung'],
+        featureKeys: ['floorplan.living.f1', 'floorplan.living.f2', 'floorplan.living.f3'],
       },
       {
         id: 'dining',
-        label: 'Essbereich',
+        labelKey: 'floorplan.dining',
         x: 65,
         y: 5,
         width: 30,
         height: 40,
         area: '3.5 m²',
-        features: ['Platz für Esstisch', 'Nähe zur Terrasse'],
+        featureKeys: ['floorplan.dining.f1', 'floorplan.dining.f2'],
       },
       {
         id: 'entry',
-        label: 'Eingang',
+        labelKey: 'floorplan.entrance',
         x: 65,
         y: 50,
         width: 30,
         height: 25,
         area: '2.5 m²',
-        features: ['Garderobe', 'Schuhregal'],
+        featureKeys: ['floorplan.entry.f1', 'floorplan.entry.f2'],
       },
       {
         id: 'bath-small',
-        label: 'Gästetoilette',
+        labelKey: 'floorplan.guestWc',
         x: 65,
         y: 80,
         width: 30,
         height: 15,
         area: '1.5 m²',
-        features: ['WC', 'Waschbecken'],
+        featureKeys: ['floorplan.guestWc.f1', 'floorplan.guestWc.f2'],
       },
     ],
   },
   {
     id: 'schlafen',
-    label: 'Schlafmodul',
+    labelKey: 'module.schlafen',
     icon: Bed,
     rooms: [
       {
         id: 'bedroom',
-        label: 'Schlafzimmer',
+        labelKey: 'floorplan.bedroom',
         x: 5,
         y: 5,
         width: 60,
         height: 75,
         area: '8.5 m²',
-        features: ['Doppelbett 1.80m', 'Nachttische', 'Stoßlüftungsanlage'],
+        featureKeys: ['floorplan.bedroom.f1', 'floorplan.bedroom.f2', 'floorplan.bedroom.f3'],
       },
       {
         id: 'closet',
-        label: 'Kleiderabteil',
+        labelKey: 'floorplan.closet',
         x: 70,
         y: 5,
         width: 25,
         height: 45,
         area: '3.0 m²',
-        features: ['Einbauschrank', 'Ablagefläche'],
+        featureKeys: ['floorplan.closet.f1', 'floorplan.closet.f2'],
       },
       {
         id: 'reading',
-        label: 'Leseecke',
+        labelKey: 'floorplan.reading',
         x: 70,
         y: 55,
         width: 25,
         height: 40,
         area: '2.5 m²',
-        features: ['Sesselplatz', 'Fenster zur Ostseite'],
+        featureKeys: ['floorplan.reading.f1', 'floorplan.reading.f2'],
       },
     ],
   },
   {
     id: 'kueche',
-    label: 'Küchenmodul',
+    labelKey: 'module.kueche',
     icon: UtensilsCrossed,
     rooms: [
       {
         id: 'kitchen',
-        label: 'Küche',
+        labelKey: 'floorplan.kitchen',
         x: 5,
         y: 5,
         width: 90,
         height: 50,
         area: '9.0 m²',
-        features: ['L-förmige Arbeitsfläche', 'Induktionsherd', 'Geschirrspüler', 'Kühlschrank'],
+        featureKeys: ['floorplan.kitchen.f1', 'floorplan.kitchen.f2', 'floorplan.kitchen.f3', 'floorplan.kitchen.f4'],
       },
       {
         id: 'storage',
-        label: 'Vorratsraum',
+        labelKey: 'floorplan.pantry',
         x: 5,
         y: 60,
         width: 35,
         height: 35,
         area: '2.5 m²',
-        features: ['Regalsystem', 'Kühlvorrat'],
+        featureKeys: ['floorplan.storage.f1', 'floorplan.storage.f2'],
       },
       {
         id: 'breakfast',
-        label: 'Frühstücksbar',
+        labelKey: 'floorplan.breakfast',
         x: 45,
         y: 60,
         width: 50,
         height: 35,
         area: '3.5 m²',
-        features: ['Bartheke mit 2 Stühlen', 'Aussichtsfenster'],
+        featureKeys: ['floorplan.breakfast.f1', 'floorplan.breakfast.f2'],
       },
     ],
   },
   {
     id: 'bad',
-    label: 'Badmodul',
+    labelKey: 'module.bad',
     icon: Bath,
     rooms: [
       {
         id: 'shower',
-        label: 'Dusche',
+        labelKey: 'floorplan.shower',
         x: 5,
         y: 5,
         width: 40,
         height: 50,
         area: '4.0 m²',
-        features: ['Walk-in Dusche', 'Regenduschkopf', 'Glasscheibe'],
+        featureKeys: ['floorplan.shower.f1', 'floorplan.shower.f2', 'floorplan.shower.f3'],
       },
       {
         id: 'vanity',
-        label: 'Waschbereich',
+        labelKey: 'floorplan.washArea',
         x: 50,
         y: 5,
         width: 45,
         height: 35,
         area: '3.0 m²',
-        features: ['Doppelwaschbecken', 'Spiegelschrank'],
+        featureKeys: ['floorplan.washArea.f1', 'floorplan.washArea.f2'],
       },
       {
         id: 'toilet',
-        label: 'WC-Bereich',
+        labelKey: 'floorplan.wcArea',
         x: 50,
         y: 45,
         width: 45,
         height: 25,
         area: '2.0 m²',
-        features: ['WC', 'Handtuchheizkörper'],
+        featureKeys: ['floorplan.wcArea.f1', 'floorplan.wcArea.f2'],
       },
       {
         id: 'laundry',
-        label: 'Waschmaschinenplatz',
+        labelKey: 'floorplan.laundry',
         x: 5,
         y: 60,
         width: 40,
         height: 35,
         area: '2.5 m²',
-        features: ['Waschmaschine', 'Trockner (Stapel)'],
+        featureKeys: ['floorplan.laundry.f1', 'floorplan.laundry.f2'],
       },
     ],
   },
@@ -203,6 +204,7 @@ function FloorPlanSVG({
   hoveredRoom: string | null;
   onRoomHover: (id: string | null) => void;
 }) {
+  const { t } = useTranslation();
   // Container dimensions: 6m x 2.5m (displayed as 600 x 250 proportionally, we use viewBox)
   return (
     <svg
@@ -273,7 +275,7 @@ function FloorPlanSVG({
               fontFamily="system-ui"
               style={{ transition: 'fill 0.2s ease' }}
             >
-              {room.label}
+              {t(room.labelKey)}
             </text>
             <text
               x={room.x + room.width / 2}
@@ -293,13 +295,14 @@ function FloorPlanSVG({
       {/* Door indicator */}
       <rect x="42" y="96.5" width="10" height="3" fill="#c9a96e" opacity="0.5" rx="0.5" />
       <text x="47" y="99" textAnchor="middle" fill="#c9a96e" fontSize="2.5" fontFamily="system-ui" opacity="0.7">
-        Tür
+        {t('floorplan.door')}
       </text>
     </svg>
   );
 }
 
 export default function FloorPlanSection() {
+  const { t } = useTranslation();
   const [hoveredRoom, setHoveredRoom] = useState<string | null>(null);
   const [activeModule, setActiveModule] = useState('wohnen');
 
@@ -318,14 +321,13 @@ export default function FloorPlanSection() {
           className="text-center mb-12"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            Grundriss
+            {t('floorplan.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Modulare <span className="text-gradient-gold">Grundrisse</span>
+            {t('floorplan.title').split(' ').slice(0, -1).join(' ')} <span className="text-gradient-gold">{t('floorplan.titleAccent')}</span>
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Jedes Modul misst 6 m × 2,5 m × 3 m und bietet optimal nutzbaren Wohnraum.
-            Entdecken Sie die Grundrisse unserer vier Standardmodule.
+            {t('floorplan.fullDesc')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -355,7 +357,7 @@ export default function FloorPlanSection() {
                     className="data-[state=active]:bg-[#c9a96e]/10 data-[state=active]:text-[#c9a96e] data-[state=active]:border-[#c9a96e]/30 text-[#8888a8] px-4 py-2.5 text-xs tracking-[0.1em] uppercase border border-transparent transition-all duration-300 flex items-center gap-2"
                   >
                     <Icon size={16} />
-                    {plan.label}
+                    {t(plan.labelKey)}
                   </TabsTrigger>
                 );
               })}
@@ -373,7 +375,7 @@ export default function FloorPlanSection() {
                           return <Icon size={18} className="text-[#c9a96e]" />;
                         })()}
                         <h3 className="text-sm tracking-[0.15em] text-white uppercase">
-                          {plan.label}
+                          {t(plan.labelKey)}
                         </h3>
                       </div>
                       <span className="text-[10px] text-[#8888a8] tracking-wider">
@@ -386,14 +388,14 @@ export default function FloorPlanSection() {
                       onRoomHover={setHoveredRoom}
                     />
                     <p className="text-[10px] text-[#8888a8]/50 mt-3 text-center">
-                      Bewegen Sie die Maus über die Räume für Details
+                      {t('floorplan.hoverHint')}
                     </p>
                   </div>
 
                   {/* Room details panel */}
                   <div className="space-y-3">
                     <h3 className="text-xs tracking-[0.15em] text-white uppercase mb-4">
-                      Raumdetails
+                      {t('floorplan.roomDetails')}
                     </h3>
                     {plan.rooms.map((room) => {
                       const isHovered = hoveredRoom === room.id;
@@ -410,15 +412,15 @@ export default function FloorPlanSection() {
                         >
                           <div className="flex items-center justify-between mb-2">
                             <h4 className={`text-sm font-medium transition-colors duration-300 ${isHovered ? 'text-[#c9a96e]' : 'text-white'}`}>
-                              {room.label}
+                              {t(room.labelKey)}
                             </h4>
                             <span className="text-xs text-[#c9a96e]/60">{room.area}</span>
                           </div>
                           <ul className="space-y-1">
-                            {room.features.map((feature, idx) => (
+                            {room.featureKeys.map((featureKey, idx) => (
                               <li key={idx} className="text-[11px] text-[#8888a8] flex items-start gap-1.5">
                                 <span className="text-[#c9a96e] mt-0.5">·</span>
-                                {feature}
+                                {t(featureKey)}
                               </li>
                             ))}
                           </ul>
@@ -429,20 +431,20 @@ export default function FloorPlanSection() {
                     {/* Module dimensions box */}
                     <div className="p-4 rounded-lg bg-[#12121f]/20 border border-dashed border-white/10">
                       <p className="text-[10px] tracking-[0.2em] text-[#c9a96e]/50 uppercase mb-2">
-                        Modulabmessungen
+                        {t('floorplan.moduleDimensions')}
                       </p>
                       <div className="grid grid-cols-3 gap-2 text-center">
                         <div>
                           <p className="text-sm text-white font-light">6,0 m</p>
-                          <p className="text-[9px] text-[#8888a8]">Länge</p>
+                          <p className="text-[9px] text-[#8888a8]">{t('floorplan.length')}</p>
                         </div>
                         <div>
                           <p className="text-sm text-white font-light">2,5 m</p>
-                          <p className="text-[9px] text-[#8888a8]">Breite</p>
+                          <p className="text-[9px] text-[#8888a8]">{t('floorplan.width')}</p>
                         </div>
                         <div>
                           <p className="text-sm text-white font-light">3,0 m</p>
-                          <p className="text-[9px] text-[#8888a8]">Höhe</p>
+                          <p className="text-[9px] text-[#8888a8]">{t('floorplan.height')}</p>
                         </div>
                       </div>
                     </div>

@@ -14,6 +14,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from '@/lib/i18n';
 
 const MODULE_TYPES = {
   standard: { label: 'Standard', pricePerModule: 25000 },
@@ -59,6 +60,7 @@ function AnimatedNumber({ value }: { value: number }) {
 }
 
 export default function PricingCalculator() {
+  const { t } = useTranslation();
   const [moduleCount, setModuleCount] = useState(3);
   const [moduleType, setModuleType] = useState<ModuleType>('standard');
   const [hasUpperFloor, setHasUpperFloor] = useState(false);
@@ -122,13 +124,13 @@ export default function PricingCalculator() {
           className="text-center mb-16"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            KOSTENRECHNER
+            {t('pricing.label').toUpperCase()}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Was kostet Ihr <span className="text-gradient-gold">Modulhaus</span>?
+            {t('pricing.title').split(t('pricing.titleAccent'))[0]}<span className="text-gradient-gold">{t('pricing.titleAccent')}</span>{t('pricing.title').split(t('pricing.titleAccent'))[1]}
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Konfigurieren Sie Ihr Wunschhaus und erhalten Sie eine erste Kostenschätzung.
+            {t('pricing.subtitle')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -145,7 +147,7 @@ export default function PricingCalculator() {
             {/* Module Count Slider */}
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
-                <Label className="text-sm text-white tracking-wide">Anzahl der Module</Label>
+                <Label className="text-sm text-white tracking-wide">{t('pricing.moduleCount')}</Label>
                 <span className="text-lg font-light text-[#c9a96e] tabular-nums">{moduleCount}</span>
               </div>
               <Slider
@@ -161,13 +163,13 @@ export default function PricingCalculator() {
                 <span>6</span>
               </div>
               <p className="text-xs text-[#8888a8] mt-3">
-                ca. {formatEuro(MODULE_TYPES[moduleType].pricePerModule)} pro Modul
+                {t('pricing.perModule')} {formatEuro(MODULE_TYPES[moduleType].pricePerModule)}/{t('pricing.perModule').split(' ')[0]}
               </p>
             </div>
 
             {/* Module Type Select */}
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
-              <Label className="text-sm text-white tracking-wide mb-3 block">Modultyp</Label>
+              <Label className="text-sm text-white tracking-wide mb-3 block">{t('pricing.moduleType')}</Label>
               <Select value={moduleType} onValueChange={(v) => setModuleType(v as ModuleType)}>
                 <SelectTrigger className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
                   <SelectValue />
@@ -179,7 +181,7 @@ export default function PricingCalculator() {
                       value={key}
                       className="text-white focus:bg-[#1a1a2e] focus:text-white"
                     >
-                      {val.label} – ab {formatEuro(val.pricePerModule)}/Modul
+                      {val.label} – ab {formatEuro(val.pricePerModule)}/{t('pricing.perModule').split(' ')[0]}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -190,9 +192,9 @@ export default function PricingCalculator() {
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label className="text-sm text-white tracking-wide">Geschossigkeit</Label>
+                  <Label className="text-sm text-white tracking-wide">{t('pricing.stories')}</Label>
                   <p className="text-xs text-[#8888a8] mt-1">
-                    {hasUpperFloor ? 'Erdgeschoss + Obergeschoss (+20%)' : 'Erdgeschoss'}
+                    {hasUpperFloor ? t('pricing.groundUpper') : t('pricing.groundOnly')}
                   </p>
                 </div>
                 <Switch
@@ -205,7 +207,7 @@ export default function PricingCalculator() {
 
             {/* Extras Checkboxes */}
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
-              <Label className="text-sm text-white tracking-wide mb-4 block">Ausstattung</Label>
+              <Label className="text-sm text-white tracking-wide mb-4 block">{t('pricing.equipment')}</Label>
               <div className="space-y-3">
                 {EXTRAS.map((extra) => (
                   <div key={extra.id} className="flex items-center justify-between gap-4">
@@ -233,7 +235,7 @@ export default function PricingCalculator() {
 
             {/* Location Select */}
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
-              <Label className="text-sm text-white tracking-wide mb-3 block">Standort</Label>
+              <Label className="text-sm text-white tracking-wide mb-3 block">{t('pricing.location')}</Label>
               <Select value={location} onValueChange={(v) => setLocation(v as Location)}>
                 <SelectTrigger className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
                   <SelectValue />
@@ -270,7 +272,7 @@ export default function PricingCalculator() {
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <Calculator size={20} className="text-[#c9a96e]" />
                   <span className="text-xs tracking-[0.2em] text-[#c9a96e] uppercase">
-                    Geschätzte Kosten
+                    {t('pricing.estimatedCost')}
                   </span>
                 </div>
                 <AnimatePresence mode="wait">
@@ -286,7 +288,7 @@ export default function PricingCalculator() {
                   </motion.div>
                 </AnimatePresence>
                 <p className="text-xs text-[#8888a8] mt-3 tracking-wide">
-                  Unverbindliche Richtpreis-Schätzung
+                  {t('pricing.unbinding')}
                 </p>
               </div>
             </div>
@@ -294,13 +296,13 @@ export default function PricingCalculator() {
             {/* Price Breakdown Table */}
             <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6 flex-1">
               <h4 className="text-sm font-medium text-white tracking-wider uppercase mb-5">
-                Kostenaufschlüsselung
+                {t('pricing.breakdown')}
               </h4>
               <div className="space-y-3">
                 {/* Base price */}
                 <div className="flex items-center justify-between py-2 border-b border-white/5">
                   <span className="text-sm text-[#8888a8]">
-                    Basispreis ({moduleCount} × {MODULE_TYPES[moduleType].label})
+                    {t('pricing.basePrice')} ({moduleCount} × {MODULE_TYPES[moduleType].label})
                   </span>
                   <span className="text-sm text-white tabular-nums">
                     <AnimatedNumber value={calculation.basePrice} />
@@ -315,7 +317,7 @@ export default function PricingCalculator() {
                     exit={{ opacity: 0, height: 0 }}
                     className="flex items-center justify-between py-2 border-b border-white/5"
                   >
-                    <span className="text-sm text-[#8888a8]">Obergeschoss (+20%)</span>
+                    <span className="text-sm text-[#8888a8]">{t('pricing.upperFloor')}</span>
                     <span className="text-sm text-white tabular-nums">
                       +<AnimatedNumber value={calculation.upperFloorAddition} />
                     </span>
@@ -325,7 +327,7 @@ export default function PricingCalculator() {
                 {/* Extras */}
                 {selectedExtras.size > 0 && (
                   <div className="py-2 border-b border-white/5">
-                    <span className="text-sm text-[#8888a8]">Ausstattung</span>
+                    <span className="text-sm text-[#8888a8]">{t('pricing.equipment')}</span>
                     <div className="mt-2 space-y-1 pl-3">
                       {EXTRAS.filter((e) => selectedExtras.has(e.id)).map((extra) => (
                         <div key={extra.id} className="flex items-center justify-between">
@@ -347,7 +349,7 @@ export default function PricingCalculator() {
                     exit={{ opacity: 0, height: 0 }}
                     className="flex items-center justify-between py-2 border-b border-white/5"
                   >
-                    <span className="text-sm text-[#8888a8]">Stadtzuschlag (+10%)</span>
+                    <span className="text-sm text-[#8888a8]">{t('pricing.citySurcharge')}</span>
                     <span className="text-sm text-white tabular-nums">
                       +<AnimatedNumber value={calculation.locationAddition} />
                     </span>
@@ -356,7 +358,7 @@ export default function PricingCalculator() {
 
                 {/* Total */}
                 <div className="flex items-center justify-between pt-4">
-                  <span className="text-base font-medium text-white tracking-wide">Gesamt</span>
+                  <span className="text-base font-medium text-white tracking-wide">{t('pricing.total')}</span>
                   <span className="text-lg font-light text-[#c9a96e] tabular-nums">
                     <AnimatedNumber value={calculation.total} />
                   </span>
@@ -369,7 +371,7 @@ export default function PricingCalculator() {
               onClick={scrollToContact}
               className="mt-6 w-full py-4 rounded-xl bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase text-sm transition-all duration-500 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#c9a96e]/20"
             >
-              Kostenschätzung anfordern
+              {t('pricing.requestEstimate')}
               <ArrowDown size={16} />
             </button>
           </motion.div>

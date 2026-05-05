@@ -3,61 +3,62 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CloudRain, AlertTriangle, Clock, Volume2, Cloud, DollarSign, Expand, Leaf } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface ComparisonMetric {
-  label: string;
-  conventional: string;
-  modular: string;
-  conventionalPercent: number; // 0-100, how "bad" the conventional is
-  modularPercent: number; // 0-100, how "good" the modular is
+  labelKey: string;
+  conventionalKey: string;
+  modularKey: string;
+  conventionalPercent: number;
+  modularPercent: number;
   icon: React.ElementType;
 }
 
 const metrics: ComparisonMetric[] = [
   {
-    label: 'Bauzeit',
-    conventional: '12–24 Monate',
-    modular: '<6 Monate',
+    labelKey: 'compare.buildTime',
+    conventionalKey: 'compare.conventional.buildTime',
+    modularKey: 'compare.modular.buildTime',
     conventionalPercent: 85,
     modularPercent: 25,
     icon: Clock,
   },
   {
-    label: 'Lärmbelastung',
-    conventional: 'Hoch',
-    modular: 'Minimal',
+    labelKey: 'compare.noise',
+    conventionalKey: 'compare.conventional.noise',
+    modularKey: 'compare.modular.noise',
     conventionalPercent: 90,
     modularPercent: 15,
     icon: Volume2,
   },
   {
-    label: 'Bauablauf',
-    conventional: 'Wetterabhängig',
-    modular: 'Wetterunabhängig',
+    labelKey: 'compare.process',
+    conventionalKey: 'compare.conventional.process',
+    modularKey: 'compare.modular.process',
     conventionalPercent: 80,
     modularPercent: 10,
     icon: Cloud,
   },
   {
-    label: 'Kostenunsicherheit',
-    conventional: '±30% Abweichung',
-    modular: 'Festpreisgarantie',
+    labelKey: 'compare.costUncertainty',
+    conventionalKey: 'compare.conventional.costUncertainty',
+    modularKey: 'compare.modular.costUncertainty',
     conventionalPercent: 75,
     modularPercent: 10,
     icon: DollarSign,
   },
   {
-    label: 'Erweiterbarkeit',
-    conventional: 'Aufwendig',
-    modular: 'Flexibel erweiterbar',
+    labelKey: 'compare.expandability',
+    conventionalKey: 'compare.conventional.expandability',
+    modularKey: 'compare.modular.expandability',
     conventionalPercent: 70,
     modularPercent: 15,
     icon: Expand,
   },
   {
-    label: 'Nachhaltigkeit',
-    conventional: 'Hoher CO₂-Ausstoß',
-    modular: 'CO₂-neutral',
+    labelKey: 'compare.sustainability',
+    conventionalKey: 'compare.conventional.sustainability',
+    modularKey: 'compare.modular.sustainability',
     conventionalPercent: 85,
     modularPercent: 10,
     icon: Leaf,
@@ -65,6 +66,7 @@ const metrics: ComparisonMetric[] = [
 ];
 
 export default function BeforeAfterSlider() {
+  const { t } = useTranslation();
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -259,14 +261,13 @@ export default function BeforeAfterSlider() {
           className="text-center mb-12"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            Vergleich
+            {t('compare.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Konventionell vs. <span className="text-gradient-gold">Modular</span>
+            {t('compare.title').split(' vs. ')[0]} vs. <span className="text-gradient-gold">{t('compare.titleAccent')}</span>
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Erleben Sie den Unterschied: Vergleichen Sie herkömmliche Bauweise mit unserem
-            innovativen modularen System.
+            {t('compare.desc')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -279,7 +280,7 @@ export default function BeforeAfterSlider() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="text-center text-xs sm:text-sm text-[#8888a8]/60 tracking-wider mb-6"
         >
-          ← Schieben Sie zum Vergleichen →
+          ← {t('compare.drag')} →
         </motion.p>
 
         {/* Before/After Slider */}
@@ -300,7 +301,7 @@ export default function BeforeAfterSlider() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleMouseUp}
             role="slider"
-            aria-label="Before/After Vergleichsschieberegler"
+            aria-label={t('compare.label')}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={Math.round(sliderPosition)}
@@ -309,7 +310,7 @@ export default function BeforeAfterSlider() {
             <div className="absolute inset-0">
               <img
                 src="/images/hero-building.png"
-                alt="Modularer Bau - Omniliving Modulhaus"
+                alt={t('compare.modular')}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -335,7 +336,7 @@ export default function BeforeAfterSlider() {
               {/* Base image - same building but heavily modified */}
               <img
                 src="/images/hero-building.png"
-                alt="Konventioneller Bau - Baustelle"
+                alt={t('compare.conventional')}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -502,7 +503,7 @@ export default function BeforeAfterSlider() {
             >
               <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-md bg-[#0a0a14]/85 backdrop-blur-md border border-[#6a7a9a]/20 text-xs sm:text-sm tracking-[0.15em] text-[#8a9aaa] uppercase shadow-lg shadow-black/30">
                 <CloudRain className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6a7a9a]" />
-                Konventioneller Bau
+                {t('compare.conventional')}
               </span>
             </motion.div>
             <motion.div
@@ -511,7 +512,7 @@ export default function BeforeAfterSlider() {
               transition={{ duration: 0.2 }}
             >
               <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-md bg-[#0a0a14]/85 backdrop-blur-md border border-[#c9a96e]/25 text-xs sm:text-sm tracking-[0.15em] text-[#c9a96e] uppercase shadow-lg shadow-black/30">
-                Modularer Bau
+                {t('compare.modular')}
                 <span className="w-2 h-2 rounded-full bg-[#c9a96e] shadow-[0_0_6px_rgba(201,169,110,0.6)]" />
               </span>
             </motion.div>
@@ -529,7 +530,7 @@ export default function BeforeAfterSlider() {
                   >
                     <div className="px-4 py-2 sm:px-5 sm:py-3 rounded-lg bg-[#c9a96e]/20 backdrop-blur-md border border-[#c9a96e]/30 shadow-[0_0_20px_rgba(201,169,110,0.2)]">
                       <p className="text-lg sm:text-2xl font-light text-gradient-gold">70%</p>
-                      <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#c9a96e]/80 uppercase">schneller</p>
+                      <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#c9a96e]/80 uppercase">{t('compare.faster')}</p>
                     </div>
                   </motion.div>
                   <motion.div
@@ -540,7 +541,7 @@ export default function BeforeAfterSlider() {
                     className="absolute top-[70%] right-[5%] z-20 pointer-events-none"
                   >
                     <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md bg-[#2d4a3e]/30 backdrop-blur-md border border-[#2d4a3e]/40 shadow-[0_0_12px_rgba(45,74,62,0.2)]">
-                      <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#6aaa8a] uppercase font-medium">Wetterunabhängig</p>
+                      <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#6aaa8a] uppercase font-medium">{t('compare.weatherIndependent')}</p>
                     </div>
                   </motion.div>
                 </>
@@ -558,7 +559,7 @@ export default function BeforeAfterSlider() {
                   className="absolute top-[65%] left-[5%] z-20 pointer-events-none"
                 >
                   <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md bg-[#8a3020]/25 backdrop-blur-md border border-[#8a3020]/30 shadow-[0_0_12px_rgba(138,48,32,0.15)]">
-                    <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#aa6a5a] uppercase font-medium">Wetterabhängig</p>
+                    <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#aa6a5a] uppercase font-medium">{t('compare.weatherDependent')}</p>
                   </div>
                 </motion.div>
               )}
@@ -577,13 +578,13 @@ export default function BeforeAfterSlider() {
             <div className="grid grid-cols-[1fr_1fr_1fr] gap-4 mb-4 px-2">
               <div className="text-center">
                 <p className="text-[10px] sm:text-xs tracking-[0.2em] text-[#6a7a9a]/80 uppercase">
-                  Konventionell
+                  {t('compare.conventional').split(' ')[0]}
                 </p>
               </div>
               <div />
               <div className="text-center">
                 <p className="text-[10px] sm:text-xs tracking-[0.2em] text-[#c9a96e]/80 uppercase">
-                  Modular
+                  {t('compare.modular').split(' ')[0]}
                 </p>
               </div>
             </div>
@@ -592,7 +593,7 @@ export default function BeforeAfterSlider() {
             <div className="space-y-3 sm:space-y-4">
               {metrics.map((metric, index) => (
                 <motion.div
-                  key={metric.label}
+                  key={metric.labelKey}
                   initial={{ opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -603,9 +604,9 @@ export default function BeforeAfterSlider() {
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
                       <metric.icon className="w-3.5 h-3.5 text-[#6a7a9a]/60 shrink-0" />
-                      <p className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">{metric.label}</p>
+                      <p className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">{t(metric.labelKey)}</p>
                     </div>
-                    <p className="text-sm sm:text-base font-light text-[#8a9aaa]/80">{metric.conventional}</p>
+                    <p className="text-sm sm:text-base font-light text-[#8a9aaa]/80">{t(metric.conventionalKey)}</p>
                     {/* Progress bar - conventional (red/gray) */}
                     <div className="h-1 sm:h-1.5 bg-[#1a1a24] rounded-full overflow-hidden">
                       <motion.div
@@ -628,10 +629,10 @@ export default function BeforeAfterSlider() {
                   {/* Modular side */}
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2 justify-end">
-                      <p className="text-[10px] sm:text-xs text-[#c9a96e]/50 uppercase tracking-wider">{metric.label}</p>
+                      <p className="text-[10px] sm:text-xs text-[#c9a96e]/50 uppercase tracking-wider">{t(metric.labelKey)}</p>
                       <metric.icon className="w-3.5 h-3.5 text-[#c9a96e]/40 shrink-0" />
                     </div>
-                    <p className="text-sm sm:text-base font-light text-gradient-gold text-right">{metric.modular}</p>
+                    <p className="text-sm sm:text-base font-light text-gradient-gold text-right">{t(metric.modularKey)}</p>
                     {/* Progress bar - modular (gold/green) */}
                     <div className="h-1 sm:h-1.5 bg-[#1a1a24] rounded-full overflow-hidden flex justify-end">
                       <motion.div
@@ -659,20 +660,20 @@ export default function BeforeAfterSlider() {
               <div className="p-4 sm:p-6 rounded-lg bg-[#12121f]/40 border border-[#3a4a5a]/10 relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#6a4a3a] via-[#8a5a4a] to-[#6a4a3a] opacity-40" />
                 <p className="text-[10px] tracking-[0.2em] text-[#6a7a9a]/60 uppercase mb-3">
-                  Konventioneller Bau
+                  {t('compare.conventional')}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#8a5a4a]" />
-                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">Lange Bauzeiten</p>
+                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">{t('compare.conventional.longBuild')}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#8a5a4a]" />
-                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">Unkalkulierbare Kosten</p>
+                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">{t('compare.conventional.unpredictableCosts')}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#8a5a4a]" />
-                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">Hohe Umweltbelastung</p>
+                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">{t('compare.conventional.highEmission')}</p>
                   </div>
                 </div>
               </div>
@@ -681,20 +682,20 @@ export default function BeforeAfterSlider() {
               <div className="p-4 sm:p-6 rounded-lg bg-[#12121f]/40 border border-[#c9a96e]/10 relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#c9a96e] via-[#dbb980] to-[#c9a96e] opacity-40" />
                 <p className="text-[10px] tracking-[0.2em] text-[#c9a96e]/60 uppercase mb-3">
-                  Modularer Bau
+                  {t('compare.modular')}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
-                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">70% schnellere Fertigstellung</p>
+                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">{t('compare.modular.fastCompletion')}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
-                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">Festpreisgarantie</p>
+                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">{t('compare.modular.fixedPrice')}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
-                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">CO₂-neutral & nachhaltig</p>
+                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">{t('compare.modular.sustainableLiving')}</p>
                   </div>
                 </div>
               </div>

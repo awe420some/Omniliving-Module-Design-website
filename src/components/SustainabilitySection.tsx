@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, Recycle, Building, Award } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface StatItem {
   icon: typeof Leaf;
@@ -13,39 +14,11 @@ interface StatItem {
   color: string;
 }
 
-const STATS: StatItem[] = [
-  {
-    icon: Leaf,
-    label: 'CO₂ Neutral',
-    value: 100,
-    suffix: '%',
-    description: 'Kohlenstoffneutraler Bau und Betrieb aller Module',
-    color: '#22c55e',
-  },
-  {
-    icon: Recycle,
-    label: 'Weniger Bauabfall',
-    value: 70,
-    suffix: '%',
-    description: 'Reduzierung von Bauabfall durch Vorfertigung im Werk',
-    color: '#4ade80',
-  },
-  {
-    icon: Building,
-    label: 'Recyclebar',
-    value: 95,
-    suffix: '%',
-    description: 'Die verwendeten Materialien sind wiederverwertbar',
-    color: '#86efac',
-  },
-  {
-    icon: Award,
-    label: 'DGNB-zertifiziert',
-    value: 100,
-    suffix: '%',
-    description: 'Entspricht den höchsten Nachhaltigkeitsstandards',
-    color: '#c9a96e',
-  },
+const statKeys = [
+  { icon: Leaf, labelKey: 'sustain.co2Neutral', value: 100, suffix: '%', descKey: 'sustain.co2NeutralDesc', color: '#22c55e' },
+  { icon: Recycle, labelKey: 'sustain.lessWaste', value: 70, suffix: '%', descKey: 'sustain.lessWasteDesc', color: '#4ade80' },
+  { icon: Building, labelKey: 'sustain.recyclable', value: 95, suffix: '%', descKey: 'sustain.recyclableDesc', color: '#86efac' },
+  { icon: Award, labelKey: 'sustain.dgnb', value: 100, suffix: '%', descKey: 'sustain.dgnbDesc', color: '#c9a96e' },
 ];
 
 function CircularProgress({
@@ -124,6 +97,7 @@ function CircularProgress({
 }
 
 export default function SustainabilitySection() {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -167,25 +141,26 @@ export default function SustainabilitySection() {
           className="text-center mb-16"
         >
           <p className="text-xs tracking-[0.3em] text-green-400 uppercase mb-4">
-            NACHHALTIGKEIT
+            {t('sustain.label').toUpperCase()}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Bauen für die <span className="text-gradient-gold">Zukunft</span>
+            {t('sustain.title').split(t('sustain.titleAccent'))[0]}<span className="text-gradient-gold">{t('sustain.titleAccent')}</span>{t('sustain.title').split(t('sustain.titleAccent'))[1]}
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Nachhaltigkeit ist kein Trend – es ist unser Fundament. Jedes Modul wird
-            ressourcenschonend gefertigt und ist vollständig recyclebar.
+            {t('sustain.desc')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-green-400 to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {STATS.map((stat, index) => {
+          {statKeys.map((stat, index) => {
             const Icon = stat.icon;
+            const label = t(stat.labelKey);
+            const description = t(stat.descKey);
             return (
               <motion.div
-                key={stat.label}
+                key={stat.labelKey}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
@@ -213,10 +188,10 @@ export default function SustainabilitySection() {
 
                   {/* Label */}
                   <h3 className="text-base sm:text-lg font-light text-white mt-4 tracking-wide">
-                    {stat.label}
+                    {label}
                   </h3>
                   <p className="text-xs text-[#8888a8] mt-2 leading-relaxed">
-                    {stat.description}
+                    {description}
                   </p>
                 </div>
               </motion.div>
@@ -233,8 +208,7 @@ export default function SustainabilitySection() {
           className="mt-12 text-center"
         >
           <p className="text-sm text-[#8888a8] max-w-xl mx-auto">
-            Modulbauweise reduziert den ökologischen Fußabdruck erheblich im Vergleich zur
-            konventionellen Bauweise – bei gleicher oder besserer Qualität.
+            {t('sustain.footerNote')}
           </p>
         </motion.div>
       </div>

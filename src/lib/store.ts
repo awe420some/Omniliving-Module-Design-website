@@ -37,12 +37,17 @@ interface AppState {
   isSectionCutActive: boolean;
   experienceMode: 'hero' | 'building' | 'sectioncut' | 'configurator';
   moduleAssignments: Record<string, ModuleDef>;
+  moduleLayout: Record<string, { col: number; row: number }>;
 
   // New configurator state
   configuratorStep: number; // 1, 2, or 3
   sizeConfig: SizeConfig;
   materialConfig: MaterialConfig;
   moduleQuality: ModuleQuality;
+  arrangeMode: boolean;
+
+  // i18n
+  locale: 'de' | 'en';
 
   setScrollProgress: (progress: number) => void;
   setBuildingPhase: (phase: number) => void;
@@ -52,13 +57,18 @@ interface AppState {
   setSectionCutActive: (active: boolean) => void;
   setExperienceMode: (mode: AppState['experienceMode']) => void;
   setModuleAssignment: (positionId: string, moduleDef: ModuleDef) => void;
+  setModuleLayout: (layout: Record<string, { col: number; row: number }>) => void;
 
   // New configurator actions
   setConfiguratorStep: (step: number) => void;
   setSizeConfig: (config: Partial<SizeConfig>) => void;
   setMaterialConfig: (config: Partial<MaterialConfig>) => void;
   setModuleQuality: (quality: ModuleQuality) => void;
+  setArrangeMode: (mode: boolean) => void;
   resetConfigurator: () => void;
+
+  // i18n actions
+  setLocale: (locale: 'de' | 'en') => void;
 }
 
 const defaultSizeConfig: SizeConfig = {
@@ -72,6 +82,15 @@ const defaultMaterialConfig: MaterialConfig = {
   windowStyle: 'standard',
 };
 
+const defaultModuleLayout: Record<string, { col: number; row: number }> = {
+  'ground-0': { col: 0, row: 1 },
+  'ground-1': { col: 1, row: 1 },
+  'ground-2': { col: 2, row: 1 },
+  'upper-0': { col: 0, row: 0 },
+  'upper-1': { col: 1, row: 0 },
+  'upper-2': { col: 2, row: 0 },
+};
+
 export const useAppStore = create<AppState>((set) => ({
   scrollProgress: 0,
   buildingPhase: 0,
@@ -81,12 +100,17 @@ export const useAppStore = create<AppState>((set) => ({
   isSectionCutActive: false,
   experienceMode: 'hero',
   moduleAssignments: {},
+  moduleLayout: defaultModuleLayout,
 
   // New configurator state
   configuratorStep: 1,
   sizeConfig: defaultSizeConfig,
   materialConfig: defaultMaterialConfig,
   moduleQuality: 'standard',
+  arrangeMode: false,
+
+  // i18n
+  locale: 'de',
 
   setScrollProgress: (progress) => set({ scrollProgress: progress }),
   setBuildingPhase: (phase) => set({ buildingPhase: phase }),
@@ -99,6 +123,7 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       moduleAssignments: { ...state.moduleAssignments, [positionId]: moduleDef },
     })),
+  setModuleLayout: (layout) => set({ moduleLayout: layout }),
 
   // New configurator actions
   setConfiguratorStep: (step) => set({ configuratorStep: step }),
@@ -111,6 +136,8 @@ export const useAppStore = create<AppState>((set) => ({
       materialConfig: { ...state.materialConfig, ...config },
     })),
   setModuleQuality: (quality) => set({ moduleQuality: quality }),
+  setArrangeMode: (mode) => set({ arrangeMode: mode }),
+  setLocale: (locale) => set({ locale }),
   resetConfigurator: () =>
     set({
       configuratorStep: 1,
@@ -118,6 +145,8 @@ export const useAppStore = create<AppState>((set) => ({
       materialConfig: defaultMaterialConfig,
       moduleQuality: 'standard',
       moduleAssignments: {},
+      moduleLayout: defaultModuleLayout,
       selectedModules: [],
+      arrangeMode: false,
     }),
 }));

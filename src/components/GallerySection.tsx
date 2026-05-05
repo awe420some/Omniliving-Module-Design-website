@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useTranslation } from '@/lib/i18n';
 
 interface GalleryImage {
   src: string;
@@ -16,43 +17,13 @@ interface GalleryImage {
   description: string;
 }
 
-const galleryImages: GalleryImage[] = [
-  {
-    src: '/images/hero-building.png',
-    title: 'Modulhaus Berlin-Mitte',
-    aspect: 'tall',
-    description: 'Modernstes Modulhaus im Herzen von Berlin – nachhaltig und elegant gestaltet.',
-  },
-  {
-    src: '/images/interior-1.png',
-    title: 'Wohnbereich Premium',
-    aspect: 'standard',
-    description: 'Geräumiger Wohnbereich mit hochwertigen Materialien und durchdachtem Lichtkonzept.',
-  },
-  {
-    src: '/images/interior-kitchen.png',
-    title: 'Designer-Küche',
-    aspect: 'wide',
-    description: 'Komplett ausgestattete Designer-Küche mit intelligenter Raumnutzung.',
-  },
-  {
-    src: '/images/interior-bedroom.png',
-    title: 'Schlafzimmer Oasis',
-    aspect: 'tall',
-    description: 'Ruhiges Schlafzimmer-Oasis mit natürlichen Materialien und warmen Akzenten.',
-  },
-  {
-    src: '/images/interior-bathroom.png',
-    title: 'Wellness-Bad',
-    aspect: 'standard',
-    description: 'Wellness-Badezimmer mit Regendusche und eleganter Ausstattung.',
-  },
-  {
-    src: '/images/container-cutaway.png',
-    title: 'Modularer Aufbau',
-    aspect: 'wide',
-    description: 'Einblick in den modularen Aufbau – präzise Fertigung für maximale Qualität.',
-  },
+const galleryImageKeys = [
+  { src: '/images/hero-building.png', titleKey: 'gallery.img1Title', descKey: 'gallery.img1Desc', aspect: 'tall' as const },
+  { src: '/images/interior-1.png', titleKey: 'gallery.img2Title', descKey: 'gallery.img2Desc', aspect: 'standard' as const },
+  { src: '/images/interior-kitchen.png', titleKey: 'gallery.img3Title', descKey: 'gallery.img3Desc', aspect: 'wide' as const },
+  { src: '/images/interior-bedroom.png', titleKey: 'gallery.img4Title', descKey: 'gallery.img4Desc', aspect: 'tall' as const },
+  { src: '/images/interior-bathroom.png', titleKey: 'gallery.img5Title', descKey: 'gallery.img5Desc', aspect: 'standard' as const },
+  { src: '/images/container-cutaway.png', titleKey: 'gallery.img6Title', descKey: 'gallery.img6Desc', aspect: 'wide' as const },
 ];
 
 const aspectClasses: Record<string, string> = {
@@ -62,8 +33,15 @@ const aspectClasses: Record<string, string> = {
 };
 
 export default function GallerySection() {
+  const { t } = useTranslation();
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const galleryImages = galleryImageKeys.map((img) => ({
+    ...img,
+    title: t(img.titleKey),
+    description: t(img.descKey),
+  }));
 
   const openLightbox = useCallback((index: number) => {
     setSelectedIndex(index);
@@ -72,11 +50,11 @@ export default function GallerySection() {
 
   const goToPrev = useCallback(() => {
     setSelectedIndex((prev) => (prev === 0 ? galleryImages.length - 1 : prev - 1));
-  }, []);
+  }, [galleryImages.length]);
 
   const goToNext = useCallback(() => {
     setSelectedIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
-  }, []);
+  }, [galleryImages.length]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -109,17 +87,17 @@ export default function GallerySection() {
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase">
-              Galerie
+              {t('gallery.label')}
             </p>
             <span className="text-[10px] text-[#8888a8]/50 tracking-wider">
-              ({galleryImages.length} Bilder)
+              ({t('gallery.imageCount', { count: galleryImages.length })})
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Unsere <span className="text-gradient-gold">Projekte</span>
+            {t('gallery.title').split(t('gallery.titleAccent'))[0]}<span className="text-gradient-gold">{t('gallery.titleAccent')}</span>{t('gallery.title').split(t('gallery.titleAccent'))[1]}
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Einblicke in realisierte Modulhäuser und Innenräume.
+            {t('gallery.desc')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -154,7 +132,7 @@ export default function GallerySection() {
                       {image.title}
                     </p>
                     <p className="text-xs text-[#c9a96e] mt-1 tracking-wide">
-                      Anklicken zum Vergrößern
+                      {t('gallery.clickEnlarge')}
                     </p>
                   </div>
                 </div>
@@ -175,7 +153,7 @@ export default function GallerySection() {
           <button
             onClick={() => setIsLightboxOpen(false)}
             className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
-            aria-label="Schließen"
+            aria-label={t('gallery.close')}
           >
             <X size={18} />
           </button>
@@ -187,7 +165,7 @@ export default function GallerySection() {
               goToPrev();
             }}
             className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
-            aria-label="Vorheriges Bild"
+            aria-label={t('gallery.prev')}
           >
             <ChevronLeft size={20} />
           </button>
@@ -197,7 +175,7 @@ export default function GallerySection() {
               goToNext();
             }}
             className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
-            aria-label="Nächstes Bild"
+            aria-label={t('gallery.next')}
           >
             <ChevronRight size={20} />
           </button>

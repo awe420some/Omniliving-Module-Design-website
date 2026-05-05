@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Mail, MapPin, Send, Loader2, MapPinned } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from '@/lib/i18n';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -26,25 +27,36 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-const contactSchema = z.object({
-  vorname: z.string().min(1, 'Vorname ist erforderlich'),
-  nachname: z.string().min(1, 'Nachname ist erforderlich'),
-  email: z.string().email('Bitte geben Sie eine gültige E-Mail-Adresse ein'),
-  telefon: z.string().optional(),
-  interesse: z.string().min(1, 'Bitte wählen Sie einen Interessentyp'),
-  nachricht: z.string().min(1, 'Bitte geben Sie eine Nachricht ein'),
-});
+function getContactSchema(t: (key: string, params?: Record<string, string | number>) => string) {
+  return z.object({
+    vorname: z.string().min(1, t('contact.required', { field: t('contact.firstName') })),
+    nachname: z.string().min(1, t('contact.required', { field: t('contact.lastName') })),
+    email: z.string().email(t('contact.invalidEmail')),
+    telefon: z.string().optional(),
+    interesse: z.string().min(1, t('contact.selectInterest')),
+    nachricht: z.string().min(1, t('contact.messageRequired')),
+  });
+}
 
-type ContactFormData = z.infer<typeof contactSchema>;
+type ContactFormData = {
+  vorname: string;
+  nachname: string;
+  email: string;
+  telefon?: string;
+  interesse: string;
+  nachricht: string;
+};
 
-const interestOptions = [
-  { value: 'wohnmodul', label: 'Wohnmodul' },
-  { value: 'schlafmodul', label: 'Schlafmodul' },
-  { value: 'kuechenmodul', label: 'Küchenmodul' },
-  { value: 'badmodul', label: 'Badmodul' },
-  { value: 'komplett-wohnheim', label: 'Komplett-Wohnheim' },
-  { value: 'beratung', label: 'Beratung' },
-];
+function getInterestOptions(t: (key: string) => string) {
+  return [
+    { value: 'wohnmodul', label: t('module.wohnen') },
+    { value: 'schlafmodul', label: t('module.schlafen') },
+    { value: 'kuechenmodul', label: t('module.kueche') },
+    { value: 'badmodul', label: t('module.bad') },
+    { value: 'komplett-wohnheim', label: t('contact.completeHome') },
+    { value: 'beratung', label: t('contact.consultation') },
+  ];
+}
 
 // Contact info card with hover lift effect
 function ContactInfoCard({
@@ -119,9 +131,13 @@ function MapPlaceholder() {
 }
 
 export default function ContactSection() {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sendAnimating, setSendAnimating] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+
+  const contactSchema = getContactSchema(t);
+  const interestOptions = getInterestOptions(t);
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -156,8 +172,8 @@ export default function ContactSection() {
 
       if (!response.ok) {
         toast({
-          title: 'Fehler',
-          description: result.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+          title: t('contact.toastError'),
+          description: result.error || t('contact.toastErrorDesc'),
           variant: 'destructive',
         });
         setIsSubmitting(false);
@@ -166,15 +182,14 @@ export default function ContactSection() {
       }
 
       toast({
-        title: 'Nachricht gesendet',
-        description:
-          'Vielen Dank für Ihre Anfrage. Wir werden uns innerhalb von 24 Stunden bei Ihnen melden.',
+        title: t('contact.toastSent'),
+        description: t('contact.toastSentDesc'),
       });
       form.reset();
     } catch {
       toast({
-        title: 'Fehler',
-        description: 'Netzwerkfehler. Bitte versuchen Sie es später erneut.',
+        title: t('toast.error'),
+        description: t('toast.networkError'),
         variant: 'destructive',
       });
     }
@@ -209,14 +224,13 @@ export default function ContactSection() {
           >
             <div className="decorative-corners p-1">
               <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-                KONTAKT
+                {t('contact.label').toUpperCase()}
               </p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-6 leading-tight">
-                Lassen Sie uns Ihr <span className="text-gradient-gold">Traumhaus</span> planen
+                {t('contact.title').split(t('contact.titleAccent'))[0]}<span className="text-gradient-gold">{t('contact.titleAccent')}</span>{t('contact.title').split(t('contact.titleAccent'))[1]}
               </h2>
               <p className="text-sm sm:text-base text-[#8888a8] leading-relaxed mb-10 max-w-md">
-                Vereinbaren Sie ein unverbindliches Beratungsgespräch und erfahren
-                Sie, wie Ihr modulares Zuhause Wirklichkeit werden kann.
+                {t('contact.descFull')}
               </p>
             </div>
 
@@ -264,7 +278,7 @@ export default function ContactSection() {
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
                         <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
-                          Vorname
+                          {t('contact.firstName')}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -283,7 +297,7 @@ export default function ContactSection() {
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
                         <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
-                          Nachname
+                          {t('contact.lastName')}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -305,7 +319,7 @@ export default function ContactSection() {
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
                         <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
-                          E-Mail
+                          {t('contact.email')}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -325,7 +339,7 @@ export default function ContactSection() {
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
                         <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
-                          Telefon
+                          {t('contact.phone')}
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -347,7 +361,7 @@ export default function ContactSection() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
-                        Interesse
+                        {t('contact.interest')}
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -357,7 +371,7 @@ export default function ContactSection() {
                           <SelectTrigger
                             className={`w-full ${inputClasses} h-9`}
                           >
-                            <SelectValue placeholder="Bitte wählen..." />
+                            <SelectValue placeholder={t('contact.selectPlaceholder')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="bg-[#12121f] border border-white/10 text-white">
@@ -383,11 +397,11 @@ export default function ContactSection() {
                   render={({ field }) => (
                     <FormItem className="floating-label-group">
                       <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
-                        Ihre Nachricht
+                        {t('contact.message')}
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Erzählen Sie uns von Ihrem Traumhaus..."
+                          placeholder={t('contact.messagePlaceholder')}
                           className={`${inputClasses} min-h-[120px] resize-none`}
                           {...field}
                         />
@@ -413,7 +427,7 @@ export default function ContactSection() {
                         className="flex items-center gap-2"
                       >
                         <Loader2 size={16} className="animate-spin" />
-                        Wird gesendet...
+                        {t('contact.sending')}
                       </motion.span>
                     ) : sendAnimating ? (
                       <motion.span
@@ -423,7 +437,7 @@ export default function ContactSection() {
                         className="flex items-center gap-2"
                       >
                         <Send size={16} className="send-fly" />
-                        Gesendet!
+                        {t('contact.sent')}
                       </motion.span>
                     ) : (
                       <motion.span
@@ -433,7 +447,7 @@ export default function ContactSection() {
                         className="flex items-center gap-2"
                       >
                         <Send size={16} />
-                        Nachricht senden
+                        {t('contact.send')}
                       </motion.span>
                     )}
                   </AnimatePresence>

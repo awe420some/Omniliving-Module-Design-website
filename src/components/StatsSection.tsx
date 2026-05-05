@@ -4,21 +4,22 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingDown, Clock, Calendar, Leaf } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface StatItem {
   value: number;
   suffix: string;
-  label: string;
+  labelKey: string;
   prefix?: string;
   icon: LucideIcon;
-  description: string;
+  descKey: string;
 }
 
 const stats: StatItem[] = [
-  { value: 70, suffix: '%', label: 'kürzere Bauzeiten', prefix: 'bis zu', icon: TrendingDown, description: 'Durch serielle Vorfertigung' },
-  { value: 48, suffix: '', label: 'Stunden Montage vor Ort', prefix: '', icon: Clock, description: 'Montage am Stück' },
-  { value: 6, suffix: '', label: 'Monate Gesamtprojekt', prefix: '<', icon: Calendar, description: 'Von Planung bis Einzug' },
-  { value: 100, suffix: '', label: 'Neutral Wohnen', prefix: 'CO₂', icon: Leaf, description: 'Nachhaltig & energieeffizient' },
+  { value: 70, suffix: '%', labelKey: 'stats.shorterBuild', prefix: 'stats.upTo', icon: TrendingDown, descKey: 'stats.serialDesc' },
+  { value: 48, suffix: '', labelKey: 'stats.hoursOnSite', prefix: '', icon: Clock, descKey: 'stats.assemblyDesc' },
+  { value: 6, suffix: '', labelKey: 'stats.monthsTotal', prefix: '<', icon: Calendar, descKey: 'stats.planningDesc' },
+  { value: 100, suffix: '', labelKey: 'stats.neutralLiving', prefix: 'CO₂', icon: Leaf, descKey: 'stats.sustainableDesc' },
 ];
 
 function AnimatedNumber({
@@ -114,6 +115,7 @@ const itemVariants = {
 };
 
 export default function StatsSection() {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -154,10 +156,10 @@ export default function StatsSection() {
           className="text-center mb-14"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            In Zahlen
+            {t('stats.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Das spricht für <span className="text-gradient-gold">sich</span>
+            {t('stats.title')} <span className="text-gradient-gold">{t('stats.titleAccent')}</span>
           </h2>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -194,9 +196,12 @@ export default function StatsSection() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
+              const prefixIsCO2 = stat.prefix === 'CO₂';
+              const prefixIsUpTo = stat.prefix === 'stats.upTo';
+              const displayPrefix = prefixIsCO2 ? 'CO₂' : prefixIsUpTo ? t('stats.upTo') : stat.prefix;
               return (
                 <motion.div
-                  key={stat.label}
+                  key={stat.labelKey}
                   variants={itemVariants}
                   className={`relative flex flex-col items-center text-center group ${index < 3 ? 'golden-divider-v' : ''}`}
                 >
@@ -219,7 +224,7 @@ export default function StatsSection() {
                     <AnimatedNumber
                       value={stat.value}
                       suffix={stat.suffix}
-                      prefix={stat.prefix}
+                      prefix={displayPrefix}
                       inView={inView}
                       delay={index * 0.2}
                       duration={2.5}
@@ -227,12 +232,12 @@ export default function StatsSection() {
                   </div>
 
                   <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
-                    {stat.label}
+                    {t(stat.labelKey)}
                   </p>
 
                   {/* Description below stat */}
                   <p className="mt-1.5 text-[10px] tracking-wider text-[#8888a8]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {stat.description}
+                    {t(stat.descKey)}
                   </p>
 
                   <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />

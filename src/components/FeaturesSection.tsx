@@ -4,48 +4,43 @@ import { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, ShieldCheck, Expand, Leaf, Recycle, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useTranslation } from '@/lib/i18n';
 
-const features = [
+const featureKeys = [
   {
     icon: Zap,
-    title: 'Schnell realisiert',
-    description:
-      'Bis zu 70% kürzere Bauzeiten durch serielle Vorfertigung in der Halle. Montage vor Ort in wenigen Tagen.',
+    titleKey: 'features.fast',
+    descKey: 'features.fast.desc',
     accent: '#c9a96e',
   },
   {
     icon: ShieldCheck,
-    title: 'Genehmigungsfähig',
-    description:
-      'Genehmigungsfähig nach Landesbauordnung. Weniger als sechs Monate von Planung bis Einzug.',
+    titleKey: 'features.permitted',
+    descKey: 'features.permitted.desc',
     accent: '#4aff9e',
   },
   {
     icon: Expand,
-    title: 'Erweiterbar',
-    description:
-      'Modul anbauen oder versetzen – flexible Erweiterbarkeit für wachsende Anforderungen.',
+    titleKey: 'features.expandable',
+    descKey: 'features.expandable.desc',
     accent: '#4a9eff',
   },
   {
     icon: Leaf,
-    title: 'Energieeffizient',
-    description:
-      'Hohe Energieeffizienz durch modernste Dämmung und Bautechnik. CO₂-neutral wohnen.',
+    titleKey: 'features.energy',
+    descKey: 'features.energy.desc',
     accent: '#4aff9e',
   },
   {
     icon: Recycle,
-    title: 'Nachhaltig',
-    description:
-      'Wiederverwendbarkeit der Module. Nachhaltiges Bauen mit minimaler Ressourcenverschwendung.',
+    titleKey: 'features.sustainable',
+    descKey: 'features.sustainable.desc',
     accent: '#c9a96e',
   },
   {
     icon: Clock,
-    title: 'Flexibel einsetzbar',
-    description:
-      'Dauerhaft als Gebäude oder zeitlich befristete Lösung. Ferienwohnungen, Seniorenwohnen, und mehr.',
+    titleKey: 'features.flexible',
+    descKey: 'features.flexible.desc',
     accent: '#ff6b4a',
   },
 ];
@@ -104,6 +99,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 }
 
 export default function FeaturesSection() {
+  const { t } = useTranslation();
   return (
     <section id="features" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
       {/* Diagonal line pattern overlay */}
@@ -132,7 +128,7 @@ export default function FeaturesSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4"
           >
-            Vorteile
+            {t('features.label')}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
@@ -141,7 +137,7 @@ export default function FeaturesSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4"
           >
-            Warum <span className="text-gradient-gold">Omniliving</span>
+            {t('features.title')} <span className="text-gradient-gold">{t('features.titleAccent')}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -150,7 +146,7 @@ export default function FeaturesSection() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4"
           >
-            Modulare Bauweise, die überzeugt – schnell, nachhaltig und flexibel.
+            {t('features.subtitle')}
           </motion.p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -163,11 +159,11 @@ export default function FeaturesSection() {
           viewport={{ once: true, margin: '-50px' }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
         >
-          {features.map((feature, index) => {
+          {featureKeys.map((feature, index) => {
             const Icon = feature.icon;
             const badgeNumber = String(index + 1).padStart(2, '0');
             return (
-              <motion.div key={feature.title} variants={cardVariants}>
+              <motion.div key={feature.titleKey} variants={cardVariants}>
                 <TiltCard>
                   <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-[#c9a96e]/20 transition-all duration-500 rounded-lg overflow-hidden h-full shimmer-sweep feature-card-glow hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.06)] relative">
                     {/* Numbered badge */}
@@ -193,10 +189,10 @@ export default function FeaturesSection() {
                         />
                       </div>
                       <h3 className="text-lg font-medium tracking-wide text-white mb-3 group-hover:text-[#dbb980] transition-colors duration-300">
-                        {feature.title}
+                        {t(feature.titleKey)}
                       </h3>
                       <p className="text-sm text-[#8888a8] leading-relaxed">
-                        {feature.description}
+                        {t(feature.descKey)}
                       </p>
                       {/* Progress bar at bottom of card that fills on hover */}
                       <div className="mt-6 h-[2px] w-full bg-white/5 rounded-full overflow-hidden">

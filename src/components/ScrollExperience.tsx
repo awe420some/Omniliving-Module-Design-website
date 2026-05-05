@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import dynamic from 'next/dynamic';
 import { useAppStore } from '@/lib/store';
+import { useTranslation } from '@/lib/i18n';
 import { motion } from 'framer-motion';
 import { MapPin, Truck, Container, Link2, ArrowUpCircle, Home } from 'lucide-react';
 
@@ -13,41 +14,40 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const SceneCanvas = dynamic(() => import('@/components/3d/SceneCanvas'), {
-  ssr: false,
-  loading: () => (
+function SceneCanvasLoader() {
+  const { t } = useTranslation();
+  return (
     <div className="w-full h-full bg-[#0a0a14] flex items-center justify-center">
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-2 border-[#c9a96e]/30 border-t-[#c9a96e] rounded-full animate-spin" />
-        <span className="text-xs text-[#8888a8] tracking-wider">3D-Szene wird geladen...</span>
+        <span className="text-xs text-[#8888a8] tracking-wider">{t('scroll.sceneLoading')}</span>
       </div>
     </div>
-  ),
+  );
+}
+
+const SceneCanvas = dynamic(() => import('@/components/3d/SceneCanvas'), {
+  ssr: false,
+  loading: () => <SceneCanvasLoader />,
 });
 
 /* ─── Phase descriptions with icons ─── */
-const PHASE_LABELS = [
-  { phase: 0, label: 'Ihr Grundstück', description: 'Das Betonfundament wird gegossen', icon: MapPin },
-  { phase: 1, label: 'Fundament wird gegossen', description: 'Das Fundament für Ihr Zuhause entsteht', icon: Truck },
-  { phase: 2, label: 'Erstes Modul wird geliefert', description: 'Das Wohnmodul wird aufgesetzt', icon: Container },
-  { phase: 3, label: 'Module werden verbunden', description: 'Die Module werden miteinander verbunden', icon: Link2 },
-  { phase: 4, label: 'Obergeschoss wird eingehoben', description: 'Die oberen Module werden positioniert', icon: ArrowUpCircle },
-  { phase: 5, label: 'Fertigstellung', description: 'Dach, Fassade und Details werden montiert', icon: Home },
-];
+const PHASE_ICONS = [MapPin, Truck, Container, Link2, ArrowUpCircle, Home];
 
 /* ─── Module labels for configurator mode ─── */
-const MODULE_LABELS = [
-  { id: 'ground-0', label: 'Wohnmodul', x: '18%', y: '68%' },
-  { id: 'ground-1', label: 'Schlafmodul', x: '48%', y: '68%' },
-  { id: 'ground-2', label: 'Küchenmodul', x: '78%', y: '68%' },
-  { id: 'upper-0', label: 'Badmodul', x: '18%', y: '42%' },
-  { id: 'upper-1', label: 'Wohnmodul', x: '48%', y: '42%' },
-  { id: 'upper-2', label: 'Schlafmodul', x: '78%', y: '42%' },
+const MODULE_LABEL_KEYS = [
+  { id: 'ground-0', labelKey: 'module.wohnen', x: '18%', y: '68%' },
+  { id: 'ground-1', labelKey: 'module.schlafen', x: '48%', y: '68%' },
+  { id: 'ground-2', labelKey: 'module.kueche', x: '78%', y: '68%' },
+  { id: 'upper-0', labelKey: 'module.bad', x: '18%', y: '42%' },
+  { id: 'upper-1', labelKey: 'module.wohnen', x: '48%', y: '42%' },
+  { id: 'upper-2', labelKey: 'module.schlafen', x: '78%', y: '42%' },
 ];
 
 export default function ScrollExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
   const setScrollProgress = useAppStore((s) => s.setScrollProgress);
   const setBuildingPhase = useAppStore((s) => s.setBuildingPhase);
   const setExperienceMode = useAppStore((s) => s.setExperienceMode);
@@ -95,8 +95,9 @@ export default function ScrollExperience() {
   const experienceMode = useAppStore((s) => s.experienceMode);
   const scrollProgress = useAppStore((s) => s.scrollProgress);
 
-  const phaseData = PHASE_LABELS[currentPhase];
-  const PhaseIcon = phaseData?.icon || MapPin;
+  const PhaseIcon = PHASE_ICONS[currentPhase] || MapPin;
+  const phaseLabel = t(`scroll.phase${currentPhase}`);
+  const phaseDesc = t(`scroll.phase${currentPhase}Desc`);
 
   return (
     <div ref={containerRef} className="relative" style={{ height: `${100 * 6}vh` }}>
@@ -130,12 +131,12 @@ export default function ScrollExperience() {
                     Phase {currentPhase}/5
                   </p>
                   <p className="text-sm text-white font-light tracking-wide">
-                    {phaseData?.label}
+                    {phaseLabel}
                   </p>
                 </div>
               </div>
               <p className="text-xs text-[#8888a8] ml-11">
-                {phaseData?.description}
+                {phaseDesc}
               </p>
             </motion.div>
           </div>
@@ -152,10 +153,10 @@ export default function ScrollExperience() {
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-[#c9a96e] animate-pulse" />
                 <p className="text-[10px] tracking-[0.2em] uppercase text-[#8888a8]">
-                  {experienceMode === 'building' && 'Aufbau'}
-                  {experienceMode === 'sectioncut' && 'Blick hinein'}
-                  {experienceMode === 'configurator' && 'Konfigurator'}
-                  {experienceMode === 'hero' && 'Entdecken'}
+                  {experienceMode === 'building' && t('scroll.building')}
+                  {experienceMode === 'sectioncut' && t('scroll.sectionCut')}
+                  {experienceMode === 'configurator' && t('scroll.configurator')}
+                  {experienceMode === 'hero' && t('scroll.explore')}
                 </p>
               </div>
             </motion.div>
@@ -181,7 +182,7 @@ export default function ScrollExperience() {
                     </svg>
                   </motion.div>
                   <p className="text-sm text-[#c9a96e] tracking-wider">
-                    Maus bewegen, um in das Gebäude zu blicken
+                    {t('scroll.cursorHint')}
                   </p>
                 </div>
               </div>
@@ -191,7 +192,7 @@ export default function ScrollExperience() {
           {/* Module labels in configurator mode */}
           {experienceMode === 'configurator' && (
             <div className="absolute inset-0">
-              {MODULE_LABELS.map((mod) => (
+              {MODULE_LABEL_KEYS.map((mod) => (
                 <motion.div
                   key={mod.id}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -202,7 +203,7 @@ export default function ScrollExperience() {
                 >
                   <div className="bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-md border border-[#c9a96e]/20">
                     <p className="text-[9px] text-[#c9a96e] tracking-wider whitespace-nowrap">
-                      {mod.label}
+                      {t(mod.labelKey)}
                     </p>
                   </div>
                 </motion.div>

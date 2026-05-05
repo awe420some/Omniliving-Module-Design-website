@@ -4,13 +4,14 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Bed, UtensilsCrossed, Bath, Sun, Moon, Info, X, Compass, Maximize2, Ruler } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTranslation } from '@/lib/i18n';
 
 interface Hotspot {
   id: string;
-  label: string;
-  detail: string;
-  dimensions: string;
-  material: string;
+  labelKey: string;
+  detailKey: string;
+  dimsKey: string;
+  matKey: string;
   x: number;
   y: number;
   depth: number;
@@ -18,7 +19,7 @@ interface Hotspot {
 
 interface ModuleInterior {
   id: string;
-  label: string;
+  labelKey: string;
   icon: typeof Home;
   specs: { flaeche: string; hoehe: string; laenge: string; breite: string };
   hotspots: Hotspot[];
@@ -31,70 +32,70 @@ interface ModuleInterior {
 const MODULE_INTERIORS: ModuleInterior[] = [
   {
     id: 'wohnen',
-    label: 'Wohnmodul',
+    labelKey: 'module.wohnen',
     icon: Home,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#1a1a2e',
-    furnitureColor: '#2a2a3e',
+    bgColor: '#242440',
+    furnitureColor: '#363650',
     accentColor: '#c9a96e',
     windowColor: 'rgba(135, 206, 235, 0.3)',
     hotspots: [
-      { id: 'sofa', label: 'L-Sofa', detail: 'L-förmiges Sofa mit Stoffbezug', dimensions: '220cm × 160cm', material: 'Edelstahlgestell, Samtbezug', x: 30, y: 65, depth: 3 },
-      { id: 'coffee', label: 'Couchtisch', detail: 'Eichentisch mit Goldakzenten', dimensions: '80cm × 60cm', material: 'Massiveiche, Messingfüße', x: 40, y: 55, depth: 3 },
-      { id: 'tv', label: 'TV-Wand', detail: '55" Smart TV mit Wandmontage', dimensions: '125cm × 72cm', material: 'Samsung OLED, Wandhalterung', x: 15, y: 45, depth: 2 },
-      { id: 'bookshelf', label: 'Bücherregal', detail: 'Maßgefertigtes Regal aus Eiche', dimensions: '180cm × 40cm', material: 'Eichenmassivholz', x: 78, y: 40, depth: 2 },
-      { id: 'window1', label: 'Panoramafenster', detail: 'Bodentiefe Verglasung 2,4m', dimensions: '240cm × 120cm', material: '3-fach Wärmeschutzverglasung', x: 50, y: 25, depth: 0 },
+      { id: 'sofa', labelKey: 'hotspot.sofa', detailKey: 'hotspot.sofa.detail', dimsKey: 'hotspot.sofa.dims', matKey: 'hotspot.sofa.mat', x: 30, y: 65, depth: 3 },
+      { id: 'coffee', labelKey: 'hotspot.coffee', detailKey: 'hotspot.coffee.detail', dimsKey: 'hotspot.coffee.dims', matKey: 'hotspot.coffee.mat', x: 40, y: 55, depth: 3 },
+      { id: 'tv', labelKey: 'hotspot.tv', detailKey: 'hotspot.tv.detail', dimsKey: 'hotspot.tv.dims', matKey: 'hotspot.tv.mat', x: 15, y: 45, depth: 2 },
+      { id: 'bookshelf', labelKey: 'hotspot.bookshelf', detailKey: 'hotspot.bookshelf.detail', dimsKey: 'hotspot.bookshelf.dims', matKey: 'hotspot.bookshelf.mat', x: 78, y: 40, depth: 2 },
+      { id: 'window1', labelKey: 'hotspot.window1', detailKey: 'hotspot.window1.detail', dimsKey: 'hotspot.window1.dims', matKey: 'hotspot.window1.mat', x: 50, y: 25, depth: 0 },
     ],
   },
   {
     id: 'schlafen',
-    label: 'Schlafmodul',
+    labelKey: 'module.schlafen',
     icon: Bed,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#1e1e30',
-    furnitureColor: '#2e2e42',
+    bgColor: '#282844',
+    furnitureColor: '#3a3a54',
     accentColor: '#c9a96e',
     windowColor: 'rgba(135, 206, 235, 0.2)',
     hotspots: [
-      { id: 'bed', label: 'Doppelbett', detail: 'Premium-Matratze mit Topper', dimensions: '180cm × 200cm', material: 'Kaltschaummatratze, Bezugsstoff', x: 35, y: 60, depth: 3 },
-      { id: 'nightstand1', label: 'Nachttisch links', detail: 'Mit integriertem USB-Anschluss', dimensions: '50cm × 40cm', material: 'Eichenfurnier, Schubladen', x: 18, y: 55, depth: 3 },
-      { id: 'nightstand2', label: 'Nachttisch rechts', detail: 'Mit Leselampe', dimensions: '50cm × 40cm', material: 'Eichenfurnier, Messinglampe', x: 58, y: 55, depth: 3 },
-      { id: 'wardrobe', label: 'Kleiderschrank', detail: 'Schwebetürschrank 2,40m', dimensions: '240cm × 60cm', material: 'MDF, Soft-Close Beschläge', x: 80, y: 50, depth: 2 },
-      { id: 'window2', label: 'Fenster', detail: 'Dreh-Kipp-Fenster mit Verdunkelung', dimensions: '120cm × 80cm', material: 'Kunststoffrahmen, Rollos', x: 48, y: 20, depth: 0 },
+      { id: 'bed', labelKey: 'hotspot.bed', detailKey: 'hotspot.bed.detail', dimsKey: 'hotspot.bed.dims', matKey: 'hotspot.bed.mat', x: 35, y: 60, depth: 3 },
+      { id: 'nightstand1', labelKey: 'hotspot.nightstand1', detailKey: 'hotspot.nightstand1.detail', dimsKey: 'hotspot.nightstand1.dims', matKey: 'hotspot.nightstand1.mat', x: 18, y: 55, depth: 3 },
+      { id: 'nightstand2', labelKey: 'hotspot.nightstand2', detailKey: 'hotspot.nightstand2.detail', dimsKey: 'hotspot.nightstand2.dims', matKey: 'hotspot.nightstand2.mat', x: 58, y: 55, depth: 3 },
+      { id: 'wardrobe', labelKey: 'hotspot.wardrobe', detailKey: 'hotspot.wardrobe.detail', dimsKey: 'hotspot.wardrobe.dims', matKey: 'hotspot.wardrobe.mat', x: 80, y: 50, depth: 2 },
+      { id: 'window2', labelKey: 'hotspot.window2', detailKey: 'hotspot.window2.detail', dimsKey: 'hotspot.window2.dims', matKey: 'hotspot.window2.mat', x: 48, y: 20, depth: 0 },
     ],
   },
   {
     id: 'kueche',
-    label: 'Küchenmodul',
+    labelKey: 'module.kueche',
     icon: UtensilsCrossed,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#1c1c2e',
-    furnitureColor: '#2c2c3e',
+    bgColor: '#262640',
+    furnitureColor: '#383850',
     accentColor: '#c9a96e',
     windowColor: 'rgba(135, 206, 235, 0.25)',
     hotspots: [
-      { id: 'counter', label: 'Arbeitsfläche', detail: 'L-förmig, Granit-Arbeitsplatte', dimensions: '280cm × 60cm', material: 'Granit, Unterschränke MDF', x: 35, y: 50, depth: 3 },
-      { id: 'stove', label: 'Induktionsherd', detail: '4-Platten Ceran-Kochfeld', dimensions: '60cm × 51cm', material: 'Glas-Keramik, Siemens', x: 25, y: 45, depth: 3 },
-      { id: 'fridge', label: 'Kühlschrank', detail: 'Einbaukühlschrank 178cm', dimensions: '60cm × 178cm', material: 'Edelstahl, A+++', x: 72, y: 45, depth: 2 },
-      { id: 'barstools', label: 'Barhocker', detail: '2 Stück mit Ledersitz', dimensions: '40cm × 65cm', material: 'Chromgestell, Lederbezug', x: 55, y: 70, depth: 3 },
-      { id: 'window3', label: 'Aussichtsfenster', detail: 'Über der Arbeitsfläche', dimensions: '100cm × 60cm', material: '2-fach Isolierverglasung', x: 40, y: 20, depth: 0 },
+      { id: 'counter', labelKey: 'hotspot.counter', detailKey: 'hotspot.counter.detail', dimsKey: 'hotspot.counter.dims', matKey: 'hotspot.counter.mat', x: 35, y: 50, depth: 3 },
+      { id: 'stove', labelKey: 'hotspot.stove', detailKey: 'hotspot.stove.detail', dimsKey: 'hotspot.stove.dims', matKey: 'hotspot.stove.mat', x: 25, y: 45, depth: 3 },
+      { id: 'fridge', labelKey: 'hotspot.fridge', detailKey: 'hotspot.fridge.detail', dimsKey: 'hotspot.fridge.dims', matKey: 'hotspot.fridge.mat', x: 72, y: 45, depth: 2 },
+      { id: 'barstools', labelKey: 'hotspot.barstools', detailKey: 'hotspot.barstools.detail', dimsKey: 'hotspot.barstools.dims', matKey: 'hotspot.barstools.mat', x: 55, y: 70, depth: 3 },
+      { id: 'window3', labelKey: 'hotspot.window3', detailKey: 'hotspot.window3.detail', dimsKey: 'hotspot.window3.dims', matKey: 'hotspot.window3.mat', x: 40, y: 20, depth: 0 },
     ],
   },
   {
     id: 'bad',
-    label: 'Badmodul',
+    labelKey: 'module.bad',
     icon: Bath,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#1a1e2e',
-    furnitureColor: '#2a2e3e',
+    bgColor: '#1e1e36',
+    furnitureColor: '#2a2a44',
     accentColor: '#c9a96e',
-    windowColor: 'rgba(200, 220, 240, 0.15)',
+    windowColor: 'rgba(135, 206, 235, 0.2)',
     hotspots: [
-      { id: 'shower', label: 'Walk-in Dusche', detail: 'Regenduschkopf + Handbrause', dimensions: '90cm × 90cm', material: 'Glaswand, Keramikboden', x: 25, y: 45, depth: 3 },
-      { id: 'vanity', label: 'Doppelwaschbecken', detail: 'Mit Unterschrank & Spiegel', dimensions: '120cm × 50cm', material: 'Keramik, Eichenunterschrank', x: 60, y: 40, depth: 3 },
-      { id: 'toilet', label: 'WC', detail: 'Hänge-WC mit Spülung', dimensions: '55cm × 38cm', material: 'Keramik, Geberit-Spülung', x: 78, y: 65, depth: 2 },
-      { id: 'washer', label: 'Waschmaschine', detail: 'Unterbaugerät mit Trockner', dimensions: '60cm × 85cm', material: 'Bosch Serie 8', x: 25, y: 78, depth: 2 },
-      { id: 'window4', label: 'Oberlicht', detail: 'Milchglasoberlicht', dimensions: '60cm × 40cm', material: 'Milchglas, Klappmechanik', x: 50, y: 12, depth: 0 },
+      { id: 'shower', labelKey: 'hotspot.shower', detailKey: 'hotspot.shower.detail', dimsKey: 'hotspot.shower.dims', matKey: 'hotspot.shower.mat', x: 19, y: 45, depth: 3 },
+      { id: 'vanity', labelKey: 'hotspot.vanity', detailKey: 'hotspot.vanity.detail', dimsKey: 'hotspot.vanity.dims', matKey: 'hotspot.vanity.mat', x: 55, y: 40, depth: 3 },
+      { id: 'toilet', labelKey: 'hotspot.toilet', detailKey: 'hotspot.toilet.detail', dimsKey: 'hotspot.toilet.dims', matKey: 'hotspot.toilet.mat', x: 73, y: 55, depth: 2 },
+      { id: 'washer', labelKey: 'hotspot.washer', detailKey: 'hotspot.washer.detail', dimsKey: 'hotspot.washer.dims', matKey: 'hotspot.washer.mat', x: 21, y: 70, depth: 2 },
+      { id: 'window4', labelKey: 'hotspot.window4', detailKey: 'hotspot.window4.detail', dimsKey: 'hotspot.window4.dims', matKey: 'hotspot.window4.mat', x: 50, y: 20, depth: 0 },
     ],
   },
 ];
@@ -119,8 +120,8 @@ function SkyLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterio
             </>
           ) : (
             <>
-              <stop offset="0%" stopColor="#87ceeb" />
-              <stop offset="100%" stopColor="#b8e4f0" />
+              <stop offset="0%" stopColor="#94d4f0" />
+              <stop offset="100%" stopColor="#c4eaf4" />
             </>
           )}
         </linearGradient>
@@ -161,7 +162,7 @@ function SkyLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterio
 }
 
 function WallLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterior; isNight: boolean; offsetX: number; offsetY: number }) {
-  const wallColor = isNight ? '#0d0d1a' : module.bgColor;
+  const wallColor = isNight ? '#14142a' : module.bgColor;
   const winX = module.id === 'bad' ? 40 : 30;
   const winW = module.id === 'bad' ? 15 : module.id === 'schlafen' ? 25 : module.id === 'kueche' ? 30 : 40;
   const winY = module.id === 'bad' ? 5 : module.id === 'schlafen' ? 12 : 10;
@@ -188,7 +189,7 @@ function WallLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInteri
       <line x1={winX} y1={winY + winH / 2} x2={winX + winW} y2={winY + winH / 2} stroke={module.accentColor} strokeWidth="0.3" opacity="0.4" />
 
       {/* Window sill */}
-      <rect x={winX - 2} y={winY + winH} width={winW + 4} height="1.2" rx="0.2" fill={isNight ? '#151528' : '#3a3a4e'} stroke={module.accentColor} strokeWidth="0.2" opacity="0.5" />
+      <rect x={winX - 2} y={winY + winH} width={winW + 4} height="1.2" rx="0.2" fill={isNight ? '#1e1e34' : '#484860'} stroke={module.accentColor} strokeWidth="0.2" opacity="0.5" />
 
       {/* Curtains */}
       {module.id === 'wohnen' && (
@@ -210,7 +211,7 @@ function WallLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInteri
       )}
 
       {/* Floor */}
-      <rect x="0" y="70" width="100" height="30" fill={isNight ? '#0a0a15' : '#15152a'} />
+      <rect x="0" y="70" width="100" height="30" fill={isNight ? '#101020' : '#1c1c34'} />
       {/* Floor texture - wood grain or tile */}
       {(module.id === 'wohnen' || module.id === 'schlafen') && (
         <g opacity="0.15">
@@ -236,7 +237,7 @@ function WallLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInteri
 }
 
 function BackgroundFurnitureLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterior; isNight: boolean; offsetX: number; offsetY: number }) {
-  const ambientLight = isNight ? 0.3 : 0.8;
+  const ambientLight = isNight ? 0.4 : 0.9;
 
   return (
     <g style={{ transform: `translate(${offsetX * 0.6}px, ${offsetY * 0.6}px)`, transition: 'transform 0.1s ease-out' }}>
@@ -364,7 +365,7 @@ function BackgroundFurnitureLayer({ module, isNight, offsetX, offsetY }: { modul
 }
 
 function ForegroundFurnitureLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterior; isNight: boolean; offsetX: number; offsetY: number }) {
-  const ambientLight = isNight ? 0.3 : 0.8;
+  const ambientLight = isNight ? 0.4 : 0.9;
 
   return (
     <g style={{ transform: `translate(${offsetX * 1}px, ${offsetY * 0.8}px)`, transition: 'transform 0.08s ease-out' }}>
@@ -532,14 +533,14 @@ function NightLightingOverlay({ module, isNight }: { module: ModuleInterior; isN
     <g>
       {moduleLamps.map((lamp, i) => (
         <g key={`lamp-${i}`}>
-          <circle cx={lamp.x} cy={lamp.y} r="20" fill="rgba(201, 169, 110, 0.04)" />
-          <circle cx={lamp.x} cy={lamp.y} r="12" fill="rgba(201, 169, 110, 0.06)" />
-          <circle cx={lamp.x} cy={lamp.y} r="6" fill="rgba(201, 169, 110, 0.05)" />
-          <circle cx={lamp.x} cy={lamp.y} r="2" fill="rgba(201, 169, 110, 0.12)" />
+          <circle cx={lamp.x} cy={lamp.y} r="20" fill="rgba(201, 169, 110, 0.06)" />
+          <circle cx={lamp.x} cy={lamp.y} r="12" fill="rgba(201, 169, 110, 0.08)" />
+          <circle cx={lamp.x} cy={lamp.y} r="6" fill="rgba(201, 169, 110, 0.07)" />
+          <circle cx={lamp.x} cy={lamp.y} r="2" fill="rgba(201, 169, 110, 0.15)" />
         </g>
       ))}
       {/* Overall blue moonlight tint */}
-      <rect x="0" y="0" width="100" height="70" fill="rgba(30,40,80,0.06)" />
+      <rect x="0" y="0" width="100" height="70" fill="rgba(30,40,80,0.04)" />
     </g>
   );
 }
@@ -547,6 +548,7 @@ function NightLightingOverlay({ module, isNight }: { module: ModuleInterior; isN
 /* =================== MAIN COMPONENT =================== */
 
 export default function VirtualTourSection() {
+  const { t } = useTranslation();
   const [activeModule, setActiveModule] = useState('wohnen');
   const [isNight, setIsNight] = useState(false);
   const [isNightTransition, setIsNightTransition] = useState(false);
@@ -640,13 +642,13 @@ export default function VirtualTourSection() {
           className="text-center mb-12"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            Virtueller Rundgang
+            {t('tour.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Module <span className="text-gradient-gold">erkunden</span>
+            {t('tour.title').split(' ')[0]} <span className="text-gradient-gold">{t('tour.titleAccent')}</span>
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Bewegen Sie die Maus für den Parallax-Effekt. Klicken Sie auf Hotspots für Details. Doppelklick zum Zoomen.
+            {t('tour.desc')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -674,7 +676,7 @@ export default function VirtualTourSection() {
                       className="data-[state=active]:bg-[#c9a96e]/10 data-[state=active]:text-[#c9a96e] data-[state=active]:border-[#c9a96e]/30 text-[#8888a8] px-4 py-2.5 text-xs tracking-[0.1em] uppercase border border-transparent transition-all duration-300 flex items-center gap-2"
                     >
                       <Icon size={16} />
-                      {mod.label}
+                      {t(mod.labelKey)}
                     </TabsTrigger>
                   );
                 })}
@@ -684,10 +686,10 @@ export default function VirtualTourSection() {
                 {/* Module spec badges */}
                 <div className="hidden md:flex items-center gap-2">
                   <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#12121f]/60 border border-white/5 rounded text-[#8888a8]">
-                    Fläche: {currentModule.specs.flaeche}
+                    {t('tour.area')}: {currentModule.specs.flaeche}
                   </span>
                   <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#12121f]/60 border border-white/5 rounded text-[#8888a8]">
-                    Höhe: {currentModule.specs.hoehe}
+                    {t('tour.height')}: {currentModule.specs.hoehe}
                   </span>
                 </div>
 
@@ -712,7 +714,7 @@ export default function VirtualTourSection() {
                       className="flex items-center gap-2"
                     >
                       {isNight ? <Moon size={14} /> : <Sun size={14} />}
-                      {isNight ? 'Nachtmodus' : 'Tagmodus'}
+                      {isNight ? t('tour.nightMode') : t('tour.dayMode')}
                     </motion.span>
                   </AnimatePresence>
                 </motion.button>
@@ -750,7 +752,7 @@ export default function VirtualTourSection() {
               {/* Parallax container */}
               <div
                 ref={containerRef}
-                className="tour-parallax-container relative p-4 sm:p-8 cursor-crosshair"
+                className="tour-parallax-container relative p-6 sm:p-10 pb-4 cursor-crosshair"
                 onDoubleClick={handleDoubleClick}
               >
                 {/* Crossfade transition overlay */}
@@ -789,12 +791,12 @@ export default function VirtualTourSection() {
                     originY: mousePos.y,
                   }}
                   transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  style={{ maxHeight: isZoomed ? 'none' : '450px', overflow: isZoomed ? 'visible' : 'hidden' }}
+                  style={{ maxHeight: isZoomed ? 'none' : '500px', overflow: isZoomed ? 'visible' : 'hidden' }}
                 >
                   <svg
-                    viewBox="0 0 100 100"
+                    viewBox="-8 -5 116 115"
                     className="w-full h-full"
-                    style={{ maxHeight: '450px' }}
+                    style={{ maxHeight: '500px' }}
                   >
                     {/* Layer 0: Sky through window (depth 0.15) */}
                     <SkyLayer module={currentModule} isNight={isNight} offsetX={offsetX} offsetY={offsetY} />
@@ -889,7 +891,7 @@ export default function VirtualTourSection() {
                                 fontWeight="600"
                                 fontFamily="system-ui"
                               >
-                                {hotspot.label}
+                                {t(hotspot.labelKey)}
                               </text>
                             </g>
                           )}
@@ -915,7 +917,7 @@ export default function VirtualTourSection() {
                                 fontSize="2"
                                 fontFamily="system-ui"
                               >
-                                {hotspot.detail}
+                                {t(hotspot.detailKey)}
                               </text>
                             </g>
                           )}
@@ -943,7 +945,7 @@ export default function VirtualTourSection() {
 
                     {/* Room label */}
                     <text x="50" y="95" textAnchor="middle" fill="#8888a8" fontSize="2.5" fontFamily="system-ui" opacity="0.3">
-                      {currentModule.label} · Grundriss
+                      {t(currentModule.labelKey)} · {t('tour.floorplan')}
                     </text>
                   </svg>
                 </motion.div>
@@ -979,13 +981,13 @@ export default function VirtualTourSection() {
                       <circle cx="10" cy="7" r="1" fill="#c9a96e" opacity="0.5" />
                     </svg>
                   </motion.div>
-                  <span className="text-[8px] tracking-wider uppercase">Maus bewegen</span>
+                  <span className="text-[8px] tracking-wider uppercase">{t('tour.moveMouse')}</span>
                 </motion.div>
 
                 {/* Info hint */}
                 <div className="absolute bottom-3 right-4 flex items-center gap-1.5 text-[#8888a8]/30 pointer-events-none">
                   <Info size={10} />
-                  <span className="text-[8px] tracking-wider uppercase">Klick für Details</span>
+                  <span className="text-[8px] tracking-wider uppercase">{t('tour.clickDetails')}</span>
                 </div>
               </div>
 
@@ -1002,8 +1004,8 @@ export default function VirtualTourSection() {
                     <div className="max-w-lg mx-auto">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <h4 className="text-lg font-light tracking-wider text-white">{selectedHotspotData.label}</h4>
-                          <p className="text-sm text-[#8888a8] mt-1">{selectedHotspotData.detail}</p>
+                          <h4 className="text-lg font-light tracking-wider text-white">{t(selectedHotspotData.labelKey)}</h4>
+                          <p className="text-sm text-[#8888a8] mt-1">{t(selectedHotspotData.detailKey)}</p>
                         </div>
                         <button
                           onClick={() => setSelectedHotspot(null)}
@@ -1014,12 +1016,12 @@ export default function VirtualTourSection() {
                       </div>
                       <div className="mt-4 grid grid-cols-2 gap-3">
                         <div className="bg-[#12121f]/60 border border-white/5 rounded-md p-3">
-                          <p className="text-[9px] tracking-[0.15em] uppercase text-[#c9a96e]/60 mb-1">Abmessungen</p>
-                          <p className="text-sm text-white font-mono">{selectedHotspotData.dimensions}</p>
+                          <p className="text-[9px] tracking-[0.15em] uppercase text-[#c9a96e]/60 mb-1">{t('tour.dimensions')}</p>
+                          <p className="text-sm text-white font-mono">{t(selectedHotspotData.dimsKey)}</p>
                         </div>
                         <div className="bg-[#12121f]/60 border border-white/5 rounded-md p-3">
-                          <p className="text-[9px] tracking-[0.15em] uppercase text-[#c9a96e]/60 mb-1">Material</p>
-                          <p className="text-sm text-white">{selectedHotspotData.material}</p>
+                          <p className="text-[9px] tracking-[0.15em] uppercase text-[#c9a96e]/60 mb-1">{t('tour.material')}</p>
+                          <p className="text-sm text-white">{t(selectedHotspotData.matKey)}</p>
                         </div>
                       </div>
                     </div>
@@ -1031,10 +1033,10 @@ export default function VirtualTourSection() {
             {/* Mobile spec badges */}
             <div className="flex md:hidden items-center justify-center gap-2 mt-4">
               <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#12121f]/60 border border-white/5 rounded text-[#8888a8]">
-                Fläche: {currentModule.specs.flaeche}
+                {t('tour.area')}: {currentModule.specs.flaeche}
               </span>
               <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#12121f]/60 border border-white/5 rounded text-[#8888a8]">
-                Höhe: {currentModule.specs.hoehe}
+                {t('tour.height')}: {currentModule.specs.hoehe}
               </span>
               <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#12121f]/60 border border-white/5 rounded text-[#8888a8]">
                 {currentModule.specs.laenge} × {currentModule.specs.breite}

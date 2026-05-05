@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/lib/i18n';
 
 interface Partner {
   name: string;
@@ -8,16 +9,16 @@ interface Partner {
   tagline: string;
 }
 
-const PARTNERS: Partner[] = [
-  { name: 'Stahlwerk GmbH', initials: 'SW', tagline: 'Hochwertige Stahlkonstruktionen' },
-  { name: 'GreenEnergy AG', initials: 'GE', tagline: 'Erneuerbare Energiesysteme' },
-  { name: 'ModulTech Solutions', initials: 'MT', tagline: 'Innovative Modultechnik' },
-  { name: 'BauVision Partner', initials: 'BV', tagline: 'Architektur & Planung' },
-  { name: 'EcoInstall GmbH', initials: 'EI', tagline: 'Nachhaltige Haustechnik' },
-  { name: 'LieferKette Logistics', initials: 'LK', tagline: 'Logistik & Montage' },
+const partnerKeys = [
+  { name: 'Stahlwerk GmbH', initials: 'SW', taglineKey: 'partners.tagline1' },
+  { name: 'GreenEnergy AG', initials: 'GE', taglineKey: 'partners.tagline2' },
+  { name: 'ModulTech Solutions', initials: 'MT', taglineKey: 'partners.tagline3' },
+  { name: 'BauVision Partner', initials: 'BV', taglineKey: 'partners.tagline4' },
+  { name: 'EcoInstall GmbH', initials: 'EI', taglineKey: 'partners.tagline5' },
+  { name: 'LieferKette Logistics', initials: 'LK', taglineKey: 'partners.tagline6' },
 ];
 
-function PartnerLogo({ partner, index }: { partner: Partner; index: number }) {
+function PartnerLogo({ partner, index, t }: { partner: typeof partnerKeys[number]; index: number; t: (key: string) => string }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -80,13 +81,14 @@ function PartnerLogo({ partner, index }: { partner: Partner; index: number }) {
         {partner.name}
       </p>
       <p className="text-xs text-[#8888a8] mt-1 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-        {partner.tagline}
+        {t(partner.taglineKey)}
       </p>
     </motion.div>
   );
 }
 
 export default function PartnersSection() {
+  const { t } = useTranslation();
   return (
     <section id="partners" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
       {/* Top divider */}
@@ -102,22 +104,21 @@ export default function PartnersSection() {
           className="text-center mb-16"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            PARTNERSCHAFTEN
+            {t('partners.label').toUpperCase()}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Unsere <span className="text-gradient-gold">Partner</span>
+            {t('partners.title').split(t('partners.titleAccent'))[0]}<span className="text-gradient-gold">{t('partners.titleAccent')}</span>{t('partners.title').split(t('partners.titleAccent'))[1]}
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
-            Gemeinsam mit führenden Unternehmen realisieren wir höchste Qualität in
-            jedem Projekt.
+            {t('partners.descFull')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Partners grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
-          {PARTNERS.map((partner, index) => (
-            <PartnerLogo key={partner.name} partner={partner} index={index} />
+          {partnerKeys.map((partner, index) => (
+            <PartnerLogo key={partner.name} partner={partner} index={index} t={t} />
           ))}
         </div>
       </div>

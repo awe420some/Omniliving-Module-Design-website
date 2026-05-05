@@ -905,3 +905,61 @@ Stage Summary:
 - SEO: JSON-LD structured data
 - Add orbit controls for mobile touch interaction
 - Consider image lazy loading with next/image
+
+---
+Task ID: 1-2
+Agent: UI Polish Agent
+Task: VirtualTourSection spacing and brightness adjustments
+
+Work Log:
+- Updated src/components/VirtualTourSection.tsx with two user-requested changes:
+
+**Change 1: More Distance/Spacing to Interior View**
+- Changed SVG viewBox from "0 0 100 100" to "-8 -5 116 115" (adds breathing room around interior)
+- Increased container padding from p-4 sm:p-8 to p-6 sm:p-10 in tour-parallax-container
+- Changed maxHeight from 450px to 500px on both the zoom wrapper style and SVG style
+- Added pb-4 class to parallax container for bottom spacing
+
+**Change 2: Make the 4-Layer Parallax Brighter**
+- MODULE_INTERIORS bgColor changes: wohnen #1a1a2e→#242440, schlafen #1e1e30→#282844, kueche #1c1c2e→#262640, bad #1a1e2e→#242842
+- MODULE_INTERIORS furnitureColor changes: wohnen #2a2a3e→#363650, schlafen #2e2e42→#3a3a54, kueche #2c2c3e→#383850, bad #2a2e3e→#363a50
+- SkyLayer day mode: stopColor #87ceeb→#94d4f0 (top), #b8e4f0→#c4eaf4 (bottom)
+- WallLayer: night wall #0d0d1a→#14142a, night floor #0a0a15→#101020, day floor #15152a→#1c1c34, window sill #3a3a4e→#484860, window sill night #151528→#1e1e34
+- BackgroundFurnitureLayer: ambientLight night 0.3→0.4, day 0.8→0.9
+- ForegroundFurnitureLayer: ambientLight night 0.3→0.4, day 0.8→0.9
+- NightLightingOverlay: lamp circle opacities 0.04→0.06, 0.06→0.08, 0.05→0.07, 0.12→0.15; moonlight tint rgba(30,40,80,0.06)→rgba(30,40,80,0.04)
+
+Stage Summary:
+- Interior view now has more breathing room with expanded viewBox and increased padding
+- All 4 parallax layers are noticeably but subtly brighter
+- Night mode ambient light increased from 0.3 to 0.4, day mode from 0.8 to 0.9
+- Lamp lighting effects more visible, moonlight tint reduced for less darkness
+- Lint passes with 0 errors
+
+---
+Task ID: i18n-batch-3
+Agent: i18n Batch 3 Developer
+Task: Add i18n translation support to 11 components (ContactSection, TargetAudienceSection, GallerySection, TestimonialsSection, FAQSection, PricingCalculator, SustainabilitySection, PartnersSection, ProjectTimelineSection, CookieConsent, page.tsx footer)
+
+Work Log:
+- Updated i18n.ts with ~100 new translation keys in both de and en dictionaries
+- Updated ContactSection.tsx: useTranslation hook, getContactSchema(t), getInterestOptions(t), all German text replaced
+- Updated TargetAudienceSection.tsx: audienceKeys array, all German text replaced
+- Updated GallerySection.tsx: galleryImageKeys array, all German text/aria-labels replaced
+- Updated TestimonialsSection.tsx: testimonialKeys array, all German text/aria-labels replaced
+- Updated FAQSection.tsx: faqKeyList array, all German text replaced
+- Updated PricingCalculator.tsx: all German labels/prices replaced with t() calls
+- Updated SustainabilitySection.tsx: statKeys array, all German text replaced
+- Updated PartnersSection.tsx: partnerKeys array, PartnerLogo accepts t prop, all German text replaced
+- Updated ProjectTimelineSection.tsx: phaseKeys array, all German text replaced
+- Updated CookieConsent.tsx: all German text/button labels replaced
+- Updated page.tsx: footer i18n, navigation labels, toast messages replaced
+- Fixed React Compiler memoization warnings (3 files)
+- Lint passes clean, dev server returns 200 OK
+
+Stage Summary:
+- 11 components fully internationalized
+- ~100 new translation keys added to both de and en dictionaries
+- All hardcoded German text replaced with t() function calls
+- Parameter interpolation for validation messages
+- Lint clean, dev server running correctly

@@ -4,32 +4,12 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useTranslation } from '@/lib/i18n';
 
-const testimonials = [
-  {
-    quote:
-      'Unser modulares Zuhause von Omniliving hat alle Erwartungen übertroffen. Die Qualität ist erstklassig und der Aufbau war unglaublich schnell.',
-    name: 'Thomas M.',
-    location: 'Berlin',
-    initials: 'TM',
-    stars: 5,
-  },
-  {
-    quote:
-      'Von der ersten Beratung bis zur Schlüsselübergabe – alles lief reibungslos. Das Design ist modern und durchdacht.',
-    name: 'Sarah K.',
-    location: 'München',
-    initials: 'SK',
-    stars: 5,
-  },
-  {
-    quote:
-      'Die Flexibilität der Module hat uns begeistert. Wir konnten genau das Zuhause gestalten, das wir uns immer gewünscht haben.',
-    name: 'Michael R.',
-    location: 'Hamburg',
-    initials: 'MR',
-    stars: 5,
-  },
+const testimonialKeys = [
+  { quoteKey: 'testimonials.quote1', nameKey: 'testimonials.name1', locationKey: 'testimonials.location1', initials: 'TM', stars: 5 },
+  { quoteKey: 'testimonials.quote2', nameKey: 'testimonials.name2', locationKey: 'testimonials.location2', initials: 'SK', stars: 5 },
+  { quoteKey: 'testimonials.quote3', nameKey: 'testimonials.name3', locationKey: 'testimonials.location3', initials: 'MR', stars: 5 },
 ];
 
 // Animated star rating component with hover effect
@@ -55,6 +35,13 @@ function AnimatedStars({ count, delay }: { count: number; delay: number }) {
 }
 
 export default function TestimonialsSection() {
+  const { t } = useTranslation();
+  const testimonials = testimonialKeys.map((item) => ({
+    ...item,
+    quote: t(item.quoteKey),
+    name: t(item.nameKey),
+    location: t(item.locationKey),
+  }));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -64,7 +51,7 @@ export default function TestimonialsSection() {
     intervalRef.current = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 5000);
-  }, []);
+  }, [testimonials.length]);
 
   const stopAutoPlay = useCallback(() => {
     if (intervalRef.current) {
@@ -116,10 +103,10 @@ export default function TestimonialsSection() {
           className="text-center mb-12"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            KUNDENSTIMMEN
+            {t('testimonials.label').toUpperCase()}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            Was unsere <span className="text-gradient-gold">Kunden</span> sagen
+            {t('testimonials.title').split(t('testimonials.titleAccent'))[0]}<span className="text-gradient-gold">{t('testimonials.titleAccent')}</span>{t('testimonials.title').split(t('testimonials.titleAccent'))[1]}
           </h2>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -164,7 +151,7 @@ export default function TestimonialsSection() {
                 {/* Star rating */}
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] tracking-[0.15em] text-[#c9a96e]/60 uppercase font-medium">
-                    5/5 Sterne
+                    {t('testimonials.stars')}
                   </span>
                 </div>
                 <AnimatedStars count={currentTestimonial.stars} delay={0.2} />
@@ -200,14 +187,14 @@ export default function TestimonialsSection() {
           <button
             onClick={goToPrev}
             className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#12121f]/80 border border-white/10 flex items-center justify-center text-[#8888a8] hover:text-[#c9a96e] hover:border-[#c9a96e]/30 transition-all duration-300 z-20"
-            aria-label="Vorherige Bewertung"
+            aria-label={t('testimonials.prevReview')}
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={goToNext}
             className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#12121f]/80 border border-white/10 flex items-center justify-center text-[#8888a8] hover:text-[#c9a96e] hover:border-[#c9a96e]/30 transition-all duration-300 z-20"
-            aria-label="Nächste Bewertung"
+            aria-label={t('testimonials.nextReview')}
           >
             <ChevronRight size={18} />
           </button>
@@ -223,7 +210,7 @@ export default function TestimonialsSection() {
                     ? 'bg-[#c9a96e] w-6'
                     : 'bg-[#8888a8]/30 hover:bg-[#8888a8]/50'
                 }`}
-                aria-label={`Bewertung ${i + 1}`}
+                aria-label={`${t('testimonials.review')} ${i + 1}`}
               />
             ))}
           </div>

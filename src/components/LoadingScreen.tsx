@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { translations } from '@/lib/i18n';
+import type { Locale } from '@/lib/i18n';
 
 export default function LoadingScreen() {
   const [phase, setPhase] = useState<'loading' | 'fading' | 'sliding' | 'done'>('loading');
@@ -108,7 +110,10 @@ export default function LoadingScreen() {
         transition={{ duration: 0.6, delay: isFading ? 0 : 1.4, ease: 'easeOut' }}
         className="tracking-[0.25em] text-[#c9a96e]/70 text-[10px] sm:text-xs mt-4 uppercase"
       >
-        Module Design GmbH
+        {(() => {
+          const locale = (typeof window !== 'undefined' && localStorage.getItem('omniliving-locale')) || 'de';
+          return translations[locale as Locale]['loading.subtitle'];
+        })()}
       </motion.p>
 
       {/* Loading dots */}

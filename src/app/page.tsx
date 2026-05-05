@@ -27,6 +27,7 @@ import ProjectTimelineSection from '@/components/ProjectTimelineSection';
 import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook, ArrowUp, Send } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from '@/lib/i18n';
 
 // Dynamic import for ScrollExperience (uses GSAP ScrollTrigger)
 const ScrollExperience = dynamic(() => import('@/components/ScrollExperience'), {
@@ -42,6 +43,7 @@ const ScrollExperience = dynamic(() => import('@/components/ScrollExperience'), 
 });
 
 export default function Home() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
@@ -57,20 +59,20 @@ export default function Home() {
 
         if (response.ok) {
           toast({
-            title: 'Newsletter abonniert',
-            description: result.message || 'Vielen Dank! Sie erhalten bald die neuesten Updates.',
+            title: t('toast.newsletterSubscribed'),
+            description: result.message || t('toast.newsletterThanks'),
           });
           setEmail('');
         } else {
           toast({
-            title: 'Hinweis',
+            title: t('toast.hint'),
             description: result.error || result.message || 'Ein Fehler ist aufgetreten.',
           });
         }
       } catch {
         toast({
-          title: 'Fehler',
-          description: 'Netzwerkfehler. Bitte versuchen Sie es später erneut.',
+          title: t('toast.error'),
+          description: t('toast.networkError'),
         });
       }
     }
@@ -227,21 +229,20 @@ export default function Home() {
                   </div>
                 </div>
                 <p className="text-sm text-[#8888a8] leading-relaxed mt-4">
-                  Modulare Wohnungen für Kommunen & Eigentümer. Nachhaltig, flexibel und
-                  schnell realisiert – bis zu 70% kürzere Bauzeiten.
+                  {t('footer.companyDesc')}
                 </p>
 
                 {/* Newsletter signup */}
                 <div className="mt-6">
                   <p className="text-xs tracking-[0.15em] text-white uppercase mb-3">
-                    Newsletter
+                    {t('footer.newsletter')}
                   </p>
                   <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Ihre E-Mail"
+                      placeholder={t('footer.newsletterPlaceholder')}
                       required
                       className="newsletter-input flex-1 px-3 py-2 rounded-md text-sm text-white placeholder:text-[#8888a8]"
                     />
@@ -250,7 +251,7 @@ export default function Home() {
                       className="shrink-0 px-4 py-2 bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-1.5"
                     >
                       <Send size={14} />
-                      <span className="hidden sm:inline">Anmelden</span>
+                      <span className="hidden sm:inline">{t('footer.newsletterSubscribe')}</span>
                     </button>
                   </form>
                 </div>
@@ -259,7 +260,7 @@ export default function Home() {
               {/* Contact - REAL DATA */}
               <div>
                 <h4 className="text-sm font-medium tracking-[0.15em] text-white uppercase mb-5">
-                  Kontakt
+                  {t('footer.contact')}
                 </h4>
                 <div className="flex flex-col gap-4">
                   <a
@@ -290,19 +291,19 @@ export default function Home() {
               {/* Quick Links */}
               <div>
                 <h4 className="text-sm font-medium tracking-[0.15em] text-white uppercase mb-5">
-                  Navigation
+                  {t('footer.navigation')}
                 </h4>
                 <div className="flex flex-col gap-3">
                   {[
-                    { label: 'Home', href: '#hero' },
-                    { label: 'Konfigurator', href: '#configurator' },
-                    { label: 'Entdecken', href: '#scroll-experience' },
-                    { label: 'Vorteile', href: '#features' },
-                    { label: 'Nachhaltigkeit', href: '#sustainability' },
-                    { label: 'Kostenrechner', href: '#pricing' },
-                    { label: 'Referenzen', href: '#testimonials' },
-                    { label: 'FAQ', href: '#faq' },
-                    { label: 'Kontakt', href: '#contact' },
+                    { label: t('nav.home'), href: '#hero' },
+                    { label: t('nav.configurator'), href: '#configurator' },
+                    { label: t('nav.explore'), href: '#scroll-experience' },
+                    { label: t('nav.advantages'), href: '#features' },
+                    { label: t('nav.sustainability'), href: '#sustainability' },
+                    { label: t('nav.pricing'), href: '#pricing' },
+                    { label: t('nav.testimonials'), href: '#testimonials' },
+                    { label: t('nav.faq'), href: '#faq' },
+                    { label: t('nav.contact'), href: '#contact' },
                   ].map((link) => (
                     <a
                       key={link.label}
@@ -315,7 +316,7 @@ export default function Home() {
                 </div>
                 {/* Social Media with enhanced animated icons */}
                 <h4 className="text-sm font-medium tracking-[0.15em] text-white uppercase mb-4 mt-8">
-                  Folgen Sie uns
+                  {t('footer.followUs')}
                 </h4>
                 <div className="flex items-center gap-3">
                   {[
@@ -344,7 +345,7 @@ export default function Home() {
             {/* Certifications Row */}
             <div className="mt-10 pt-8 border-t border-white/5">
               <p className="text-[10px] tracking-[0.2em] text-[#c9a96e]/40 uppercase mb-4 text-center">
-                Zertifizierungen & Standards
+                {t('footer.certifications')}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <div className="cert-badge">
@@ -391,8 +392,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <p className="text-xs text-[#8888a8] tracking-wide">
-                  © {new Date().getFullYear()} Omniliving Module Design GmbH. Alle Rechte
-                  vorbehalten.
+                  © {new Date().getFullYear()} Omniliving Module Design GmbH. {t('footer.rights')}.
                 </p>
                 <div className="flex items-center gap-6">
                   <a
@@ -400,14 +400,14 @@ export default function Home() {
                     onClick={(e) => { e.preventDefault(); document.getElementById('footer-section')?.scrollIntoView({ behavior: 'smooth' }); }}
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
                   >
-                    Impressum
+                    {t('footer.imprint')}
                   </a>
                   <a
                     href="#footer-section"
                     onClick={(e) => { e.preventDefault(); document.getElementById('footer-section')?.scrollIntoView({ behavior: 'smooth' }); }}
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
                   >
-                    Datenschutz
+                    {t('footer.privacy')}
                   </a>
                   {/* Back to top button with smooth scroll */}
                   <button
@@ -417,7 +417,7 @@ export default function Home() {
                     }}
                     className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide flex items-center gap-1.5 group back-to-top-hover"
                   >
-                    Nach oben
+                    {t('footer.toTop')}
                     <ArrowUp size={12} className="group-hover:-translate-y-0.5 transition-transform duration-300" />
                   </button>
                 </div>

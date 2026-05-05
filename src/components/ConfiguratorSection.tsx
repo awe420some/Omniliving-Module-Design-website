@@ -16,9 +16,10 @@ import {
   Home, Bed, UtensilsCrossed, Bath, RotateCcw, Check,
   Sofa, Moon, CookingPot, Droplets,
   ChevronRight, ChevronLeft, Download, FileText,
-  Minus, Plus, ArrowDown,
+  Minus, Plus, ArrowDown, GripVertical, Move,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from '@/lib/i18n';
 
 /* ────────────────────────────────────────────
    Constants
@@ -26,86 +27,86 @@ import { toast } from '@/hooks/use-toast';
 
 const MODULE_TYPES: {
   id: ModuleDef['type'];
-  label: string;
+  labelKey: string;
+  descKey: string;
   icon: typeof Home;
   interiorIcon: typeof Sofa;
   color: string;
   emissiveColor: string;
   windowCount: number;
   windowSize: 'large' | 'medium' | 'small';
-  description: string;
   defaultDef: Omit<ModuleDef, 'id'>;
 }[] = [
   {
     id: 'wohnen',
-    label: 'Wohnmodul',
+    labelKey: 'module.wohnen',
+    descKey: 'module.wohnen.desc',
     icon: Home,
     interiorIcon: Sofa,
     color: '#c9a96e',
     emissiveColor: '#ffcc88',
     windowCount: 2,
     windowSize: 'large',
-    description: 'Großzügige Fenster, warmer Holzboden',
     defaultDef: { label: 'Wohnmodul', type: 'wohnen', color: '#2d4a3e', windowColor: '#cce5ff', emissiveColor: '#ffcc88' },
   },
   {
     id: 'schlafen',
-    label: 'Schlafmodul',
+    labelKey: 'module.schlafen',
+    descKey: 'module.schlafen.desc',
     icon: Bed,
     interiorIcon: Moon,
     color: '#4a9eff',
     emissiveColor: '#88aaff',
     windowCount: 2,
     windowSize: 'medium',
-    description: 'Gemütliches Interieur, kleinere Fenster',
     defaultDef: { label: 'Schlafmodul', type: 'schlafen', color: '#3d3d3d', windowColor: '#cce5ff', emissiveColor: '#88aaff' },
   },
   {
     id: 'kueche',
-    label: 'Küchenmodul',
+    labelKey: 'module.kueche',
+    descKey: 'module.kueche.desc',
     icon: UtensilsCrossed,
     interiorIcon: CookingPot,
     color: '#ff6b4a',
     emissiveColor: '#ffdd66',
     windowCount: 1,
     windowSize: 'large',
-    description: 'Helle Belüftung, praktische Ausstattung',
     defaultDef: { label: 'Küchenmodul', type: 'kueche', color: '#3a3535', windowColor: '#ffffdd', emissiveColor: '#ffdd66' },
   },
   {
     id: 'bad',
-    label: 'Badmodul',
+    labelKey: 'module.bad',
+    descKey: 'module.bad.desc',
     icon: Bath,
     interiorIcon: Droplets,
     color: '#4aff9e',
     emissiveColor: '#88bbff',
     windowCount: 1,
     windowSize: 'small',
-    description: 'Milchglasscheiben, fliesenartige Wände',
     defaultDef: { label: 'Badmodul', type: 'bad', color: '#2d3a4a', windowColor: '#ddeeff', emissiveColor: '#88bbff' },
   },
 ];
 
-const WALL_COLORS: { id: WallColor; label: string; hex: string; premium: number }[] = [
-  { id: 'anthrazit', label: 'Anthrazit', hex: '#2d4a3e', premium: 0 },
-  { id: 'schwarz', label: 'Schwarz', hex: '#1a1a1a', premium: 0 },
-  { id: 'weiss', label: 'Weiß', hex: '#e8e8e8', premium: 2000 },
-  { id: 'holzoptik', label: 'Holzoptik', hex: '#8B6914', premium: 3000 },
-  { id: 'rost', label: 'Rost', hex: '#8B4513', premium: 0 },
-  { id: 'blaugrau', label: 'Blaugrau', hex: '#4a5568', premium: 0 },
+const WALL_COLORS: { id: WallColor; labelKey: string; hex: string; premium: number }[] = [
+  { id: 'anthrazit', labelKey: 'config.colorAnthrazit', hex: '#2d4a3e', premium: 0 },
+  { id: 'schwarz', labelKey: 'config.colorSchwarz', hex: '#1a1a1a', premium: 0 },
+  { id: 'weiss', labelKey: 'config.colorWeiss', hex: '#e8e8e8', premium: 2000 },
+  { id: 'holzoptik', labelKey: 'config.colorHolzoptik', hex: '#8B6914', premium: 3000 },
+  { id: 'rost', labelKey: 'config.colorRost', hex: '#8B4513', premium: 0 },
+  { id: 'blaugrau', labelKey: 'config.colorBlaugrau', hex: '#4a5568', premium: 0 },
 ];
 
-const ROOF_COLORS: { id: RoofColor; label: string; hex: string }[] = [
-  { id: 'anthrazit', label: 'Anthrazit', hex: '#2d4a3e' },
-  { id: 'schwarz', label: 'Schwarz', hex: '#1a1a1a' },
-  { id: 'ziegelrot', label: 'Ziegelrot', hex: '#8B2500' },
-  { id: 'gruen', label: 'Grün', hex: '#2d5a3e' },
+const ROOF_COLORS: { id: RoofColor; labelKey: string; hex: string }[] = [
+  { id: 'anthrazit', labelKey: 'config.colorAnthrazit', hex: '#2d4a3e' },
+  { id: 'schwarz', labelKey: 'config.colorSchwarz', hex: '#1a1a1a' },
+  { id: 'ziegelrot', labelKey: 'config.colorZiegelrot', hex: '#8B2500' },
+  { id: 'gruen', labelKey: 'config.colorGruen', hex: '#2d5a3e' },
 ];
 
-const WINDOW_STYLES: { id: WindowStyle; label: string; description: string; premiumPerModule: number }[] = [
-  { id: 'standard', label: 'Standard', description: 'Klare Verglasung', premiumPerModule: 0 },
-  { id: 'panorama', label: 'Panoramaverglasung', description: 'Bodenbiss-Fenster', premiumPerModule: 1500 },
-  { id: 'sprossen', label: 'Sprossenfenster', description: 'Klassische Unterteilung', premiumPerModule: 0 },
+const WINDOW_STYLES: { id: WindowStyle; labelKey: string; descKey: string; premiumPerModule: number }[] = [
+  { id: 'standard', labelKey: 'config.windowStandard', descKey: 'config.windowStandardDesc', premiumPerModule: 0 },
+  { id: 'panorama', labelKey: 'config.windowPanorama', descKey: 'config.windowPanoramaDesc', premiumPerModule: 1500 },
+  { id: 'sprossen', labelKey: 'config.windowSprossen', descKey: 'config.windowSprossenDesc', premiumPerModule: 0 },
 ];
 
 const MODULE_AREA = 15; // m² per module
@@ -123,17 +124,19 @@ const DEFAULT_ASSIGNMENTS: Record<string, ModuleDef> = {
    Helper: get positions for current size
    ──────────────────────────────────────────── */
 
+const POSITION_KEYS = ['pos.links', 'pos.midLeft', 'pos.mid', 'pos.midRight', 'pos.rechts'] as const;
+
 function getPositionsForSize(size: SizeConfig) {
   const ground = Array.from({ length: size.groundModules }, (_, i) => ({
     id: `ground-${i}`,
-    label: size.groundModules === 1 ? 'Erdgeschoss' : ['Links', 'Mitte-links', 'Mitte', 'Mitte-rechts', 'Rechts'][i] || `Pos ${i + 1}`,
-    floor: 'Erdgeschoss' as const,
+    labelKey: size.groundModules === 1 ? 'config.groundFloor' : POSITION_KEYS[i] || `Pos ${i + 1}`,
+    floor: 'ground' as const,
   }));
   const upper = size.upperModules > 0
     ? Array.from({ length: size.upperModules }, (_, i) => ({
         id: `upper-${i}`,
-        label: size.upperModules === 1 ? 'Obergeschoss' : ['Links', 'Mitte-links', 'Mitte', 'Mitte-rechts', 'Rechts'][i] || `Pos ${i + 1}`,
-        floor: 'Obergeschoss' as const,
+        labelKey: size.upperModules === 1 ? 'config.upperFloor' : POSITION_KEYS[i] || `Pos ${i + 1}`,
+        floor: 'upper' as const,
       }))
     : [];
   return { ground, upper };
@@ -159,17 +162,17 @@ function calculatePrice(
   const windowPremium = windowPremiumPerModule * totalModules;
   const total = baseTotal + upperSurcharge + colorPremium + windowPremium;
 
-  const breakdown: { label: string; value: number }[] = [
-    { label: 'Grundpreis Module', value: baseTotal },
+  const breakdown: { labelKey: string; value: number }[] = [
+    { labelKey: 'config.basePrice', value: baseTotal },
   ];
   if (upperSurcharge > 0) {
-    breakdown.push({ label: 'Obergeschosszuschlag (20%)', value: upperSurcharge });
+    breakdown.push({ labelKey: 'config.upperSurcharge', value: upperSurcharge });
   }
   if (colorPremium > 0) {
-    breakdown.push({ label: 'Farbzuschlag', value: colorPremium });
+    breakdown.push({ labelKey: 'config.colorSurcharge', value: colorPremium });
   }
   if (windowPremium > 0) {
-    breakdown.push({ label: 'Fensterzuschlag', value: windowPremium });
+    breakdown.push({ labelKey: 'config.windowSurcharge', value: windowPremium });
   }
 
   return { baseTotal, upperSurcharge, colorPremium, windowPremium, total, breakdown };
@@ -211,7 +214,25 @@ function AnimatedPrice({ value }: { value: number }) {
 }
 
 /* ────────────────────────────────────────────
-   Enhanced Building Illustration
+   Grid layout constants
+   ──────────────────────────────────────────── */
+
+const GRID_COLS = 4;
+const GRID_ROWS = 2; // row 0 = upper, row 1 = ground
+const CELL_W = 108;
+const CELL_H = 78;
+const CELL_GAP = 4;
+const DEFAULT_MODULE_LAYOUT: Record<string, { col: number; row: number }> = {
+  'ground-0': { col: 0, row: 1 },
+  'ground-1': { col: 1, row: 1 },
+  'ground-2': { col: 2, row: 1 },
+  'upper-0': { col: 0, row: 0 },
+  'upper-1': { col: 1, row: 0 },
+  'upper-2': { col: 2, row: 0 },
+};
+
+/* ────────────────────────────────────────────
+   Enhanced Building Illustration (Drag-and-Drop Grid)
    ──────────────────────────────────────────── */
 
 function BuildingIllustration({
@@ -221,6 +242,7 @@ function BuildingIllustration({
   flashPosition,
   sizeConfig,
   materialConfig,
+  arrangeMode,
 }: {
   moduleAssignments: Record<string, ModuleDef>;
   activeType: ModuleDef['type'] | null;
@@ -228,12 +250,40 @@ function BuildingIllustration({
   flashPosition: string | null;
   sizeConfig: SizeConfig;
   materialConfig: MaterialConfig;
+  arrangeMode: boolean;
 }) {
+  const { t } = useTranslation();
   const positions = useMemo(() => getPositionsForSize(sizeConfig), [sizeConfig]);
   const wallHex = WALL_COLORS.find(c => c.id === materialConfig.wallColor)?.hex ?? '#2d4a3e';
   const roofHex = ROOF_COLORS.find(c => c.id === materialConfig.roofColor)?.hex ?? '#2d4a3e';
   const isPanorama = materialConfig.windowStyle === 'panorama';
   const isSprossen = materialConfig.windowStyle === 'sprossen';
+
+  const moduleLayout = useAppStore((s) => s.moduleLayout);
+  const setModuleLayout = useAppStore((s) => s.setModuleLayout);
+
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [ghostPos, setGhostPos] = useState<{ col: number; row: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Compute layout for each module, falling back to defaults
+  const layout = useMemo(() => {
+    const result: Record<string, { col: number; row: number }> = {};
+    const allPos = [...positions.ground, ...positions.upper];
+    allPos.forEach((pos, idx) => {
+      if (moduleLayout[pos.id]) {
+        result[pos.id] = moduleLayout[pos.id];
+      } else if (DEFAULT_MODULE_LAYOUT[pos.id]) {
+        result[pos.id] = DEFAULT_MODULE_LAYOUT[pos.id];
+      } else {
+        // Assign to next available position
+        const col = idx % GRID_COLS;
+        const row = pos.floor === 'upper' ? 0 : 1;
+        result[pos.id] = { col, row };
+      }
+    });
+    return result;
+  }, [moduleLayout, positions]);
 
   const getPositionData = (positionId: string) => {
     return moduleAssignments[positionId] || DEFAULT_ASSIGNMENTS[positionId];
@@ -245,7 +295,7 @@ function BuildingIllustration({
     const Icon = modType.interiorIcon;
     return (
       <div className="relative z-10 mb-0.5">
-        <Icon size={16} className="opacity-60" style={{ color: modType.emissiveColor }} />
+        <Icon size={14} className="opacity-60" style={{ color: modType.emissiveColor }} />
       </div>
     );
   };
@@ -264,7 +314,7 @@ function BuildingIllustration({
     const isFrosted = data.type === 'bad';
 
     return (
-      <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none" style={{ marginTop: isPanorama ? '4px' : '8px' }}>
+      <div className="absolute inset-0 flex items-center justify-center gap-1.5 pointer-events-none" style={{ marginTop: isPanorama ? '2px' : '4px' }}>
         {Array.from({ length: count }).map((_, i) => (
           <div
             key={i}
@@ -274,14 +324,12 @@ function BuildingIllustration({
               borderColor: isFrosted ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.2)',
             }}
           >
-            {/* Interior glow */}
             <div
               className="absolute inset-0"
               style={{
                 background: `radial-gradient(ellipse at center, ${data.emissiveColor}25 0%, transparent 70%)`,
               }}
             />
-            {/* Sprossen cross */}
             {isSprossen && (
               <>
                 <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/20 -translate-x-1/2" />
@@ -294,104 +342,97 @@ function BuildingIllustration({
     );
   };
 
-  const renderModuleBlock = (positionId: string, positionLabel: string, isUpper: boolean) => {
-    const data = getPositionData(positionId);
-    if (!data) return null;
+  const handleDragEnd = useCallback((positionId: string, _event: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number; y: number } }) => {
+    setDraggingId(null);
+    setGhostPos(null);
 
-    const isFlashing = flashPosition === positionId;
-    const isInteractive = activeType !== null;
-    const hasHood = data.type === 'kueche' && isUpper;
+    const currentLayout = layout[positionId];
+    if (!currentLayout) return;
 
-    return (
-      <motion.button
-        key={positionId}
-        onClick={() => onPositionClick(positionId)}
-        disabled={!activeType}
-        className={`relative flex flex-col items-center justify-center rounded-sm transition-all duration-300 border-2 ${
-          isFlashing
-            ? 'border-[#c9a96e] shadow-[0_0_20px_rgba(201,169,110,0.3)]'
-            : isInteractive
-              ? 'border-white/10 hover:border-[#c9a96e]/50 hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] hover:-translate-y-1 cursor-pointer'
-              : 'border-white/5 cursor-default'
-        }`}
-        style={{
-          backgroundColor: wallHex,
-          minWidth: `${Math.max(60, 240 / Math.max(sizeConfig.groundModules, sizeConfig.upperModules, 1))}px`,
-          minHeight: isUpper ? '55px' : '65px',
-        }}
-        whileHover={isInteractive ? { scale: 1.05 } : {}}
-        whileTap={isInteractive ? { scale: 0.98 } : {}}
-        layout
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* Interior glow overlay */}
-        <div
-          className="absolute inset-0 rounded-sm pointer-events-none"
-          style={{
-            background: `radial-gradient(ellipse at center bottom, ${data.emissiveColor}15 0%, transparent 60%)`,
-          }}
-        />
+    const offsetX = info.offset.x;
+    const offsetY = info.offset.y;
 
-        {/* Shadow beneath module */}
-        <div
-          className="absolute -bottom-1 left-1 right-1 h-2 rounded-b-sm pointer-events-none"
-          style={{
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), transparent)',
-          }}
-        />
+    // Calculate how many cells the module was dragged
+    const colDelta = Math.round(offsetX / (CELL_W + CELL_GAP));
+    const rowDelta = Math.round(offsetY / (CELL_H + CELL_GAP));
 
-        {/* Ventilation hood for kitchen on upper floor */}
-        {hasHood && (
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-2 rounded-t-sm bg-[#555] border-t border-x border-white/10" />
-        )}
+    let newCol = currentLayout.col + colDelta;
+    let newRow = currentLayout.row + rowDelta;
 
-        {/* Windows */}
-        {renderWindows(data)}
+    // Clamp to grid bounds
+    newCol = Math.max(0, Math.min(GRID_COLS - 1, newCol));
+    newRow = Math.max(0, Math.min(GRID_ROWS - 1, newRow));
 
-        {/* Interior icon */}
-        <div className="relative z-10 mt-4">
-          {renderModuleIcon(data.type)}
-        </div>
+    // If position didn't change, do nothing
+    if (newCol === currentLayout.col && newRow === currentLayout.row) return;
 
-        {/* Module type label */}
-        <span className="relative z-10 text-[8px] sm:text-[9px] font-medium text-white/80 tracking-wide">
-          {data.label}
-        </span>
+    // Check if target cell is occupied by another module — swap them
+    const newLayout = { ...layout };
+    const occupyingModuleId = Object.entries(newLayout).find(
+      ([id, pos]) => id !== positionId && pos.col === newCol && pos.row === newRow
+    )?.[0];
 
-        {/* Position label */}
-        <span className="relative z-10 text-[6px] sm:text-[7px] text-white/40 tracking-wider uppercase">
-          {positionLabel}
-        </span>
+    if (occupyingModuleId) {
+      // Swap positions
+      newLayout[occupyingModuleId] = { col: currentLayout.col, row: currentLayout.row };
+    }
+    newLayout[positionId] = { col: newCol, row: newRow };
 
-        {/* Corrugation lines */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-sm">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-full h-[1px]"
-              style={{
-                top: `${15 + i * 15}%`,
-                backgroundColor: 'rgba(255,255,255,0.04)',
-              }}
-            />
-          ))}
-        </div>
-      </motion.button>
-    );
-  };
+    setModuleLayout(newLayout);
+  }, [layout, setModuleLayout]);
+
+  const handleDrag = useCallback((_positionId: string, info: { offset: { x: number; y: number } }) => {
+    const currentLayout = layout[_positionId];
+    if (!currentLayout) return;
+
+    const colDelta = Math.round(info.offset.x / (CELL_W + CELL_GAP));
+    const rowDelta = Math.round(info.offset.y / (CELL_H + CELL_GAP));
+
+    let newCol = currentLayout.col + colDelta;
+    let newRow = currentLayout.row + rowDelta;
+
+    newCol = Math.max(0, Math.min(GRID_COLS - 1, newCol));
+    newRow = Math.max(0, Math.min(GRID_ROWS - 1, newRow));
+
+    setGhostPos({ col: newCol, row: newRow });
+  }, [layout]);
 
   const totalModules = sizeConfig.groundModules + sizeConfig.upperModules;
-  const roofWidth = Math.max(sizeConfig.groundModules, sizeConfig.upperModules);
+
+  // Dynamic roof: find leftmost and rightmost columns with modules in upper row
+  const upperModules = [...positions.ground, ...positions.upper].filter(pos => {
+    const posLayout = layout[pos.id];
+    return posLayout && posLayout.row === 0;
+  });
+
+  const roofMinCol = upperModules.length > 0 ? Math.min(...upperModules.map(p => layout[p.id].col)) : 0;
+  const roofMaxCol = upperModules.length > 0 ? Math.max(...upperModules.map(p => layout[p.id].col)) : Math.max(sizeConfig.groundModules, sizeConfig.upperModules) - 1;
+  const roofSpan = roofMaxCol - roofMinCol + 1;
+
+  // For non-arrange mode, also consider ground floor for roof width
+  const groundModules = [...positions.ground].filter(pos => {
+    const posLayout = layout[pos.id];
+    return posLayout && posLayout.row === 1;
+  });
+  const groundMaxCol = groundModules.length > 0 ? Math.max(...groundModules.map(p => layout[p.id].col)) : sizeConfig.groundModules - 1;
+  const groundMinCol = groundModules.length > 0 ? Math.min(...groundModules.map(p => layout[p.id].col)) : 0;
+
+  // Roof covers the wider of upper or ground floor
+  const effectiveRoofMin = upperModules.length > 0 ? Math.min(roofMinCol, groundMinCol) : groundMinCol;
+  const effectiveRoofMax = upperModules.length > 0 ? Math.max(roofMaxCol, groundMaxCol) : groundMaxCol;
+  const effectiveRoofSpan = effectiveRoofMax - effectiveRoofMin + 1;
+
+  const gridTotalW = GRID_COLS * CELL_W + (GRID_COLS - 1) * CELL_GAP;
+  const gridTotalH = GRID_ROWS * CELL_H + (GRID_ROWS - 1) * CELL_GAP;
+
+  const allPos = [...positions.ground, ...positions.upper];
 
   return (
     <div className="w-full h-full flex items-center justify-center p-4 sm:p-8">
-      <div className="relative w-full max-w-md">
-        {/* Roof */}
-        <div className="relative mx-auto mb-0" style={{ width: `calc(${roofWidth * 33 + 5}% )`, maxWidth: '100%' }}>
-          <svg viewBox={`0 0 ${roofWidth * 100 + 40} 35`} className="w-full h-auto" preserveAspectRatio="none">
+      <div className="relative" style={{ width: gridTotalW + 40 }}>
+        {/* Roof - dynamic based on module positions */}
+        <div className="relative mx-auto mb-0" style={{ width: `${(effectiveRoofSpan / GRID_COLS) * 100 + 5}%`, marginLeft: `${(effectiveRoofMin / GRID_COLS) * 100 - 2}%` }}>
+          <svg viewBox={`0 0 ${effectiveRoofSpan * 100 + 40} 35`} className="w-full h-auto" preserveAspectRatio="none">
             <defs>
               <linearGradient id="roofGradConfig" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={roofHex} stopOpacity="0.9" />
@@ -399,95 +440,230 @@ function BuildingIllustration({
               </linearGradient>
             </defs>
             <polygon
-              points={`0,35 15,8 ${roofWidth * 100 + 25},8 ${roofWidth * 100 + 40},35`}
+              points={`0,35 15,8 ${effectiveRoofSpan * 100 + 25},8 ${effectiveRoofSpan * 100 + 40},35`}
               fill="url(#roofGradConfig)"
             />
-            {/* Standing seam lines */}
-            {Array.from({ length: roofWidth * 3 }).map((_, i) => (
+            {Array.from({ length: effectiveRoofSpan * 3 }).map((_, i) => (
               <line
                 key={i}
-                x1={25 + i * (roofWidth * 100 / (roofWidth * 3))}
+                x1={25 + i * (effectiveRoofSpan * 100 / (effectiveRoofSpan * 3))}
                 y1="12"
-                x2={25 + i * (roofWidth * 100 / (roofWidth * 3))}
+                x2={25 + i * (effectiveRoofSpan * 100 / (effectiveRoofSpan * 3))}
                 y2="35"
                 stroke="rgba(201,169,110,0.08)"
                 strokeWidth="1"
               />
             ))}
-            {/* Roof edge highlight */}
-            <line x1="15" y1="8" x2={`${roofWidth * 100 + 25}`} y2="8" stroke="rgba(201,169,110,0.2)" strokeWidth="1" />
+            <line x1="15" y1="8" x2={`${effectiveRoofSpan * 100 + 25}`} y2="8" stroke="rgba(201,169,110,0.2)" strokeWidth="1" />
           </svg>
         </div>
 
-        {/* Upper floor modules (if any) */}
-        <AnimatePresence mode="popLayout">
-          {sizeConfig.upperModules > 0 && (
-            <motion.div
-              className="flex gap-1 sm:gap-1.5 justify-center relative"
-              layout
-            >
-              {positions.upper.map((pos) => renderModuleBlock(pos.id, pos.label, true))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Balcony railing for upper floor */}
-        {sizeConfig.upperModules > 0 && (
-          <div className="relative h-2 flex items-center justify-center">
-            <div
-              className="flex items-end gap-[3px] justify-center relative"
-              style={{ width: `${sizeConfig.upperModules * 33}%` }}
-            >
-              {Array.from({ length: Math.max(sizeConfig.upperModules * 4, 8) }).map((_, i) => (
-                <div key={i} className="w-[1px] h-2 bg-[#8a8a8a]/40" />
+        {/* Grid container for modules */}
+        <div
+          ref={containerRef}
+          className="relative mx-auto"
+          style={{ width: gridTotalW, height: gridTotalH }}
+        >
+          {/* Grid overlay lines (visible in arrange mode) */}
+          {arrangeMode && (
+            <div className="absolute inset-0 pointer-events-none">
+              {/* Column dividers */}
+              {Array.from({ length: GRID_COLS + 1 }).map((_, i) => (
+                <div
+                  key={`col-${i}`}
+                  className="absolute top-0 bottom-0 w-[1px]"
+                  style={{
+                    left: i * (CELL_W + CELL_GAP) - CELL_GAP / 2,
+                    backgroundColor: 'rgba(201,169,110,0.08)',
+                  }}
+                />
               ))}
-              <div className="absolute left-0 right-0 bottom-0 h-[1px] bg-[#8a8a8a]/30" />
+              {/* Row dividers */}
+              {Array.from({ length: GRID_ROWS + 1 }).map((_, i) => (
+                <div
+                  key={`row-${i}`}
+                  className="absolute left-0 right-0 h-[1px]"
+                  style={{
+                    top: i * (CELL_H + CELL_GAP) - CELL_GAP / 2,
+                    backgroundColor: 'rgba(201,169,110,0.08)',
+                  }}
+                />
+              ))}
+              {/* Cell backgrounds */}
+              {Array.from({ length: GRID_ROWS }).map((_, row) =>
+                Array.from({ length: GRID_COLS }).map((_, col) => (
+                  <div
+                    key={`cell-${row}-${col}`}
+                    className="absolute rounded-sm border border-dashed"
+                    style={{
+                      left: col * (CELL_W + CELL_GAP),
+                      top: row * (CELL_H + CELL_GAP),
+                      width: CELL_W,
+                      height: CELL_H,
+                      borderColor: ghostPos && ghostPos.col === col && ghostPos.row === row
+                        ? 'rgba(201,169,110,0.4)'
+                        : 'rgba(201,169,110,0.1)',
+                      backgroundColor: ghostPos && ghostPos.col === col && ghostPos.row === row
+                        ? 'rgba(201,169,110,0.06)'
+                        : 'rgba(201,169,110,0.02)',
+                    }}
+                  />
+                ))
+              )}
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Ghost position (drop preview) */}
+          {arrangeMode && ghostPos && draggingId && (
+            <motion.div
+              className="absolute rounded-sm border-2 border-dashed border-[#c9a96e]/50 pointer-events-none"
+              style={{
+                left: ghostPos.col * (CELL_W + CELL_GAP),
+                top: ghostPos.row * (CELL_H + CELL_GAP),
+                width: CELL_W,
+                height: CELL_H,
+                backgroundColor: 'rgba(201,169,110,0.08)',
+              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15 }}
+            />
+          )}
+
+          {/* Module blocks */}
+          {allPos.map((pos) => {
+            const data = getPositionData(pos.id);
+            if (!data) return null;
+
+            const posLayout = layout[pos.id];
+            if (!posLayout) return null;
+
+            const isFlashing = flashPosition === pos.id;
+            const isInteractive = activeType !== null && !arrangeMode;
+            const isDragging = draggingId === pos.id;
+            const isUpper = posLayout.row === 0;
+            const hasHood = data.type === 'kueche' && isUpper;
+
+            return (
+              <motion.div
+                key={pos.id}
+                className="absolute"
+                style={{
+                  left: posLayout.col * (CELL_W + CELL_GAP),
+                  top: posLayout.row * (CELL_H + CELL_GAP),
+                  width: CELL_W,
+                  height: CELL_H,
+                  zIndex: isDragging ? 50 : 1,
+                }}
+                layout
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              >
+                <motion.button
+                  onClick={() => { if (!arrangeMode) onPositionClick(pos.id); }}
+                  disabled={!arrangeMode && !activeType}
+                  drag={arrangeMode}
+                  dragMomentum={false}
+                  dragElastic={0.1}
+                  dragConstraints={containerRef}
+                  onDragStart={() => setDraggingId(pos.id)}
+                  onDrag={(_, info) => handleDrag(pos.id, info)}
+                  onDragEnd={(_e, info) => handleDragEnd(pos.id, _e, info)}
+                  className={`relative flex flex-col items-center justify-center rounded-sm transition-colors duration-200 border-2 w-full h-full ${
+                    isDragging
+                      ? 'border-[#c9a96e] shadow-[0_0_24px_rgba(201,169,110,0.35)] scale-105'
+                      : isFlashing
+                        ? 'border-[#c9a96e] shadow-[0_0_20px_rgba(201,169,110,0.3)]'
+                        : arrangeMode
+                          ? 'border-[#c9a96e]/30 cursor-grab active:cursor-grabbing hover:border-[#c9a96e]/50 hover:shadow-[0_0_12px_rgba(201,169,110,0.15)]'
+                          : isInteractive
+                            ? 'border-white/10 hover:border-[#c9a96e]/50 hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] cursor-pointer'
+                            : 'border-white/5 cursor-default'
+                  }`}
+                  style={{ backgroundColor: wallHex }}
+                  whileHover={isInteractive ? { scale: 1.05 } : arrangeMode ? { scale: 1.02 } : {}}
+                  whileTap={isInteractive ? { scale: 0.98 } : {}}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: isDragging ? 1.05 : 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                >
+                  {/* Interior glow overlay */}
+                  <div
+                    className="absolute inset-0 rounded-sm pointer-events-none"
+                    style={{
+                      background: `radial-gradient(ellipse at center bottom, ${data.emissiveColor}15 0%, transparent 60%)`,
+                    }}
+                  />
+
+                  {/* Drag handle in arrange mode */}
+                  {arrangeMode && (
+                    <div className="absolute top-0.5 right-0.5 z-20">
+                      <GripVertical size={10} className="text-[#c9a96e]/50" />
+                    </div>
+                  )}
+
+                  {/* Ventilation hood for kitchen on upper floor */}
+                  {hasHood && (
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-2 rounded-t-sm bg-[#555] border-t border-x border-white/10" />
+                  )}
+
+                  {/* Windows */}
+                  {renderWindows(data)}
+
+                  {/* Interior icon */}
+                  <div className="relative z-10 mt-3">
+                    {renderModuleIcon(data.type)}
+                  </div>
+
+                  {/* Module type label */}
+                  <span className="relative z-10 text-[7px] sm:text-[8px] font-medium text-white/80 tracking-wide truncate max-w-full px-1">
+                    {MODULE_TYPES.find(m => m.id === data.type) ? t(MODULE_TYPES.find(m => m.id === data.type)!.labelKey) : data.label}
+                  </span>
+
+                  {/* Corrugation lines */}
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-sm">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute w-full h-[1px]"
+                        style={{
+                          top: `${15 + i * 15}%`,
+                          backgroundColor: 'rgba(255,255,255,0.04)',
+                        }}
+                      />
+                    ))}
+                  </div>
+                </motion.button>
+              </motion.div>
+            );
+          })}
+        </div>
 
         {/* Connection line between floors */}
         <div className="relative h-3 flex items-center justify-center">
           <div
             className="h-[2px] bg-gradient-to-r from-[#c9a96e]/10 via-[#c9a96e]/25 to-[#c9a96e]/10"
-            style={{ width: `${Math.max(sizeConfig.groundModules, sizeConfig.upperModules) * 33}%` }}
+            style={{ width: `${effectiveRoofSpan / GRID_COLS * 100}%` }}
           />
-          {Array.from({ length: Math.max(sizeConfig.groundModules, sizeConfig.upperModules) }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1.5 h-1.5 rounded-full bg-[#c9a96e]/30"
-              style={{
-                left: `${50 + (i - (Math.max(sizeConfig.groundModules, sizeConfig.upperModules) - 1) / 2) * 33}%`,
-                transform: 'translateX(-50%)',
-              }}
-            />
-          ))}
         </div>
-
-        {/* Ground floor modules */}
-        <AnimatePresence mode="popLayout">
-          <motion.div className="flex gap-1 sm:gap-1.5 justify-center relative" layout>
-            {positions.ground.map((pos) => renderModuleBlock(pos.id, pos.label, false))}
-          </motion.div>
-        </AnimatePresence>
 
         {/* Foundation */}
         <div className="relative mt-0">
           <div
             className="mx-auto h-5 rounded-b-sm relative"
             style={{
-              width: `${sizeConfig.groundModules * 33 + 5}%`,
+              width: `${(groundModules.length > 0 ? (groundMaxCol - groundMinCol + 1) : sizeConfig.groundModules) / GRID_COLS * 100 + 5}%`,
+              marginLeft: `${(groundModules.length > 0 ? groundMinCol : 0) / GRID_COLS * 100 - 2}%`,
               background: 'linear-gradient(to bottom, #606060, #4a4a4a)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
             }}
           >
             <div className="absolute inset-0 overflow-hidden rounded-b-sm">
-              {Array.from({ length: sizeConfig.groundModules * 3 }).map((_, i) => (
+              {Array.from({ length: (groundMaxCol - groundMinCol + 1) * 3 }).map((_, i) => (
                 <div
                   key={i}
                   className="absolute top-1 h-[1px]"
                   style={{
-                    left: `${5 + i * (90 / (sizeConfig.groundModules * 3))}%`,
+                    left: `${5 + i * (90 / ((groundMaxCol - groundMinCol + 1) * 3))}%`,
                     width: '6%',
                     backgroundColor: 'rgba(255,255,255,0.06)',
                   }}
@@ -495,19 +671,19 @@ function BuildingIllustration({
               ))}
             </div>
             <span className="absolute inset-0 flex items-center justify-center text-[7px] text-white/30 tracking-[0.2em] uppercase">
-              Fundament
+              {t('config.fundament')}
             </span>
           </div>
         </div>
 
         {/* Floor labels */}
         {sizeConfig.upperModules > 0 && (
-          <div className="absolute left-0 top-[52%] -translate-y-1/2 -translate-x-full pr-2 hidden sm:block">
-            <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/40 uppercase whitespace-nowrap">OG</span>
+          <div className="absolute left-0 top-[30%] -translate-y-1/2 -translate-x-full pr-2 hidden sm:block">
+            <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/40 uppercase whitespace-nowrap">{t('config.floorOG')}</span>
           </div>
         )}
-        <div className="absolute left-0 top-[82%] -translate-y-1/2 -translate-x-full pr-2 hidden sm:block">
-          <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/40 uppercase whitespace-nowrap">EG</span>
+        <div className="absolute left-0 top-[75%] -translate-y-1/2 -translate-x-full pr-2 hidden sm:block">
+          <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/40 uppercase whitespace-nowrap">{t('config.floorEG')}</span>
         </div>
 
         {/* Module count badge */}
@@ -569,6 +745,7 @@ function StepIndicator({ step, currentStep, label }: { step: number; currentStep
    ──────────────────────────────────────────── */
 
 function StepSizeConfig() {
+  const { t } = useTranslation();
   const sizeConfig = useAppStore((s) => s.sizeConfig);
   const setSizeConfig = useAppStore((s) => s.setSizeConfig);
 
@@ -582,18 +759,18 @@ function StepSizeConfig() {
     >
       <div>
         <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-2">
-          Größe konfigurieren
+          {t('config.sizeTitle')}
         </h3>
         <p className="text-[11px] text-[#8888a8] leading-relaxed mb-6">
-          Wählen Sie die Anzahl der Module pro Geschoss. Jedes Modul bietet {MODULE_AREA} m² Wohnfläche.
+          {t('config.sizeDesc', { area: MODULE_AREA })}
         </p>
       </div>
 
       {/* Ground floor modules */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs text-white tracking-wide">Erdgeschoss</span>
-          <span className="text-sm text-[#c9a96e] font-light">{sizeConfig.groundModules} Module</span>
+          <span className="text-xs text-white tracking-wide">{t('config.groundFloor')}</span>
+          <span className="text-sm text-[#c9a96e] font-light">{sizeConfig.groundModules} {t('config.modules')}</span>
         </div>
         <div className="flex items-center gap-3">
           <button
@@ -628,9 +805,9 @@ function StepSizeConfig() {
       {/* Upper floor modules */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs text-white tracking-wide">Obergeschoss</span>
+          <span className="text-xs text-white tracking-wide">{t('config.upperFloor')}</span>
           <span className="text-sm text-[#c9a96e] font-light">
-            {sizeConfig.upperModules === 0 ? 'Keins' : `${sizeConfig.upperModules} Module`}
+            {sizeConfig.upperModules === 0 ? t('config.none') : `${sizeConfig.upperModules} ${t('config.modules')}`}
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -663,7 +840,7 @@ function StepSizeConfig() {
         </div>
         {sizeConfig.upperModules === 0 && (
           <p className="text-[10px] text-[#c9a96e]/50 mt-2 flex items-center gap-1">
-            <ArrowDown size={10} /> Einstöckiges Gebäude
+            <ArrowDown size={10} /> {t('config.singleStory')}
           </p>
         )}
       </div>
@@ -671,13 +848,13 @@ function StepSizeConfig() {
       {/* Summary card */}
       <div className="bg-[#12121f]/40 border border-white/5 rounded-lg p-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-xs text-[#8888a8]">Gesamtfläche</span>
+          <span className="text-xs text-[#8888a8]">{t('config.totalArea')}</span>
           <span className="text-lg text-[#c9a96e] font-light">
             {(sizeConfig.groundModules + sizeConfig.upperModules) * MODULE_AREA} m²
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Gesamtmodule</span>
+          <span className="text-xs text-[#8888a8]">{t('config.totalModules')}</span>
           <span className="text-sm text-white">{sizeConfig.groundModules + sizeConfig.upperModules}</span>
         </div>
       </div>
@@ -692,9 +869,13 @@ function StepSizeConfig() {
 function StepModuleAssignment({
   activeType,
   setActiveType,
+  arrangeMode,
+  setArrangeMode,
 }: {
   activeType: ModuleDef['type'] | null;
   setActiveType: (type: ModuleDef['type'] | null) => void;
+  arrangeMode: boolean;
+  setArrangeMode: (mode: boolean) => void;
 }) {
   const sizeConfig = useAppStore((s) => s.sizeConfig);
   const moduleAssignments = useAppStore((s) => s.moduleAssignments);
@@ -703,6 +884,7 @@ function StepModuleAssignment({
   const selectedModules = useAppStore((s) => s.selectedModules);
   const [flashPosition, setFlashPosition] = useState<string | null>(null);
 
+  const { t } = useTranslation();
   const positions = useMemo(() => getPositionsForSize(sizeConfig), [sizeConfig]);
 
   // Initialize assignments for new positions when size changes
@@ -762,15 +944,53 @@ function StepModuleAssignment({
     >
       <div>
         <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-2">
-          Module zuweisen
+          {t('config.assignTitle')}
         </h3>
         <p className="text-[11px] text-[#8888a8] leading-relaxed mb-4">
-          Wählen Sie einen Modultyp, dann klicken Sie auf eine Position im Gebäude, um ihn zuzuweisen.
+          {arrangeMode
+            ? t('config.arrangeDesc')
+            : t('config.assignDesc')}
         </p>
       </div>
 
-      {/* Module Type Selection */}
-      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+      {/* Arrange mode toggle */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => { setArrangeMode(!arrangeMode); if (!arrangeMode) setActiveType(null); }}
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-300 text-[10px] tracking-wider uppercase min-h-[44px] ${
+            arrangeMode
+              ? 'border-[#c9a96e]/50 bg-[#c9a96e]/15 text-[#c9a96e]'
+              : 'border-white/10 bg-[#12121f]/60 text-white/50 hover:border-white/20 hover:text-white/70'
+          }`}
+        >
+          <Move size={14} />
+          {t('config.arrangeToggle')}
+        </button>
+        {arrangeMode && (
+          <button
+            onClick={() => {
+              const defaultLayout: Record<string, { col: number; row: number }> = {};
+              const allPos = [...getPositionsForSize(sizeConfig).ground, ...getPositionsForSize(sizeConfig).upper];
+              allPos.forEach((pos) => {
+                if (DEFAULT_MODULE_LAYOUT[pos.id]) {
+                  defaultLayout[pos.id] = DEFAULT_MODULE_LAYOUT[pos.id];
+                } else {
+                  const idx = allPos.indexOf(pos);
+                  defaultLayout[pos.id] = { col: idx % GRID_COLS, row: pos.floor === 'Obergeschoss' ? 0 : 1 };
+                }
+              });
+              useAppStore.getState().setModuleLayout(defaultLayout);
+            }}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 bg-[#12121f]/60 text-white/50 hover:border-white/20 hover:text-white/70 transition-all duration-300 text-[10px] tracking-wider uppercase min-h-[44px]"
+          >
+            <RotateCcw size={12} />
+            {t('config.arrangeReset')}
+          </button>
+        )}
+      </div>
+
+      {/* Module Type Selection (disabled in arrange mode) */}
+      <div className={`grid grid-cols-2 gap-2 sm:gap-3 transition-opacity duration-300 ${arrangeMode ? 'opacity-30 pointer-events-none' : ''}`}>
         {MODULE_TYPES.map((mod) => {
           const Icon = mod.icon;
           const isActive = activeType === mod.id;
@@ -800,8 +1020,8 @@ function StepModuleAssignment({
         })}
       </div>
 
-      {/* Position buttons by floor */}
-      {['Erdgeschoss', 'Obergeschoss'].map((floor) => {
+      {/* Position buttons by floor (disabled in arrange mode) */}
+      {!arrangeMode && ['Erdgeschoss', 'Obergeschoss'].map((floor) => {
         const floorPositions = floor === 'Erdgeschoss' ? positions.ground : positions.upper;
         if (floor === 'Obergeschoss' && sizeConfig.upperModules === 0) return null;
 
@@ -850,7 +1070,7 @@ function StepModuleAssignment({
         );
       })}
 
-      {activeType && (
+      {activeType && !arrangeMode && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -1210,6 +1430,8 @@ export default function ConfiguratorSection() {
   const materialConfig = useAppStore((s) => s.materialConfig);
   const resetConfigurator = useAppStore((s) => s.resetConfigurator);
   const moduleQuality = useAppStore((s) => s.moduleQuality);
+  const arrangeMode = useAppStore((s) => s.arrangeMode);
+  const setArrangeMode = useAppStore((s) => s.setArrangeMode);
 
   // Lifted state - activeType is shared between StepModuleAssignment and BuildingIllustration
   const [activeType, setActiveType] = useState<ModuleDef['type'] | null>(null);
@@ -1280,9 +1502,10 @@ export default function ConfiguratorSection() {
   const changeStep = useCallback((newStep: number) => {
     if (newStep !== 2) {
       setActiveType(null);
+      setArrangeMode(false);
     }
     setConfiguratorStep(newStep);
-  }, [setConfiguratorStep]);
+  }, [setConfiguratorStep, setArrangeMode]);
 
   const steps = [
     { step: 1, label: 'Größe wählen' },
@@ -1369,9 +1592,12 @@ export default function ConfiguratorSection() {
               flashPosition={flashPosition}
               sizeConfig={sizeConfig}
               materialConfig={materialConfig}
+              arrangeMode={configuratorStep === 2 && arrangeMode}
             />
             <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-md border border-white/5">
-              <p className="text-[10px] tracking-[0.2em] text-[#8888a8] uppercase">Modul-Vorschau</p>
+              <p className="text-[10px] tracking-[0.2em] text-[#8888a8] uppercase">
+                {arrangeMode && configuratorStep === 2 ? 'Module anordnen' : 'Modul-Vorschau'}
+              </p>
             </div>
 
             {/* Floating price indicator on illustration */}
@@ -1386,8 +1612,21 @@ export default function ConfiguratorSection() {
               </p>
             </motion.div>
 
+            {/* Arrange mode hint on illustration */}
+            {configuratorStep === 2 && arrangeMode && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute bottom-4 left-4 right-20 bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
+              >
+                <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
+                  Ziehen Sie Module an die gewünschte Position
+                </p>
+              </motion.div>
+            )}
+
             {/* Step hint on illustration */}
-            {configuratorStep === 2 && activeType && (
+            {configuratorStep === 2 && activeType && !arrangeMode && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1421,6 +1660,8 @@ export default function ConfiguratorSection() {
                     key="step2"
                     activeType={activeType}
                     setActiveType={setActiveType}
+                    arrangeMode={arrangeMode}
+                    setArrangeMode={setArrangeMode}
                   />
                 )}
                 {configuratorStep === 3 && <StepMaterial key="step3" />}

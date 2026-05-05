@@ -4,56 +4,57 @@ import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MessageSquare, Search, PenTool, Wallet, Hammer, KeyRound } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 interface ProcessStep {
   number: string;
-  title: string;
-  description: string;
-  tooltip: string;
+  titleKey: string;
+  descKey: string;
+  tooltipKey: string;
   icon: LucideIcon;
 }
 
 const steps: ProcessStep[] = [
   {
     number: '01',
-    title: 'Erstgespräch',
-    description: 'Wir besprechen Ihre Wünsche, Bedürfnisse und Rahmenbedingungen',
-    tooltip: 'Kostenlos & unverbindlich',
+    titleKey: 'process.step1',
+    descKey: 'process.step1Desc',
+    tooltipKey: 'process.step1Tooltip',
     icon: MessageSquare,
   },
   {
     number: '02',
-    title: 'Standortprüfung',
-    description: 'Prüfung der örtlichen Gegebenheiten und Genehmigungsfähigkeit',
-    tooltip: 'Inkl. Baugenehmigungs-Check',
+    titleKey: 'process.step2',
+    descKey: 'process.step2Desc',
+    tooltipKey: 'process.step2Tooltip',
     icon: Search,
   },
   {
     number: '03',
-    title: 'Entwurf',
-    description: 'Individuelle Planung und Gestaltung Ihres modularen Zuhauses',
-    tooltip: '3D-Visualisierung inklusive',
+    titleKey: 'process.step3',
+    descKey: 'process.step3Desc',
+    tooltipKey: 'process.step3Tooltip',
     icon: PenTool,
   },
   {
     number: '04',
-    title: 'Finanzierungsmodell',
-    description: 'Pacht, Kauf oder individuelle Kombination – wir finden die passende Lösung',
-    tooltip: 'Flexible Modelle verfügbar',
+    titleKey: 'process.step4',
+    descKey: 'process.step4Desc',
+    tooltipKey: 'process.step4Tooltip',
     icon: Wallet,
   },
   {
     number: '05',
-    title: 'Realisierung',
-    description: 'Serielle Vorfertigung in der Halle, Montage vor Ort in wenigen Tagen',
-    tooltip: 'Qualitätskontrolle in der Halle',
+    titleKey: 'process.step5',
+    descKey: 'process.step5Desc',
+    tooltipKey: 'process.step5Tooltip',
     icon: Hammer,
   },
   {
     number: '06',
-    title: 'Übergabe',
-    description: 'Schlüsselübergabe und Einzug – weniger als sechs Monate Gesamtprojekt',
-    tooltip: 'Referenzbesichtigung möglich',
+    titleKey: 'process.step6',
+    descKey: 'process.step6Desc',
+    tooltipKey: 'process.step6Tooltip',
     icon: KeyRound,
   },
 ];
@@ -87,6 +88,7 @@ function StepCard({
   index: number;
   isCurrent: boolean;
 }) {
+  const { t } = useTranslation();
   const Icon = step.icon;
 
   return (
@@ -97,7 +99,7 @@ function StepCard({
     >
       {/* Tooltip on hover */}
       <div className="process-tooltip">
-        {step.tooltip}
+        {t(step.tooltipKey)}
       </div>
 
       <div className="relative mb-6">
@@ -129,16 +131,17 @@ function StepCard({
       <h3 className={`text-lg font-medium tracking-wide mb-2 transition-colors duration-300 ${
         isCurrent ? 'text-[#c9a96e]' : 'text-white group-hover:text-[#c9a96e]'
       }`}>
-        {step.title}
+        {step.titleKey ? t(step.titleKey) : ''}
       </h3>
       <p className="text-sm text-[#8888a8] leading-relaxed max-w-[220px]">
-        {step.description}
+        {t(step.descKey)}
       </p>
     </motion.div>
   );
 }
 
 export default function ProcessSection() {
+  const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-100px' });
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
@@ -159,13 +162,13 @@ export default function ProcessSection() {
           className="text-center mb-16 sm:mb-20"
         >
           <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-            Der Weg zu Ihrem Zuhause
+            {t('process.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
-            So funktioniert<span className="text-gradient-gold">&apos;s</span>
+            {t('process.title').replace("'s", '')}<span className="text-gradient-gold">&apos;s</span>
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-xl mx-auto mt-4">
-            In sechs Schritten zu Ihrem modularen Zuhause – von der Idee bis zum Einzug.
+            {t('process.subtitle')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -285,13 +288,13 @@ export default function ProcessSection() {
                     <h3 className={`text-lg font-medium tracking-wide mb-2 transition-colors duration-300 ${
                       isCurrent ? 'text-[#c9a96e]' : 'text-white group-hover:text-[#c9a96e]'
                     }`}>
-                      {step.title}
+                      {t(step.titleKey)}
                     </h3>
                     <p className="text-sm text-[#8888a8] leading-relaxed">
-                      {step.description}
+                      {t(step.descKey)}
                     </p>
                     <p className="text-[10px] text-[#c9a96e]/50 mt-1 tracking-wider">
-                      {step.tooltip}
+                      {t(step.tooltipKey)}
                     </p>
                   </div>
                 </motion.div>

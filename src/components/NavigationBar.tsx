@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu } from 'lucide-react';
+import { Menu, Globe } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 import {
   Sheet,
   SheetTrigger,
@@ -13,12 +14,12 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 
-const navLinks = [
-  { label: 'Home', href: '#hero' },
-  { label: 'Konfigurator', href: '#configurator' },
-  { label: 'Entdecken', href: '#scroll-experience' },
-  { label: 'Vorteile', href: '#features' },
-  { label: 'Kontakt', href: '#contact' },
+const navLinkKeys = [
+  { labelKey: 'nav.home', href: '#hero' },
+  { labelKey: 'nav.configurator', href: '#configurator' },
+  { labelKey: 'nav.explore', href: '#scroll-experience' },
+  { labelKey: 'nav.advantages', href: '#features' },
+  { labelKey: 'nav.contact', href: '#contact' },
 ];
 
 // Magnetic hover link component with sliding underline and gold glow
@@ -93,6 +94,9 @@ export default function NavigationBar() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('hero');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t, locale, toggleLocale } = useTranslation();
+
+  const navLinks = navLinkKeys.map((l) => ({ ...l, label: t(l.labelKey) }));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -210,7 +214,7 @@ export default function NavigationBar() {
                 OMNILIVING
               </span>
               <span className="text-[7px] tracking-[0.2em] text-[#8888a8]/50 uppercase leading-none">
-                Modulares Bauen
+                {t('hero.sublabel')}
               </span>
             </div>
           </a>
@@ -221,7 +225,7 @@ export default function NavigationBar() {
               const isActive = activeSection === sectionId;
               return (
                 <MagneticNavLink
-                  key={link.label}
+                  key={link.labelKey}
                   label={link.label}
                   href={link.href}
                   isActive={isActive}
@@ -229,6 +233,15 @@ export default function NavigationBar() {
                 />
               );
             })}
+            {/* Language Toggle */}
+            <button
+              onClick={toggleLocale}
+              className="ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-white/10 hover:border-[#c9a96e]/30 bg-transparent hover:bg-[#c9a96e]/5 transition-all duration-300 text-[#8888a8] hover:text-[#c9a96e]"
+              aria-label={t('lang.switchLabel')}
+            >
+              <Globe size={14} />
+              <span className="text-[10px] tracking-[0.1em] uppercase font-medium">{locale === 'de' ? 'EN' : 'DE'}</span>
+            </button>
           </div>
 
           <div className="md:hidden">
@@ -240,7 +253,7 @@ export default function NavigationBar() {
                   className="text-[#8888a8] hover:text-[#c9a96e] hover:bg-transparent transition-colors duration-300"
                 >
                   <Menu size={22} />
-                  <span className="sr-only">Menü öffnen</span>
+                  <span className="sr-only">{t('nav.openMenu')}</span>
                 </Button>
               </SheetTrigger>
               <SheetContent
@@ -258,7 +271,7 @@ export default function NavigationBar() {
                     OMNILIVING
                   </SheetTitle>
                   <p className="text-left text-[9px] tracking-[0.2em] text-[#c9a96e]/40 uppercase">
-                    Modulares Bauen
+                    {t('hero.sublabel')}
                   </p>
                 </SheetHeader>
                 <nav className="flex flex-col gap-2">
@@ -310,6 +323,14 @@ export default function NavigationBar() {
                   <p className="text-[10px] text-[#8888a8] tracking-wider text-center">
                     Module Design GmbH
                   </p>
+                  {/* Language Toggle Mobile */}
+                  <button
+                    onClick={() => { toggleLocale(); }}
+                    className="mt-3 mx-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/10 hover:border-[#c9a96e]/30 bg-transparent hover:bg-[#c9a96e]/5 transition-all duration-300 text-[#8888a8] hover:text-[#c9a96e]"
+                  >
+                    <Globe size={14} />
+                    <span className="text-[10px] tracking-[0.1em] uppercase font-medium">{locale === 'de' ? 'English' : 'Deutsch'}</span>
+                  </button>
                 </div>
               </SheetContent>
             </Sheet>

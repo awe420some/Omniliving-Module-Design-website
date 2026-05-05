@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore, useCallback } from '
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/lib/store';
+import { useTranslation } from '@/lib/i18n';
 import { ChevronDown, Home, Bed, UtensilsCrossed, Bath } from 'lucide-react';
 
 // Seeded pseudo-random for consistent SSR/client values (avoids hydration mismatch)
@@ -53,11 +54,12 @@ function FloatingParticles() {
 
 // Floating module icons that orbit the center
 function FloatingModuleIcons() {
+  const { t } = useTranslation();
   const icons = [
-    { Icon: Home, label: 'Wohnmodul', angle: 0, radius: 28 },
-    { Icon: Bed, label: 'Schlafmodul', angle: 90, radius: 32 },
-    { Icon: UtensilsCrossed, label: 'Küchenmodul', angle: 180, radius: 26 },
-    { Icon: Bath, label: 'Badmodul', angle: 270, radius: 30 },
+    { Icon: Home, label: t('module.wohnen'), angle: 0, radius: 28 },
+    { Icon: Bed, label: t('module.schlafen'), angle: 90, radius: 32 },
+    { Icon: UtensilsCrossed, label: t('module.kueche'), angle: 180, radius: 26 },
+    { Icon: Bath, label: t('module.bad'), angle: 270, radius: 30 },
   ];
 
   return (
@@ -128,6 +130,7 @@ function TypewriterText({ text, delay = 0 }: { text: string; delay: number }) {
 }
 
 export default function HeroSection() {
+  const { t } = useTranslation();
   const [scrollY, setScrollY] = useState(0);
   const [lineProgress, setLineProgress] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
@@ -456,7 +459,7 @@ export default function HeroSection() {
           transition={{ duration: 1.2, ease: 'easeOut' }}
         >
           <p className="text-[10px] sm:text-xs tracking-[0.4em] text-[#c9a96e]/60 uppercase mb-6">
-            Modulares Bauen
+            {t('hero.sublabel')}
           </p>
         </motion.div>
 
@@ -487,7 +490,7 @@ export default function HeroSection() {
           transition={{ duration: 1, delay: 0.4, ease: 'easeOut' }}
         >
           <p className="text-base sm:text-lg md:text-xl tracking-[0.15em] sm:tracking-[0.2em] text-white/70 mb-2 font-light">
-            <TypewriterText text="Modulare Wohnungen für Kommunen & Eigentümer" delay={1800} />
+            <TypewriterText text={t('hero.description')} delay={1800} />
           </p>
         </motion.div>
 
@@ -497,7 +500,7 @@ export default function HeroSection() {
           transition={{ duration: 1, delay: 0.6 }}
         >
           <p className="text-[10px] sm:text-xs tracking-[0.3em] text-[#c9a96e]/50 font-light">
-            MODULE DESIGN GMBH
+            {t('hero.company')}
           </p>
         </motion.div>
 
@@ -522,7 +525,7 @@ export default function HeroSection() {
                 document.getElementById('scroll-experience')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              <span className="relative z-10">Entdecken Sie Ihr modulares Zuhause</span>
+              <span className="relative z-10">{t('hero.cta')}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#c9a96e] to-[#dbb980] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Button>
           </div>
@@ -537,7 +540,7 @@ export default function HeroSection() {
         transition={{ duration: 1, delay: 1.5 }}
       >
         <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-[#c9a96e]/50 uppercase">
-          Zum Entdecken scrollen
+          {t('hero.scroll')}
         </span>
         <div className="relative">
           {/* Circular progress ring */}
