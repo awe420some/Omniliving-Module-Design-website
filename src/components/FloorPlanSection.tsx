@@ -24,6 +24,10 @@ interface ModulePlan {
   rooms: RoomZone[];
 }
 
+// ViewBox: 240 × 100 matches real container ratio (6 m × 2.5 m)
+const VBOX_W = 240;
+const VBOX_H = 100;
+
 const MODULE_PLANS: ModulePlan[] = [
   {
     id: 'wohnen',
@@ -33,41 +37,29 @@ const MODULE_PLANS: ModulePlan[] = [
       {
         id: 'living',
         labelKey: 'floorplan.living',
-        x: 5,
-        y: 5,
-        width: 55,
-        height: 70,
-        area: '7.5 m²',
+        x: 4, y: 4, width: 130, height: 92,
+        area: '8.5 m²',
         featureKeys: ['floorplan.living.f1', 'floorplan.living.f2', 'floorplan.living.f3'],
       },
       {
         id: 'dining',
         labelKey: 'floorplan.dining',
-        x: 65,
-        y: 5,
-        width: 30,
-        height: 40,
+        x: 138, y: 4, width: 56, height: 55,
         area: '3.5 m²',
         featureKeys: ['floorplan.dining.f1', 'floorplan.dining.f2'],
       },
       {
         id: 'entry',
         labelKey: 'floorplan.entrance',
-        x: 65,
-        y: 50,
-        width: 30,
-        height: 25,
-        area: '2.5 m²',
+        x: 138, y: 63, width: 56, height: 33,
+        area: '2.0 m²',
         featureKeys: ['floorplan.entry.f1', 'floorplan.entry.f2'],
       },
       {
         id: 'bath-small',
         labelKey: 'floorplan.guestWc',
-        x: 65,
-        y: 80,
-        width: 30,
-        height: 15,
-        area: '1.5 m²',
+        x: 198, y: 4, width: 38, height: 92,
+        area: '1.0 m²',
         featureKeys: ['floorplan.guestWc.f1', 'floorplan.guestWc.f2'],
       },
     ],
@@ -80,30 +72,21 @@ const MODULE_PLANS: ModulePlan[] = [
       {
         id: 'bedroom',
         labelKey: 'floorplan.bedroom',
-        x: 5,
-        y: 5,
-        width: 60,
-        height: 75,
-        area: '8.5 m²',
+        x: 4, y: 4, width: 150, height: 92,
+        area: '9.5 m²',
         featureKeys: ['floorplan.bedroom.f1', 'floorplan.bedroom.f2', 'floorplan.bedroom.f3'],
       },
       {
         id: 'closet',
         labelKey: 'floorplan.closet',
-        x: 70,
-        y: 5,
-        width: 25,
-        height: 45,
+        x: 158, y: 4, width: 40, height: 55,
         area: '3.0 m²',
         featureKeys: ['floorplan.closet.f1', 'floorplan.closet.f2'],
       },
       {
         id: 'reading',
         labelKey: 'floorplan.reading',
-        x: 70,
-        y: 55,
-        width: 25,
-        height: 40,
+        x: 158, y: 63, width: 78, height: 33,
         area: '2.5 m²',
         featureKeys: ['floorplan.reading.f1', 'floorplan.reading.f2'],
       },
@@ -117,32 +100,30 @@ const MODULE_PLANS: ModulePlan[] = [
       {
         id: 'kitchen',
         labelKey: 'floorplan.kitchen',
-        x: 5,
-        y: 5,
-        width: 90,
-        height: 50,
+        x: 4, y: 4, width: 155, height: 55,
         area: '9.0 m²',
         featureKeys: ['floorplan.kitchen.f1', 'floorplan.kitchen.f2', 'floorplan.kitchen.f3', 'floorplan.kitchen.f4'],
       },
       {
         id: 'storage',
         labelKey: 'floorplan.pantry',
-        x: 5,
-        y: 60,
-        width: 35,
-        height: 35,
+        x: 4, y: 63, width: 74, height: 33,
         area: '2.5 m²',
         featureKeys: ['floorplan.storage.f1', 'floorplan.storage.f2'],
       },
       {
         id: 'breakfast',
         labelKey: 'floorplan.breakfast',
-        x: 45,
-        y: 60,
-        width: 50,
-        height: 35,
-        area: '3.5 m²',
+        x: 82, y: 63, width: 77, height: 33,
+        area: '3.0 m²',
         featureKeys: ['floorplan.breakfast.f1', 'floorplan.breakfast.f2'],
+      },
+      {
+        id: 'dining',
+        labelKey: 'floorplan.dining',
+        x: 163, y: 4, width: 73, height: 92,
+        area: '4.0 m²',
+        featureKeys: ['floorplan.dining.f1', 'floorplan.dining.f2'],
       },
     ],
   },
@@ -154,41 +135,29 @@ const MODULE_PLANS: ModulePlan[] = [
       {
         id: 'shower',
         labelKey: 'floorplan.shower',
-        x: 5,
-        y: 5,
-        width: 40,
-        height: 50,
-        area: '4.0 m²',
+        x: 4, y: 4, width: 80, height: 92,
+        area: '5.0 m²',
         featureKeys: ['floorplan.shower.f1', 'floorplan.shower.f2', 'floorplan.shower.f3'],
       },
       {
         id: 'vanity',
         labelKey: 'floorplan.washArea',
-        x: 50,
-        y: 5,
-        width: 45,
-        height: 35,
-        area: '3.0 m²',
+        x: 88, y: 4, width: 78, height: 55,
+        area: '3.5 m²',
         featureKeys: ['floorplan.washArea.f1', 'floorplan.washArea.f2'],
       },
       {
         id: 'toilet',
         labelKey: 'floorplan.wcArea',
-        x: 50,
-        y: 45,
-        width: 45,
-        height: 25,
-        area: '2.0 m²',
+        x: 88, y: 63, width: 78, height: 33,
+        area: '2.5 m²',
         featureKeys: ['floorplan.wcArea.f1', 'floorplan.wcArea.f2'],
       },
       {
         id: 'laundry',
         labelKey: 'floorplan.laundry',
-        x: 5,
-        y: 60,
-        width: 40,
-        height: 35,
-        area: '2.5 m²',
+        x: 170, y: 4, width: 66, height: 92,
+        area: '4.0 m²',
         featureKeys: ['floorplan.laundry.f1', 'floorplan.laundry.f2'],
       },
     ],
@@ -205,43 +174,43 @@ function FloorPlanSVG({
   onRoomHover: (id: string | null) => void;
 }) {
   const { t } = useTranslation();
-  // Container dimensions: 6m x 2.5m (displayed as 600 x 250 proportionally, we use viewBox)
+  // ViewBox 240×100 matches real container ratio: 6 m × 2.5 m
   return (
     <svg
-      viewBox="0 0 100 100"
+      viewBox={`0 0 ${VBOX_W} ${VBOX_H}`}
       className="w-full h-auto"
-      style={{ maxHeight: '400px' }}
+      style={{ maxHeight: '260px' }}
     >
       {/* Background */}
-      <rect x="0" y="0" width="100" height="100" fill="#12121f" rx="2" />
+      <rect x="0" y="0" width={VBOX_W} height={VBOX_H} fill="#12121f" rx="2" />
 
       {/* Outer walls */}
       <rect
         x="2"
         y="2"
-        width="96"
-        height="96"
+        width={VBOX_W - 4}
+        height={VBOX_H - 4}
         fill="none"
         stroke="#c9a96e"
-        strokeWidth="1.5"
+        strokeWidth="1.2"
         rx="1"
       />
 
       {/* Dimension labels */}
-      <text x="50" y="98" textAnchor="middle" fill="#8888a8" fontSize="4" fontFamily="system-ui">
+      <text x={VBOX_W / 2} y={VBOX_H - 1} textAnchor="middle" fill="#8888a8" fontSize="4" fontFamily="system-ui">
         6,00 m
       </text>
-      <text x="2" y="50" textAnchor="middle" fill="#8888a8" fontSize="4" fontFamily="system-ui" transform="rotate(-90, 2, 50)">
+      <text x="3" y={VBOX_H / 2} textAnchor="middle" fill="#8888a8" fontSize="4" fontFamily="system-ui" transform={`rotate(-90, 3, ${VBOX_H / 2})`}>
         2,50 m
       </text>
 
       {/* Dimension arrows - bottom */}
-      <line x1="5" y1="95" x2="95" y2="95" stroke="#8888a8" strokeWidth="0.3" />
-      <polygon points="5,94 5,96 3,95" fill="#8888a8" />
-      <polygon points="95,94 95,96 97,95" fill="#8888a8" />
+      <line x1="5" y1={VBOX_H - 5} x2={VBOX_W - 5} y2={VBOX_H - 5} stroke="#8888a8" strokeWidth="0.3" />
+      <polygon points={`5,${VBOX_H - 6} 5,${VBOX_H - 4} 3,${VBOX_H - 5}`} fill="#8888a8" />
+      <polygon points={`${VBOX_W - 5},${VBOX_H - 6} ${VBOX_W - 5},${VBOX_H - 4} ${VBOX_W - 3},${VBOX_H - 5}`} fill="#8888a8" />
 
       {/* Dimension arrows - left */}
-      <line x1="0.5" y1="5" x2="0.5" y2="95" stroke="#8888a8" strokeWidth="0.3" />
+      <line x1="0.5" y1="5" x2="0.5" y2={VBOX_H - 5} stroke="#8888a8" strokeWidth="0.3" />
 
       {/* Room zones */}
       {rooms.map((room) => {
@@ -265,29 +234,33 @@ function FloorPlanSVG({
               rx="1"
               style={{ transition: 'all 0.2s ease' }}
             />
-            <text
-              x={room.x + room.width / 2}
-              y={room.y + room.height / 2 - 2}
-              textAnchor="middle"
-              fill={isHovered ? '#c9a96e' : '#aaa'}
-              fontSize="4"
-              fontWeight="500"
-              fontFamily="system-ui"
-              style={{ transition: 'fill 0.2s ease' }}
-            >
-              {t(room.labelKey)}
-            </text>
-            <text
-              x={room.x + room.width / 2}
-              y={room.y + room.height / 2 + 4}
-              textAnchor="middle"
-              fill={isHovered ? '#dbb980' : '#666'}
-              fontSize="3"
-              fontFamily="system-ui"
-              style={{ transition: 'fill 0.2s ease' }}
-            >
-              {room.area}
-            </text>
+            {room.height > 12 && (
+              <text
+                x={room.x + room.width / 2}
+                y={room.y + room.height / 2 - 2}
+                textAnchor="middle"
+                fill={isHovered ? '#c9a96e' : '#aaa'}
+                fontSize="5"
+                fontWeight="500"
+                fontFamily="system-ui"
+                style={{ transition: 'fill 0.2s ease' }}
+              >
+                {t(room.labelKey)}
+              </text>
+            )}
+            {room.height > 16 && (
+              <text
+                x={room.x + room.width / 2}
+                y={room.y + room.height / 2 + 5}
+                textAnchor="middle"
+                fill={isHovered ? '#dbb980' : '#666'}
+                fontSize="4"
+                fontFamily="system-ui"
+                style={{ transition: 'fill 0.2s ease' }}
+              >
+                {room.area}
+              </text>
+            )}
           </g>
         );
       })}

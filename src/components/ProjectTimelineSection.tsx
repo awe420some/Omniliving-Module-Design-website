@@ -32,6 +32,12 @@ export default function ProjectTimelineSection() {
     timeEstimate: t(p.timeKey),
     description: t(p.descKey),
   }));
+  // Compute cumulative percentages for the progress bar
+  const cumulativePercent = phaseKeys.reduce<number[]>((acc, p) => {
+    acc.push((acc[acc.length - 1] ?? 0) + p.percentage);
+    return acc;
+  }, []);
+
   const [activePhase, setActivePhase] = useState<number | null>(null);
   const [hasAutoPlayed, setHasAutoPlayed] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -181,7 +187,7 @@ export default function ProjectTimelineSection() {
                     <p className="text-sm text-[#8888a8] leading-relaxed mb-4">
                       {selectedPhase.description}
                     </p>
-                    {/* Progress bar */}
+                    {/* Progress bar — shows cumulative project progress */}
                     <div className="flex items-center gap-3">
                       <span className="text-[10px] text-[#8888a8]/50 uppercase tracking-wider shrink-0">
                         {t('timeline.progress')}
@@ -189,13 +195,13 @@ export default function ProjectTimelineSection() {
                       <div className="flex-1 h-1.5 bg-[#1a1a2e] rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
-                          animate={{ width: `${selectedPhase.percentage}%` }}
+                          animate={{ width: `${cumulativePercent[selectedPhase.id - 1]}%` }}
                           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
                           className="h-full bg-gradient-to-r from-[#c9a96e] to-[#dbb980] rounded-full"
                         />
                       </div>
                       <span className="text-xs text-[#c9a96e] font-medium shrink-0">
-                        {selectedPhase.percentage}%
+                        {cumulativePercent[selectedPhase.id - 1]}%
                       </span>
                     </div>
                   </div>
@@ -267,21 +273,21 @@ export default function ProjectTimelineSection() {
                             <p className="text-sm text-[#8888a8] leading-relaxed mb-3">
                               {phase.description}
                             </p>
-                            {/* Progress bar */}
+                            {/* Progress bar — shows cumulative project progress */}
                             <div className="flex items-center gap-3">
                               <span className="text-[9px] text-[#8888a8]/40 uppercase tracking-wider shrink-0">
-                                Projektanteil
+                                {t('timeline.progress')}
                               </span>
                               <div className="flex-1 h-1.5 bg-[#1a1a2e] rounded-full overflow-hidden">
                                 <motion.div
                                   initial={{ width: 0 }}
-                                  animate={{ width: `${phase.percentage}%` }}
+                                  animate={{ width: `${cumulativePercent[phase.id - 1]}%` }}
                                   transition={{ duration: 0.6, ease: 'easeOut' }}
                                   className="h-full bg-gradient-to-r from-[#c9a96e] to-[#dbb980] rounded-full"
                                 />
                               </div>
                               <span className="text-[10px] text-[#c9a96e] font-medium shrink-0">
-                                {phase.percentage}%
+                                {cumulativePercent[phase.id - 1]}%
                               </span>
                             </div>
                           </motion.div>

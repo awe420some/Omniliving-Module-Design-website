@@ -363,6 +363,11 @@ function BuildingIllustration({
     newCol = Math.max(0, Math.min(GRID_COLS - 1, newCol));
     newRow = Math.max(0, Math.min(GRID_ROWS - 1, newRow));
 
+    // Row 1 is a visual gap — snap to nearest valid floor row (0=upper, 2=ground)
+    if (newRow === 1) {
+      newRow = rowDelta >= 0 ? 2 : 0;
+    }
+
     // If position didn't change, do nothing
     if (newCol === currentLayout.col && newRow === currentLayout.row) return;
 
@@ -394,6 +399,11 @@ function BuildingIllustration({
     newCol = Math.max(0, Math.min(GRID_COLS - 1, newCol));
     newRow = Math.max(0, Math.min(GRID_ROWS - 1, newRow));
 
+    // Skip row 1 (visual gap between floors)
+    if (newRow === 1) {
+      newRow = rowDelta >= 0 ? 2 : 0;
+    }
+
     setGhostPos({ col: newCol, row: newRow });
   }, [layout]);
 
@@ -412,7 +422,7 @@ function BuildingIllustration({
   // For non-arrange mode, also consider ground floor for roof width
   const groundModules = [...positions.ground].filter(pos => {
     const posLayout = layout[pos.id];
-    return posLayout && posLayout.row === 1;
+    return posLayout && posLayout.row === 2;
   });
   const groundMaxCol = groundModules.length > 0 ? Math.max(...groundModules.map(p => layout[p.id].col)) : sizeConfig.groundModules - 1;
   const groundMinCol = groundModules.length > 0 ? Math.min(...groundModules.map(p => layout[p.id].col)) : 0;
@@ -1019,7 +1029,7 @@ function StepModuleAssignment({
                 style={{ color: isActive ? mod.color : '#8888a8' }}
               />
               <p className="text-[10px] sm:text-xs font-medium text-white tracking-wide">
-                {mod.label}
+                {t(mod.labelKey)}
               </p>
               {isActive && (
                 <Check size={12} className="mt-1 text-[#c9a96e]" />
@@ -1030,14 +1040,17 @@ function StepModuleAssignment({
       </div>
 
       {/* Position buttons by floor (disabled in arrange mode) */}
-      {!arrangeMode && ['Erdgeschoss', 'Obergeschoss'].map((floor) => {
-        const floorPositions = floor === 'Erdgeschoss' ? positions.ground : positions.upper;
-        if (floor === 'Obergeschoss' && sizeConfig.upperModules === 0) return null;
+      {!arrangeMode && ([
+        { key: 'ground', label: t('config.groundFloor') },
+        { key: 'upper', label: t('config.upperFloor') },
+      ] as const).map(({ key, label }) => {
+        const floorPositions = key === 'ground' ? positions.ground : positions.upper;
+        if (key === 'upper' && sizeConfig.upperModules === 0) return null;
 
         return (
-          <div key={floor}>
+          <div key={key}>
             <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-2">
-              {floor}
+              {label}
             </p>
             <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${floorPositions.length}, 1fr)` }}>
               {floorPositions.map((pos) => {
@@ -1064,11 +1077,11 @@ function StepModuleAssignment({
                       />
                     )}
                     <p className="text-[9px] sm:text-[10px] text-white/80 tracking-wide relative z-10 truncate">
-                      {pos.label}
+                      {t(pos.labelKey)}
                     </p>
                     {assignment && (
                       <p className="text-[7px] sm:text-[8px] text-[#c9a96e]/70 mt-0.5 truncate relative z-10">
-                        {assignment.label}
+                        {t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '')}
                       </p>
                     )}
                   </button>
@@ -1086,7 +1099,7 @@ function StepModuleAssignment({
           className="bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
         >
           <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
-            Klicken Sie auf eine Position im Gebäude, um das {MODULE_TYPES.find(m => m.id === activeType)?.label} zuzuweisen
+            {t('config.assignHint', { module: t(MODULE_TYPES.find(m => m.id === activeType)?.labelKey || '') })}
           </p>
         </motion.div>
       )}
@@ -1099,6 +1112,7 @@ function StepModuleAssignment({
    ──────────────────────────────────────────── */
 
 function StepMaterial() {
+  const { t } = useTranslation();
   const materialConfig = useAppStore((s) => s.materialConfig);
   const setMaterialConfig = useAppStore((s) => s.setMaterialConfig);
   const moduleQuality = useAppStore((s) => s.moduleQuality);
@@ -1114,16 +1128,16 @@ function StepMaterial() {
     >
       <div>
         <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-2">
-          Farbe & Material
+          {t('config.materialTitle')}
         </h3>
         <p className="text-[11px] text-[#8888a8] leading-relaxed">
-          Passen Sie die Optik Ihres Modulhauses an.
+          {t('config.materialDesc')}
         </p>
       </div>
 
       {/* Module Quality */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">Ausstattungslinie</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.quality')}</p>
         <div className="grid grid-cols-2 gap-2">
           {(['standard', 'premium'] as const).map((q) => (
             <button
@@ -1135,9 +1149,9 @@ function StepMaterial() {
                   : 'border-white/5 bg-[#12121f]/60 hover:border-white/10'
               }`}
             >
-              <p className="text-xs text-white tracking-wide">{q === 'standard' ? 'Standard' : 'Premium'}</p>
+              <p className="text-xs text-white tracking-wide">{t(q === 'standard' ? 'config.qualityStandard' : 'config.qualityPremium')}</p>
               <p className="text-[9px] text-[#8888a8] mt-0.5">
-                {q === 'standard' ? 'ab 25.000 €/Modul' : 'ab 32.000 €/Modul'}
+                {t(q === 'standard' ? 'config.qualityStandardPrice' : 'config.qualityPremiumPrice')}
               </p>
             </button>
           ))}
@@ -1146,7 +1160,7 @@ function StepMaterial() {
 
       {/* Wall Color */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">Außenwandfarbe</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.wallColor')}</p>
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {WALL_COLORS.map((color) => {
             const isSelected = materialConfig.wallColor === color.id;
@@ -1166,7 +1180,7 @@ function StepMaterial() {
                   }`}
                   style={{ backgroundColor: color.hex }}
                 />
-                <span className="text-[8px] sm:text-[9px] text-white/70 tracking-wide">{color.label}</span>
+                <span className="text-[8px] sm:text-[9px] text-white/70 tracking-wide">{t(color.labelKey)}</span>
                 {color.premium > 0 && (
                   <span className="text-[7px] text-[#c9a96e]/60">+{formatPrice(color.premium)}</span>
                 )}
@@ -1181,7 +1195,7 @@ function StepMaterial() {
 
       {/* Roof Color */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">Dachfarbe</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.roofColor')}</p>
         <div className="grid grid-cols-4 gap-2 sm:gap-3">
           {ROOF_COLORS.map((color) => {
             const isSelected = materialConfig.roofColor === color.id;
@@ -1201,7 +1215,7 @@ function StepMaterial() {
                   }`}
                   style={{ backgroundColor: color.hex }}
                 />
-                <span className="text-[7px] sm:text-[8px] text-white/70 tracking-wide">{color.label}</span>
+                <span className="text-[7px] sm:text-[8px] text-white/70 tracking-wide">{t(color.labelKey)}</span>
                 {isSelected && (
                   <Check size={8} className="absolute top-0.5 right-0.5 text-[#c9a96e]" />
                 )}
@@ -1213,7 +1227,7 @@ function StepMaterial() {
 
       {/* Window Style */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">Fensterstil</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.windowStyle')}</p>
         <div className="space-y-2">
           {WINDOW_STYLES.map((style) => {
             const isSelected = materialConfig.windowStyle === style.id;
@@ -1245,8 +1259,8 @@ function StepMaterial() {
                     )}
                   </div>
                   <div className="text-left">
-                    <p className="text-[10px] sm:text-xs text-white tracking-wide">{style.label}</p>
-                    <p className="text-[8px] sm:text-[9px] text-[#8888a8]">{style.description}</p>
+                    <p className="text-[10px] sm:text-xs text-white tracking-wide">{t(style.labelKey)}</p>
+                    <p className="text-[8px] sm:text-[9px] text-[#8888a8]">{t(style.descKey)}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1269,6 +1283,7 @@ function StepMaterial() {
    ──────────────────────────────────────────── */
 
 function SummaryPanel() {
+  const { t } = useTranslation();
   const sizeConfig = useAppStore((s) => s.sizeConfig);
   const materialConfig = useAppStore((s) => s.materialConfig);
   const moduleQuality = useAppStore((s) => s.moduleQuality);
@@ -1303,7 +1318,7 @@ function SummaryPanel() {
       className="bg-[#12121f]/40 border border-white/5 rounded-lg p-4 sm:p-6 mt-6"
     >
       <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-4">
-        Zusammenfassung
+        {t('config.summary')}
       </h3>
 
       {/* Module breakdown */}
@@ -1312,7 +1327,7 @@ function SummaryPanel() {
           const assignment = mergedAssignments[pos.id];
           return (
             <div key={pos.id} className="flex items-center justify-between text-[10px]">
-              <span className="text-[#8888a8]">EG – {pos.label}</span>
+              <span className="text-[#8888a8]">{t('config.floorEG')} – {t(pos.labelKey)}</span>
               <span className="flex items-center gap-1.5">
                 {assignment && (
                   <span
@@ -1320,7 +1335,7 @@ function SummaryPanel() {
                     style={{ backgroundColor: assignment.emissiveColor }}
                   />
                 )}
-                <span className="text-[#c9a96e]">{assignment?.label || '—'}</span>
+                <span className="text-[#c9a96e]">{assignment ? t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '') : '—'}</span>
                 <span className="text-white/30">{MODULE_AREA} m²</span>
               </span>
             </div>
@@ -1330,7 +1345,7 @@ function SummaryPanel() {
           const assignment = mergedAssignments[pos.id];
           return (
             <div key={pos.id} className="flex items-center justify-between text-[10px]">
-              <span className="text-[#8888a8]">OG – {pos.label}</span>
+              <span className="text-[#8888a8]">{t('config.floorOG')} – {t(pos.labelKey)}</span>
               <span className="flex items-center gap-1.5">
                 {assignment && (
                   <span
@@ -1338,7 +1353,7 @@ function SummaryPanel() {
                     style={{ backgroundColor: assignment.emissiveColor }}
                   />
                 )}
-                <span className="text-[#c9a96e]">{assignment?.label || '—'}</span>
+                <span className="text-[#c9a96e]">{assignment ? t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '') : '—'}</span>
                 <span className="text-white/30">{MODULE_AREA} m²</span>
               </span>
             </div>
@@ -1348,40 +1363,40 @@ function SummaryPanel() {
 
       <div className="border-t border-white/5 pt-3 space-y-2">
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Wohnfläche gesamt</span>
+          <span className="text-xs text-[#8888a8]">{t('config.livingArea')}</span>
           <span className="text-sm text-white">{totalArea} m²</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Geschosse</span>
+          <span className="text-xs text-[#8888a8]">{t('config.floors')}</span>
           <span className="text-sm text-white">{sizeConfig.upperModules > 0 ? '2' : '1'}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Geschätzte Bauzeit</span>
-          <span className="text-sm text-white">~{estimatedWeeks} Wochen</span>
+          <span className="text-xs text-[#8888a8]">{t('config.estimatedBuildTime')}</span>
+          <span className="text-sm text-white">~{estimatedWeeks} {t('config.weeks')}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Außenwand</span>
+          <span className="text-xs text-[#8888a8]">{t('config.exteriorWall')}</span>
           <div className="flex items-center gap-2">
             <span
               className="w-3 h-3 rounded-sm inline-block border border-white/10"
               style={{ backgroundColor: WALL_COLORS.find(c => c.id === materialConfig.wallColor)?.hex }}
             />
-            <span className="text-sm text-white">{WALL_COLORS.find(c => c.id === materialConfig.wallColor)?.label}</span>
+            <span className="text-sm text-white">{t(WALL_COLORS.find(c => c.id === materialConfig.wallColor)?.labelKey || '')}</span>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Dach</span>
+          <span className="text-xs text-[#8888a8]">{t('config.roof')}</span>
           <div className="flex items-center gap-2">
             <span
               className="w-3 h-3 rounded-sm inline-block border border-white/10"
               style={{ backgroundColor: ROOF_COLORS.find(c => c.id === materialConfig.roofColor)?.hex }}
             />
-            <span className="text-sm text-white">{ROOF_COLORS.find(c => c.id === materialConfig.roofColor)?.label}</span>
+            <span className="text-sm text-white">{t(ROOF_COLORS.find(c => c.id === materialConfig.roofColor)?.labelKey || '')}</span>
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">Fenster</span>
-          <span className="text-sm text-white">{WINDOW_STYLES.find(w => w.id === materialConfig.windowStyle)?.label}</span>
+          <span className="text-xs text-[#8888a8]">{t('config.windows')}</span>
+          <span className="text-sm text-white">{t(WINDOW_STYLES.find(w => w.id === materialConfig.windowStyle)?.labelKey || '')}</span>
         </div>
       </div>
 
@@ -1389,12 +1404,12 @@ function SummaryPanel() {
       <div className="border-t border-white/5 pt-3 mt-3 space-y-1.5">
         {priceData.breakdown.map((item, i) => (
           <div key={i} className="flex justify-between items-center">
-            <span className="text-[10px] text-[#8888a8]">{item.label}</span>
+            <span className="text-[10px] text-[#8888a8]">{t(item.labelKey)}</span>
             <span className="text-[10px] text-white/60">{formatPrice(item.value)}</span>
           </div>
         ))}
         <div className="flex justify-between items-center pt-2 border-t border-[#c9a96e]/20">
-          <span className="text-xs text-[#c9a96e] font-medium tracking-wide">Geschätzter Preis</span>
+          <span className="text-xs text-[#c9a96e] font-medium tracking-wide">{t('config.estimatedPrice')}</span>
           <span className="text-lg text-[#c9a96e] font-light">
             <AnimatedPrice value={priceData.total} />
           </span>
@@ -1408,7 +1423,7 @@ function SummaryPanel() {
           className="flex-1 bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase text-xs min-h-[44px]"
         >
           <FileText size={14} className="mr-2" />
-          Konfiguration anfragen
+          {t('config.requestConfig')}
         </Button>
         <Button
           onClick={handleDownloadPdf}
@@ -1416,7 +1431,7 @@ function SummaryPanel() {
           className="flex-1 border-white/10 text-[#8888a8] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
         >
           <Download size={14} className="mr-2" />
-          PDF herunterladen
+          {t('config.downloadPdf')}
         </Button>
       </div>
     </motion.div>
@@ -1428,6 +1443,7 @@ function SummaryPanel() {
    ──────────────────────────────────────────── */
 
 export default function ConfiguratorSection() {
+  const { t } = useTranslation();
   const selectedModules = useAppStore((s) => s.selectedModules);
   const setSelectedModules = useAppStore((s) => s.setSelectedModules);
   const setExperienceMode = useAppStore((s) => s.setExperienceMode);
@@ -1517,9 +1533,9 @@ export default function ConfiguratorSection() {
   }, [setConfiguratorStep, setArrangeMode]);
 
   const steps = [
-    { step: 1, label: 'Größe wählen' },
-    { step: 2, label: 'Module zuweisen' },
-    { step: 3, label: 'Farbe & Material' },
+    { step: 1, label: t('config.step1') },
+    { step: 2, label: t('config.step2') },
+    { step: 3, label: t('config.step3') },
   ];
 
   return (
@@ -1547,7 +1563,7 @@ export default function ConfiguratorSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4"
           >
-            Konfigurator
+            {t('config.label')}
           </motion.p>
           <motion.h2
             initial={{ opacity: 0, y: 10 }}
@@ -1556,7 +1572,11 @@ export default function ConfiguratorSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4"
           >
-            Ihr <span className="text-gradient-gold">modulares</span> Zuhause
+            {t('config.title').split(t('config.titleAccent')).map((part, i, arr) =>
+              i < arr.length - 1
+                ? <span key={i}>{part}<span className="text-gradient-gold">{t('config.titleAccent')}</span></span>
+                : <span key={i}>{part}</span>
+            )}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -1565,7 +1585,7 @@ export default function ConfiguratorSection() {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4"
           >
-            Konfigurieren Sie Ihr Zuhause in drei einfachen Schritten.
+            {t('config.subtitle')}
           </motion.p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
@@ -1605,7 +1625,7 @@ export default function ConfiguratorSection() {
             />
             <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-md border border-white/5">
               <p className="text-[10px] tracking-[0.2em] text-[#8888a8] uppercase">
-                {arrangeMode && configuratorStep === 2 ? 'Module anordnen' : 'Modul-Vorschau'}
+                {arrangeMode && configuratorStep === 2 ? t('config.arrangeToggle') : t('config.modulePreview')}
               </p>
             </div>
 
@@ -1615,7 +1635,7 @@ export default function ConfiguratorSection() {
               animate={{ opacity: 1, y: 0 }}
               className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
             >
-              <p className="text-[8px] tracking-[0.15em] text-[#8888a8] uppercase mb-0.5">Geschätzter Preis</p>
+              <p className="text-[8px] tracking-[0.15em] text-[#8888a8] uppercase mb-0.5">{t('config.estimatedPrice')}</p>
               <p className="text-sm text-[#c9a96e] font-light tracking-wide">
                 <AnimatedPrice value={priceData.total} />
               </p>
@@ -1629,7 +1649,7 @@ export default function ConfiguratorSection() {
                 className="absolute bottom-4 left-4 right-20 bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
               >
                 <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
-                  Ziehen Sie Module an die gewünschte Position
+                  {t('config.dragHint')}
                 </p>
               </motion.div>
             )}
@@ -1642,7 +1662,7 @@ export default function ConfiguratorSection() {
                 className="absolute bottom-4 left-4 right-20 bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
               >
                 <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
-                  Klicken Sie auf eine Position, um das {MODULE_TYPES.find(m => m.id === activeType)?.label} zuzuweisen
+                  {t('config.clickPosition', { module: t(MODULE_TYPES.find(m => m.id === activeType)?.labelKey || '') })}
                 </p>
               </motion.div>
             )}
