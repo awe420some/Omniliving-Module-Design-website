@@ -15,6 +15,11 @@ import FAQSection from '@/components/FAQSection';
 import LoadingScreen from '@/components/LoadingScreen';
 import BackToTopButton from '@/components/BackToTopButton';
 import SectionDivider from '@/components/SectionDivider';
+import ScrollProgress from '@/components/ScrollProgress';
+import PricingCalculator from '@/components/PricingCalculator';
+import CookieConsent from '@/components/CookieConsent';
+import SustainabilitySection from '@/components/SustainabilitySection';
+import PartnersSection from '@/components/PartnersSection';
 import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook, ArrowUp, Send } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
@@ -48,6 +53,7 @@ export default function Home() {
 
   return (
     <>
+      <ScrollProgress />
       <LoadingScreen />
       <div className="min-h-screen flex flex-col bg-[#0a0a14]">
         {/* Navigation Bar */}
@@ -80,15 +86,30 @@ export default function Home() {
 
         <SectionDivider variant="line" />
 
+        {/* Sustainability */}
+        <SustainabilitySection />
+
+        <SectionDivider variant="gradient" />
+
         {/* Process with 6 Steps */}
         <ProcessSection />
 
         <SectionDivider variant="dots" />
 
+        {/* Partners */}
+        <PartnersSection />
+
+        <SectionDivider variant="line" />
+
         {/* Features with 6 Real Features */}
         <FeaturesSection />
 
         <SectionDivider variant="gradient" />
+
+        {/* Pricing Calculator */}
+        <PricingCalculator />
+
+        <SectionDivider variant="dots" />
 
         {/* Gallery */}
         <GallerySection />
@@ -108,9 +129,9 @@ export default function Home() {
         {/* Contact with REAL Data */}
         <ContactSection />
 
-        {/* Footer with REAL Data and Wave Divider */}
-        <footer id="footer-section" className="relative bg-[#060610] mt-auto">
-          {/* Wave/curve SVG divider at top of footer */}
+        {/* Footer with REAL Data and Enhanced Styling */}
+        <footer id="footer-section" className="relative bg-[#060610] mt-auto footer-pattern">
+          {/* Decorative SVG pattern at top */}
           <div className="absolute -top-[60px] left-0 right-0 overflow-hidden">
             <svg
               viewBox="0 0 1440 60"
@@ -126,16 +147,30 @@ export default function Home() {
             </svg>
           </div>
 
+          {/* Decorative SVG geometric pattern below wave */}
+          <div className="absolute top-0 left-0 right-0 h-4 overflow-hidden opacity-[0.03]">
+            <svg width="100%" height="16" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="footerPattern" x="0" y="0" width="40" height="16" patternUnits="userSpaceOnUse">
+                  <path d="M0 8 L20 0 L40 8 L20 16 Z" fill="#c9a96e" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="16" fill="url(#footerPattern)" />
+            </svg>
+          </div>
+
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 sm:gap-12">
               {/* Company Info */}
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <img
-                    src="/images/logo-omniliving.png"
-                    alt="Omniliving Logo"
-                    className="w-10 h-10 object-contain"
-                  />
+                  <div className="relative">
+                    <img
+                      src="/images/logo-omniliving.png"
+                      alt="Omniliving Logo"
+                      className="w-10 h-10 object-contain"
+                    />
+                  </div>
                   <div>
                     <h3 className="text-lg font-light tracking-[0.15em] text-white">
                       OMNILIVING
@@ -217,6 +252,8 @@ export default function Home() {
                     { label: 'Konfigurator', href: '#configurator' },
                     { label: 'Entdecken', href: '#scroll-experience' },
                     { label: 'Vorteile', href: '#features' },
+                    { label: 'Nachhaltigkeit', href: '#sustainability' },
+                    { label: 'Kostenrechner', href: '#pricing' },
                     { label: 'Referenzen', href: '#testimonials' },
                     { label: 'FAQ', href: '#faq' },
                     { label: 'Kontakt', href: '#contact' },
@@ -230,7 +267,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                {/* Social Media with animated icons */}
+                {/* Social Media with enhanced animated icons */}
                 <h4 className="text-sm font-medium tracking-[0.15em] text-white uppercase mb-4 mt-8">
                   Folgen Sie uns
                 </h4>
@@ -248,7 +285,7 @@ export default function Home() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={social.label}
-                        className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] hover:scale-110 hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] transition-all duration-300 group"
+                        className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center social-icon-hover hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] group"
                       >
                         <SocialIcon size={16} className="text-[#8888a8] group-hover:text-[#c9a96e] transition-colors duration-300" />
                       </a>
@@ -281,18 +318,17 @@ export default function Home() {
                   >
                     Datenschutz
                   </a>
-                  {/* Back to top link */}
-                  <a
-                    href="#hero"
-                    onClick={(e) => {
-                      e.preventDefault();
+                  {/* Back to top button with smooth scroll */}
+                  <button
+                    type="button"
+                    onClick={() => {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide flex items-center gap-1.5 group"
+                    className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide flex items-center gap-1.5 group back-to-top-hover"
                   >
                     Nach oben
                     <ArrowUp size={12} className="group-hover:-translate-y-0.5 transition-transform duration-300" />
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -301,6 +337,9 @@ export default function Home() {
 
         {/* Back to Top Button */}
         <BackToTopButton />
+
+        {/* Cookie Consent Banner */}
+        <CookieConsent />
       </div>
     </>
   );

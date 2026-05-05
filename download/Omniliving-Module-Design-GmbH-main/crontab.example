@@ -1,0 +1,2 @@
+# Run daily at 18:00 UTC to append an automated worklog heartbeat
+0 18 * * * cd /workspace/Omniliving-Module-Design-GmbH && /usr/bin/env node scripts/worklog-cron.mjs >> cron.log 2>&1

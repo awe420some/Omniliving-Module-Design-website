@@ -1,14 +1,49 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/lib/store';
+import { ChevronDown } from 'lucide-react';
+
+// CSS floating golden particles
+function FloatingParticles() {
+  const particles = useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      duration: `${6 + Math.random() * 8}s`,
+      delay: `${Math.random() * 8}s`,
+      size: `${2 + Math.random() * 3}px`,
+      opacity: 0.3 + Math.random() * 0.5,
+    })),
+  []);
+
+  return (
+    <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="golden-particle"
+          style={{
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            '--duration': p.duration,
+            '--delay': p.delay,
+            opacity: p.opacity,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const [lineProgress, setLineProgress] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const [letterboxOpacity, setLetterboxOpacity] = useState(1);
   const setExperienceMode = useAppStore((s) => s.setExperienceMode);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -16,10 +51,12 @@ export default function HeroSection() {
     setExperienceMode('hero');
   }, [setExperienceMode]);
 
-  // Parallax scroll effect
+  // Parallax scroll effect + letterbox fade
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
+      // Fade letterbox bars as user scrolls
+      setLetterboxOpacity(Math.max(0, 1 - window.scrollY / 300));
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -129,6 +166,10 @@ export default function HeroSection() {
     };
   }, [mousePos.x, mousePos.y]);
 
+  // Parallax offset for hero text (opposite to cursor, subtle)
+  const parallaxX = (mousePos.x - 0.5) * -12;
+  const parallaxY = (mousePos.y - 0.5) * -8;
+
   return (
     <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
       {/* Animated particle canvas */}
@@ -137,6 +178,9 @@ export default function HeroSection() {
         className="absolute inset-0 z-0"
         style={{ opacity: 0.6 }}
       />
+
+      {/* Floating CSS golden particles */}
+      <FloatingParticles />
 
       {/* Background gradient with parallax */}
       <div
@@ -166,6 +210,16 @@ export default function HeroSection() {
       {/* Dark gradient overlays for text readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14]/60 via-transparent to-[#0a0a14]/60 pointer-events-none z-[1]" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-[#0a0a14]/40 pointer-events-none z-[1]" />
+
+      {/* Cinematic letterbox bars (fade on scroll) */}
+      <div
+        className="letterbox-bar letterbox-bar--top"
+        style={{ opacity: letterboxOpacity }}
+      />
+      <div
+        className="letterbox-bar letterbox-bar--bottom"
+        style={{ opacity: letterboxOpacity }}
+      />
 
       {/* Animated gold vertical line on the left */}
       <div
@@ -233,10 +287,13 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* Content */}
+      {/* Content with parallax mouse-follow */}
       <div
         className="relative z-10 text-center px-4"
-        style={{ transform: `translateY(${scrollY * 0.1}px)` }}
+        style={{
+          transform: `translate(${parallaxX}px, ${parallaxY + scrollY * 0.1}px)`,
+          transition: 'transform 0.15s ease-out',
+        }}
       >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -291,20 +348,23 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1, ease: 'easeOut' }}
         >
-          <Button
-            size="lg"
-            className="group relative bg-transparent border border-[#c9a96e]/40 text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#0a0a14] px-10 py-7 text-xs tracking-[0.2em] uppercase transition-all duration-500 rounded-none overflow-hidden"
-            onClick={() => {
-              document.getElementById('scroll-experience')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            <span className="relative z-10">Entdecken Sie Ihr modulares Zuhause</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-[#c9a96e] to-[#dbb980] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-          </Button>
+          {/* CTA button with animated gradient shimmer border */}
+          <div className="inline-block gold-border-animate rounded-sm">
+            <Button
+              size="lg"
+              className="group relative bg-[#0a0a14] border-0 text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#0a0a14] px-10 py-7 text-xs tracking-[0.2em] uppercase transition-all duration-500 rounded-sm overflow-hidden"
+              onClick={() => {
+                document.getElementById('scroll-experience')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <span className="relative z-10">Entdecken Sie Ihr modulares Zuhause</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#c9a96e] to-[#dbb980] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+            </Button>
+          </div>
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll down indicator with bouncing animation */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
@@ -312,6 +372,9 @@ export default function HeroSection() {
         transition={{ duration: 1, delay: 1.5 }}
       >
         <span className="text-[9px] tracking-[0.3em] text-[#8888a8]/60 uppercase">Scroll</span>
+        <div className="bounce-down">
+          <ChevronDown size={16} className="text-[#c9a96e]/60" />
+        </div>
         <motion.div
           className="w-[1px] h-8 bg-gradient-to-b from-[#c9a96e]/60 to-transparent"
           animate={{ scaleY: [0, 1, 0] }}

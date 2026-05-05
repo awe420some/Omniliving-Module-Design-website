@@ -762,3 +762,49 @@ Stage Summary:
 - All text in German, dark luxury theme with gold accents
 - Lint passes with 0 errors
 - Dev server compiling and serving correctly
+
+---
+Task ID: 5
+Agent: 3D Scene Upgrade Developer
+Task: Major 3D scene upgrade - imperative Three.js
+
+Work Log:
+- Read reference implementation at /home/z/my-project/upload/omniliving_3_d_modular_website.jsx
+- Analyzed existing R3F-based components: SceneCanvas.tsx, ModularBuilding.tsx, SectionCutMaterial.tsx
+- Studied Zustand store integration (scrollProgress, buildingPhase, cursorPosition, isSectionCutActive, experienceMode, moduleAssignments)
+- Verified ScrollExperience.tsx imports SceneCanvas via dynamic(() => import(...), { ssr: false })
+- Verified ConfiguratorSection.tsx also imports SceneCanvas the same way
+- Rewrote SceneCanvas.tsx with imperative Three.js approach:
+  - Replaced R3F Canvas with ref-based mount component using useEffect
+  - Implemented setupRenderer(): WebGLRenderer with ACESFilmic tone mapping, PCFSoftShadowMap
+  - Implemented addArchitecturalLighting(): HemisphereLight, DirectionalLight (sun with 2048x2048 shadow map), PointLight (interior warm glow), PointLight (blue fill)
+  - Implemented createGroundPlane(): ground plane + concrete plinth + grid helper
+  - Added GLTFLoader with DRACOLoader support for real GLB model loading
+  - Added RGBELoader for HDRI environment (graceful fallback to procedural lighting)
+  - Created createFallbackArchitecturalMassing(): realistic modules with floor/roof slabs, side walls, back wall, cutaway glass, steel frame, corrugation ridges, interior furniture (sofa, bed, kitchen counter, bathroom), windows with frames, corner posts, standing seam roof, door with gold handle
+  - Module assembly animation: staggered start via getBuildProgress(), easeOutCubic, modules slide from alternating sides, scale from 0.001 to 1.0, rotation animation
+  - Camera modes: hero (cinematic orbit + mouse parallax), building (dolly in with scroll), sectioncut (closer from above), configurator (slow orbit + parallax)
+  - Section cut effect: opacity-based approach (distance from cursor to mesh), walls near cursor become transparent with golden rim emissive glow
+  - Interior glow during section cut: emissive intensity increases on floor meshes
+  - Module color updates from moduleAssignments store (wall colors lerp to match config)
+  - Zustand store integration via subscribe() outside render cycle (no re-renders)
+  - Proper cleanup: dispose geometries, materials, textures, renderer, DRACOLoader
+  - Responsive resize handler
+- Deleted ModularBuilding.tsx (replaced by SceneCanvas)
+- Deleted SectionCutMaterial.tsx (section cut now uses simple opacity approach)
+- Lint passes with 0 errors, 0 warnings
+- Dev server compiling and serving correctly
+
+Stage Summary:
+- Complete 3D scene rewrite from R3F to imperative Three.js
+- GLTFLoader/DRACOLoader support for real GLB models (with architectural fallback massing)
+- RGBELoader for HDRI environments (graceful fallback)
+- Architectural lighting system (hemisphere + directional sun + interior glow + blue fill)
+- Ground plane with concrete plinth
+- Realistic fallback modules with concrete slabs, steel frames, glass, furniture
+- Scroll-driven assembly animation with easeOutCubic and staggered starts
+- Camera modes matching reference: hero orbit, building dolly, section cut close, configurator orbit
+- Simplified section cut: opacity-based with golden rim glow instead of complex GLSL
+- Module color updates from configurator via store
+- Zustand store fully integrated without React re-renders
+- Lint clean, dev server operational

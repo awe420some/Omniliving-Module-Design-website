@@ -2,19 +2,23 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { TrendingDown, Clock, Calendar, Leaf } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface StatItem {
   value: number;
   suffix: string;
   label: string;
   prefix?: string;
+  icon: LucideIcon;
+  description: string;
 }
 
 const stats: StatItem[] = [
-  { value: 70, suffix: '%', label: 'kürzere Bauzeiten', prefix: 'bis zu' },
-  { value: 48, suffix: '', label: 'Stunden Montage vor Ort', prefix: '' },
-  { value: 6, suffix: '', label: 'Monate Gesamtprojekt', prefix: '<' },
-  { value: 100, suffix: '', label: 'Neutral Wohnen', prefix: 'CO₂' },
+  { value: 70, suffix: '%', label: 'kürzere Bauzeiten', prefix: 'bis zu', icon: TrendingDown, description: 'Durch serielle Vorfertigung' },
+  { value: 48, suffix: '', label: 'Stunden Montage vor Ort', prefix: '', icon: Clock, description: 'Assembly am Stück' },
+  { value: 6, suffix: '', label: 'Monate Gesamtprojekt', prefix: '<', icon: Calendar, description: 'Von Planung bis Einzug' },
+  { value: 100, suffix: '', label: 'Neutral Wohnen', prefix: 'CO₂', icon: Leaf, description: 'Nachhaltig & energieeffizient' },
 ];
 
 function AnimatedNumber({
@@ -68,7 +72,7 @@ function AnimatedNumber({
   const isCO2 = prefix === 'CO₂';
 
   return (
-    <span className="text-4xl sm:text-5xl md:text-6xl font-light tracking-wider text-white transition-all duration-300 group-hover:text-[#dbb980] group-hover:scale-105 inline-block">
+    <span className="text-4xl sm:text-5xl md:text-6xl font-light tracking-wider text-white stat-glow inline-block">
       {isCO2 ? (
         <>
           <span className="text-[#c9a96e]">CO</span>
@@ -168,39 +172,53 @@ export default function StatsSection() {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                variants={itemVariants}
-                className="relative flex flex-col items-center text-center group"
-              >
-                {/* Subtle pulse/glow behind stat number */}
-                <div
-                  className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pulse-glow"
-                  style={{
-                    background: 'radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%)',
-                  }}
-                />
-
-                <div className="w-8 h-[1px] bg-[#c9a96e]/30 mb-6 group-hover:w-12 transition-all duration-500" />
-
-                <div className="relative">
-                  <AnimatedNumber
-                    value={stat.value}
-                    suffix={stat.suffix}
-                    prefix={stat.prefix}
-                    inView={isInView}
-                    delay={index * 0.15}
-                    duration={2}
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={stat.label}
+                  variants={itemVariants}
+                  className={`relative flex flex-col items-center text-center group ${index < 3 ? 'golden-divider-v' : ''}`}
+                >
+                  {/* Subtle pulse/glow behind stat number */}
+                  <div
+                    className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pulse-glow"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%)',
+                    }}
                   />
-                </div>
 
-                <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
-                  {stat.label}
-                </p>
-                <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />
-              </motion.div>
-            ))}
+                  {/* Icon illustration */}
+                  <div className="w-10 h-10 rounded-lg bg-[#12121f]/60 border border-[#c9a96e]/15 flex items-center justify-center mb-4 group-hover:border-[#c9a96e]/30 group-hover:bg-[#12121f]/80 transition-all duration-500">
+                    <Icon size={18} className="text-[#c9a96e]/60 group-hover:text-[#c9a96e] transition-colors duration-500" />
+                  </div>
+
+                  <div className="w-8 h-[1px] bg-[#c9a96e]/30 mb-6 group-hover:w-12 transition-all duration-500" />
+
+                  <div className="relative">
+                    <AnimatedNumber
+                      value={stat.value}
+                      suffix={stat.suffix}
+                      prefix={stat.prefix}
+                      inView={isInView}
+                      delay={index * 0.15}
+                      duration={2}
+                    />
+                  </div>
+
+                  <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
+                    {stat.label}
+                  </p>
+
+                  {/* Description below stat */}
+                  <p className="mt-1.5 text-[10px] tracking-wider text-[#8888a8]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {stat.description}
+                  </p>
+
+                  <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </div>

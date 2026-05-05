@@ -21,19 +21,17 @@ const navLinks = [
   { label: 'Kontakt', href: '#contact' },
 ];
 
-// Magnetic hover link component
+// Magnetic hover link component with sliding underline
 function MagneticNavLink({
   label,
   href,
   isActive,
   onClick,
-  indicatorStyle,
 }: {
   label: string;
   href: string;
   isActive: boolean;
   onClick: (href: string) => void;
-  indicatorStyle: React.CSSProperties;
 }) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -62,25 +60,13 @@ function MagneticNavLink({
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300"
+      className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 nav-underline-slide ${isActive ? 'active text-[#c9a96e]' : 'text-[#8888a8] hover:text-white'}`}
       style={{
-        color: isActive ? '#c9a96e' : '#8888a8',
         transform: `translate(${offset.x}px, ${offset.y}px)`,
         transition: offset.x === 0 ? 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s' : 'transform 0.15s ease-out, color 0.3s',
       }}
     >
       {label}
-      {/* Sliding gold underline indicator */}
-      <motion.div
-        className="absolute bottom-0 left-4 right-4 h-[1.5px]"
-        style={{ backgroundColor: '#c9a96e' }}
-        initial={false}
-        animate={{
-          scaleX: isActive ? 1 : 0,
-          opacity: isActive ? 1 : 0,
-        }}
-        transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-      />
     </a>
   );
 }
@@ -140,8 +126,8 @@ export default function NavigationBar() {
     []
   );
 
-  // Dynamic blur: 0px → 12px based on scroll
-  const blurAmount = scrollProgress * 12;
+  // Dynamic blur: 0px → 20px based on scroll (glass morphism)
+  const blurAmount = scrollProgress * 20;
   const borderGlowOpacity = scrollProgress * 0.15;
 
   return (
@@ -149,7 +135,7 @@ export default function NavigationBar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'nav-gradient-border' : ''}`}
       style={{
         backgroundColor: `rgba(10, 10, 20, ${0.3 + scrollProgress * 0.65})`,
         backdropFilter: `blur(${blurAmount}px)`,
@@ -162,6 +148,7 @@ export default function NavigationBar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo with shimmer effect when scrolled */}
           <a
             href="#hero"
             onClick={(e) => {
@@ -170,12 +157,14 @@ export default function NavigationBar() {
             }}
             className="flex items-center gap-2 group"
           >
-            <img
-              src="/images/logo-omniliving.png"
-              alt="Omniliving"
-              className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110"
-            />
-            <span className="text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#c9a96e] transition-colors duration-300">
+            <div className={`relative ${scrolled ? 'logo-shimmer' : ''}`}>
+              <img
+                src="/images/logo-omniliving.png"
+                alt="Omniliving"
+                className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110"
+              />
+            </div>
+            <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#c9a96e] transition-colors duration-300 ${scrolled ? 'text-[#c9a96e]/80' : ''}`}>
               OMNILIVING
             </span>
           </a>
@@ -191,7 +180,6 @@ export default function NavigationBar() {
                   href={link.href}
                   isActive={isActive}
                   onClick={handleNavClick}
-                  indicatorStyle={{ backgroundColor: '#c9a96e' }}
                 />
               );
             })}

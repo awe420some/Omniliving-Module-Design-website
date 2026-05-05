@@ -143,7 +143,7 @@ export default function FeaturesSection() {
             return (
               <motion.div key={feature.title} variants={cardVariants}>
                 <TiltCard>
-                  <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.06)]">
+                  <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full shimmer-sweep feature-card-glow hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.06)]">
                     <div className="p-6 sm:p-8 relative overflow-hidden">
                       {/* Animated icon background (subtle rotating gradient) */}
                       <div
@@ -155,11 +155,11 @@ export default function FeaturesSection() {
                       >
                         <Icon
                           size={22}
-                          className="transition-colors duration-500 relative z-10"
+                          className="transition-all duration-500 relative z-10 group-hover:scale-110 group-hover:-rotate-6"
                           style={{ color: feature.accent }}
                         />
                       </div>
-                      <h3 className="text-lg font-medium tracking-wide text-white mb-3">
+                      <h3 className="text-lg font-medium tracking-wide text-white mb-3 group-hover:text-[#dbb980] transition-colors duration-300">
                         {feature.title}
                       </h3>
                       <p className="text-sm text-[#8888a8] leading-relaxed">

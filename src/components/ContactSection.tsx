@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Send, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Phone, Mail, MapPin, Send, Loader2, MapPinned } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -76,8 +76,52 @@ function ContactInfoCard({
   );
 }
 
+// Map placeholder with pin animation
+function MapPlaceholder() {
+  return (
+    <div className="relative w-full h-48 sm:h-56 rounded-lg overflow-hidden border border-white/5 bg-[#12121f]/30">
+      {/* Stylized map grid */}
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(201, 169, 110, 0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(201, 169, 110, 0.5) 1px, transparent 1px)
+          `,
+          backgroundSize: '30px 30px',
+        }}
+      />
+      {/* Stylized roads */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-[70%] h-[1px] bg-white/5 rotate-12" />
+      </div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-[1px] h-[60%] bg-white/5 -rotate-12" />
+      </div>
+      {/* Pin */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full pin-bounce">
+        <div className="relative">
+          <MapPinned size={32} className="text-[#c9a96e]" />
+        </div>
+      </div>
+      {/* Pin shadow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-1">
+        <div className="w-4 h-1.5 rounded-full bg-[#c9a96e]/20 pin-shadow-pulse" />
+      </div>
+      {/* Address label */}
+      <div className="absolute bottom-3 left-3 right-3 text-center">
+        <p className="text-[10px] text-[#8888a8]/60 tracking-wider">
+          Teutoburger Straße 23 a, 33330 Gütersloh
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sendAnimating, setSendAnimating] = useState(false);
+  const formRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -93,6 +137,7 @@ export default function ContactSection() {
 
   async function onSubmit(_data: ContactFormData) {
     setIsSubmitting(true);
+    setSendAnimating(true);
     // Simulate network delay for loading animation
     await new Promise((resolve) => setTimeout(resolve, 1500));
     toast({
@@ -102,10 +147,11 @@ export default function ContactSection() {
     });
     form.reset();
     setIsSubmitting(false);
+    setTimeout(() => setSendAnimating(false), 600);
   }
 
   const inputClasses =
-    'bg-[#12121f] border border-white/10 text-white focus:border-[#c9a96e] focus-visible:border-[#c9a96e] focus-visible:ring-[#c9a96e]/20 placeholder:text-[#8888a8]';
+    'bg-[#12121f] border border-white/10 text-white focus:border-[#c9a96e] focus-visible:border-[#c9a96e] focus-visible:ring-[#c9a96e]/20 focus-visible:ring-2 placeholder:text-[#8888a8] transition-all duration-300';
 
   return (
     <section id="contact" className="relative bg-[#0f0f20] px-4 sm:px-6 lg:px-8 py-20 sm:py-28 overflow-hidden">
@@ -114,6 +160,10 @@ export default function ContactSection() {
 
       {/* Subtle background pattern */}
       <div className="absolute inset-0 diagonal-lines pointer-events-none" />
+
+      {/* Decorative corners */}
+      <div className="absolute top-8 left-8 w-20 h-20 border-t border-l border-[#c9a96e]/10 pointer-events-none" />
+      <div className="absolute bottom-8 right-8 w-20 h-20 border-b border-r border-[#c9a96e]/10 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
@@ -125,17 +175,19 @@ export default function ContactSection() {
             transition={{ duration: 0.8 }}
             className="flex flex-col justify-center"
           >
-            <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
-              KONTAKT
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-6 leading-tight">
-              Lassen Sie uns Ihr{' '}
-              <span className="text-gradient-gold">Traumhaus</span> planen
-            </h2>
-            <p className="text-sm sm:text-base text-[#8888a8] leading-relaxed mb-10 max-w-md">
-              Vereinbaren Sie ein unverbindliches Beratungsgespräch und erfahren
-              Sie, wie Ihr modulares Zuhause Wirklichkeit werden kann.
-            </p>
+            <div className="decorative-corners p-1">
+              <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+                KONTAKT
+              </p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-6 leading-tight">
+                Lassen Sie uns Ihr{' '}
+                <span className="text-gradient-gold">Traumhaus</span> planen
+              </h2>
+              <p className="text-sm sm:text-base text-[#8888a8] leading-relaxed mb-10 max-w-md">
+                Vereinbaren Sie ein unverbindliches Beratungsgespräch und erfahren
+                Sie, wie Ihr modulares Zuhause Wirklichkeit werden kann.
+              </p>
+            </div>
 
             {/* Contact details with hover lift cards */}
             <div className="flex flex-col gap-4">
@@ -153,10 +205,16 @@ export default function ContactSection() {
                 </span>
               </ContactInfoCard>
             </div>
+
+            {/* Map placeholder with pin animation */}
+            <div className="mt-8">
+              <MapPlaceholder />
+            </div>
           </motion.div>
 
           {/* Right column: Form with gold accent line */}
           <motion.div
+            ref={formRef}
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -314,17 +372,40 @@ export default function ContactSection() {
                   disabled={isSubmitting}
                   className={`w-full sm:w-auto bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase px-8 py-6 text-sm transition-all duration-500 rounded-none border-0 relative overflow-hidden ${isSubmitting ? 'btn-loading' : ''}`}
                 >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 size={16} className="animate-spin" />
-                      Wird gesendet...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <Send size={16} />
-                      Nachricht senden
-                    </span>
-                  )}
+                  <AnimatePresence mode="wait">
+                    {isSubmitting ? (
+                      <motion.span
+                        key="loading"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="flex items-center gap-2"
+                      >
+                        <Loader2 size={16} className="animate-spin" />
+                        Wird gesendet...
+                      </motion.span>
+                    ) : sendAnimating ? (
+                      <motion.span
+                        key="sent"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="flex items-center gap-2"
+                      >
+                        <Send size={16} className="send-fly" />
+                        Gesendet!
+                      </motion.span>
+                    ) : (
+                      <motion.span
+                        key="default"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center gap-2"
+                      >
+                        <Send size={16} />
+                        Nachricht senden
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </Button>
               </form>
             </Form>
