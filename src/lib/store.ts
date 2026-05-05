@@ -10,6 +10,24 @@ export interface ModuleDef {
   emissiveColor: string;
 }
 
+/* ─── Material / color configuration ─── */
+export type WallColor = 'anthrazit' | 'schwarz' | 'weiss' | 'holzoptik' | 'rost' | 'blaugrau';
+export type RoofColor = 'anthrazit' | 'schwarz' | 'ziegelrot' | 'gruen';
+export type WindowStyle = 'standard' | 'panorama' | 'sprossen';
+export type ModuleQuality = 'standard' | 'premium';
+
+export interface MaterialConfig {
+  wallColor: WallColor;
+  roofColor: RoofColor;
+  windowStyle: WindowStyle;
+}
+
+/* ─── Size configuration ─── */
+export interface SizeConfig {
+  groundModules: number; // 1-4
+  upperModules: number;  // 0-4 (0 = single-story)
+}
+
 interface AppState {
   scrollProgress: number;
   buildingPhase: number;
@@ -19,6 +37,13 @@ interface AppState {
   isSectionCutActive: boolean;
   experienceMode: 'hero' | 'building' | 'sectioncut' | 'configurator';
   moduleAssignments: Record<string, ModuleDef>;
+
+  // New configurator state
+  configuratorStep: number; // 1, 2, or 3
+  sizeConfig: SizeConfig;
+  materialConfig: MaterialConfig;
+  moduleQuality: ModuleQuality;
+
   setScrollProgress: (progress: number) => void;
   setBuildingPhase: (phase: number) => void;
   setActiveModule: (module: string | null) => void;
@@ -27,7 +52,25 @@ interface AppState {
   setSectionCutActive: (active: boolean) => void;
   setExperienceMode: (mode: AppState['experienceMode']) => void;
   setModuleAssignment: (positionId: string, moduleDef: ModuleDef) => void;
+
+  // New configurator actions
+  setConfiguratorStep: (step: number) => void;
+  setSizeConfig: (config: Partial<SizeConfig>) => void;
+  setMaterialConfig: (config: Partial<MaterialConfig>) => void;
+  setModuleQuality: (quality: ModuleQuality) => void;
+  resetConfigurator: () => void;
 }
+
+const defaultSizeConfig: SizeConfig = {
+  groundModules: 3,
+  upperModules: 3,
+};
+
+const defaultMaterialConfig: MaterialConfig = {
+  wallColor: 'anthrazit',
+  roofColor: 'anthrazit',
+  windowStyle: 'standard',
+};
 
 export const useAppStore = create<AppState>((set) => ({
   scrollProgress: 0,
@@ -38,6 +81,13 @@ export const useAppStore = create<AppState>((set) => ({
   isSectionCutActive: false,
   experienceMode: 'hero',
   moduleAssignments: {},
+
+  // New configurator state
+  configuratorStep: 1,
+  sizeConfig: defaultSizeConfig,
+  materialConfig: defaultMaterialConfig,
+  moduleQuality: 'standard',
+
   setScrollProgress: (progress) => set({ scrollProgress: progress }),
   setBuildingPhase: (phase) => set({ buildingPhase: phase }),
   setActiveModule: (module) => set({ activeModule: module }),
@@ -49,4 +99,25 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       moduleAssignments: { ...state.moduleAssignments, [positionId]: moduleDef },
     })),
+
+  // New configurator actions
+  setConfiguratorStep: (step) => set({ configuratorStep: step }),
+  setSizeConfig: (config) =>
+    set((state) => ({
+      sizeConfig: { ...state.sizeConfig, ...config },
+    })),
+  setMaterialConfig: (config) =>
+    set((state) => ({
+      materialConfig: { ...state.materialConfig, ...config },
+    })),
+  setModuleQuality: (quality) => set({ moduleQuality: quality }),
+  resetConfigurator: () =>
+    set({
+      configuratorStep: 1,
+      sizeConfig: defaultSizeConfig,
+      materialConfig: defaultMaterialConfig,
+      moduleQuality: 'standard',
+      moduleAssignments: {},
+      selectedModules: [],
+    }),
 }));

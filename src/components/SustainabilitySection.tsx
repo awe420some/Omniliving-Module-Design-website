@@ -35,7 +35,7 @@ const STATS: StatItem[] = [
     label: 'Recyclebar',
     value: 95,
     suffix: '%',
-    description: 'Der verwendeten Materialien sind wiederverwertbar',
+    description: 'Die verwendeten Materialien sind wiederverwertbar',
     color: '#86efac',
   },
   {

@@ -16,7 +16,7 @@ interface StatItem {
 
 const stats: StatItem[] = [
   { value: 70, suffix: '%', label: 'kürzere Bauzeiten', prefix: 'bis zu', icon: TrendingDown, description: 'Durch serielle Vorfertigung' },
-  { value: 48, suffix: '', label: 'Stunden Montage vor Ort', prefix: '', icon: Clock, description: 'Assembly am Stück' },
+  { value: 48, suffix: '', label: 'Stunden Montage vor Ort', prefix: '', icon: Clock, description: 'Montage am Stück' },
   { value: 6, suffix: '', label: 'Monate Gesamtprojekt', prefix: '<', icon: Calendar, description: 'Von Planung bis Einzug' },
   { value: 100, suffix: '', label: 'Neutral Wohnen', prefix: 'CO₂', icon: Leaf, description: 'Nachhaltig & energieeffizient' },
 ];
