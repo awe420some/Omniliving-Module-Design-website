@@ -314,11 +314,15 @@ export default function BeforeAfterSlider() {
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
-              {/* Warm golden tint for modular */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#c9a96e]/12 via-[#dbb980]/5 to-[#f5d990]/8" />
-              {/* Subtle warm light overlay from top-right */}
+              {/* Warm golden tint for modular - slightly brighter */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#c9a96e]/15 via-[#dbb980]/8 to-[#f5d990]/10" />
+              {/* Subtle warm light overlay from top-right - enhanced */}
               <div className="absolute inset-0 bg-[#c9a96e]/5" style={{
-                background: 'radial-gradient(ellipse at 70% 20%, rgba(201,169,110,0.15) 0%, transparent 60%)',
+                background: 'radial-gradient(ellipse at 70% 20%, rgba(201,169,110,0.2) 0%, transparent 60%)',
+              }} />
+              {/* Green nature tint at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 h-1/4" style={{
+                background: 'linear-gradient(to top, rgba(45,74,62,0.15) 0%, transparent 100%)',
               }} />
               {/* Sparkle canvas overlay */}
               <canvas
@@ -342,14 +346,14 @@ export default function BeforeAfterSlider() {
               />
 
               {/* Cold blue/gray desaturation overlay */}
-              <div className="absolute inset-0 bg-[#3a4a5a]/50 mix-blend-saturation" />
-              <div className="absolute inset-0 bg-[#2a3a4a]/35 mix-blend-multiply" />
+              <div className="absolute inset-0 bg-[#3a4a5a]/60 mix-blend-saturation" />
+              <div className="absolute inset-0 bg-[#2a3a4a]/45 mix-blend-multiply" />
               
-              {/* Heavy cold blue tint */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#1a2a3a]/60 via-[#2a3a5a]/40 to-[#1a2a3a]/60" />
+              {/* Heavy cold blue tint - construction feel */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#1a2a3a]/70 via-[#2a3a5a]/50 to-[#1a2a3a]/70" />
               
-              {/* Desaturation - make it look gray and dull */}
-              <div className="absolute inset-0 bg-[#4a5a6a]/25 mix-blend-saturation" />
+              {/* Strong desaturation - make it look gray and dull */}
+              <div className="absolute inset-0 bg-[#4a5a6a]/35 mix-blend-saturation" />
 
               {/* Concrete/mess texture noise overlay */}
               <div className="absolute inset-0 opacity-[0.12]" style={{
@@ -359,19 +363,19 @@ export default function BeforeAfterSlider() {
                 `,
               }} />
 
-              {/* Scaffolding overlay using CSS */}
-              <div className="absolute inset-0 opacity-25" style={{
+              {/* Scaffolding overlay using CSS - more prominent */}
+              <div className="absolute inset-0 opacity-35" style={{
                 backgroundImage: `
-                  repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(180,180,180,0.4) 80px, rgba(180,180,180,0.4) 82px),
-                  repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(180,180,180,0.3) 50px, rgba(180,180,180,0.3) 52px)
+                  repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(180,180,180,0.5) 60px, rgba(180,180,180,0.5) 62px),
+                  repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(180,180,180,0.4) 40px, rgba(180,180,180,0.4) 42px)
                 `,
               }} />
 
               {/* Diagonal cross braces for scaffolding */}
-              <div className="absolute inset-0 opacity-10" style={{
+              <div className="absolute inset-0 opacity-15" style={{
                 backgroundImage: `
-                  repeating-linear-gradient(45deg, transparent, transparent 60px, rgba(150,150,150,0.3) 60px, rgba(150,150,150,0.3) 62px),
-                  repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(150,150,150,0.3) 60px, rgba(150,150,150,0.3) 62px)
+                  repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(150,150,150,0.4) 50px, rgba(150,150,150,0.4) 52px),
+                  repeating-linear-gradient(-45deg, transparent, transparent 50px, rgba(150,150,150,0.4) 50px, rgba(150,150,150,0.4) 52px)
                 `,
               }} />
 
@@ -392,20 +396,20 @@ export default function BeforeAfterSlider() {
                 <div className="absolute bottom-0 right-[15%] w-[10%] h-[50%] bg-[#3a3020]/30 rounded-t-full blur-sm" />
               </div>
 
-              {/* Red/gray construction warning stripes at top */}
-              <div className="absolute top-0 left-0 right-0 h-8 opacity-30" style={{
+              {/* Red/gray construction warning stripes at top - more visible */}
+              <div className="absolute top-0 left-0 right-0 h-10 opacity-45" style={{
                 backgroundImage: `repeating-linear-gradient(
                   -45deg,
                   #8a2020,
-                  #8a2020 8px,
-                  #6a6a6a 8px,
-                  #6a6a6a 16px
+                  #8a2020 10px,
+                  #6a6a6a 10px,
+                  #6a6a6a 20px
                 )`,
               }} />
-              <div className="absolute top-8 left-0 right-0 h-[1px] bg-[#8a2020]/20" />
+              <div className="absolute top-10 left-0 right-0 h-[1px] bg-[#8a2020]/30" />
 
-              {/* Construction crane silhouette - top right */}
-              <svg className="absolute top-0 right-[5%] w-[30%] h-[80%] opacity-15" viewBox="0 0 200 400" preserveAspectRatio="xMidYMin">
+              {/* Construction crane silhouette - top right - more visible */}
+              <svg className="absolute top-0 right-[5%] w-[30%] h-[80%] opacity-22" viewBox="0 0 200 400" preserveAspectRatio="xMidYMin">
                 {/* Crane mast */}
                 <rect x="95" y="20" width="10" height="360" fill="#777" />
                 {/* Crane jib (horizontal arm) */}

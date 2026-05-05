@@ -217,18 +217,18 @@ function AnimatedPrice({ value }: { value: number }) {
    Grid layout constants
    ──────────────────────────────────────────── */
 
-const GRID_COLS = 4;
-const GRID_ROWS = 2; // row 0 = upper, row 1 = ground
-const CELL_W = 108;
-const CELL_H = 78;
+const GRID_COLS = 5;
+const GRID_ROWS = 3; // row 0-1 = upper area, row 2 = ground
+const CELL_W = 96;
+const CELL_H = 68;
 const CELL_GAP = 4;
 const DEFAULT_MODULE_LAYOUT: Record<string, { col: number; row: number }> = {
-  'ground-0': { col: 0, row: 1 },
-  'ground-1': { col: 1, row: 1 },
-  'ground-2': { col: 2, row: 1 },
-  'upper-0': { col: 0, row: 0 },
-  'upper-1': { col: 1, row: 0 },
-  'upper-2': { col: 2, row: 0 },
+  'ground-0': { col: 1, row: 2 },
+  'ground-1': { col: 2, row: 2 },
+  'ground-2': { col: 3, row: 2 },
+  'upper-0': { col: 1, row: 0 },
+  'upper-1': { col: 2, row: 0 },
+  'upper-2': { col: 3, row: 0 },
 };
 
 /* ────────────────────────────────────────────
@@ -464,57 +464,57 @@ function BuildingIllustration({
           className="relative mx-auto"
           style={{ width: gridTotalW, height: gridTotalH }}
         >
-          {/* Grid overlay lines (visible in arrange mode) */}
-          {arrangeMode && (
-            <div className="absolute inset-0 pointer-events-none">
-              {/* Column dividers */}
-              {Array.from({ length: GRID_COLS + 1 }).map((_, i) => (
+          {/* Grid overlay lines - always visible for drag guidance */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Column dividers */}
+            {Array.from({ length: GRID_COLS + 1 }).map((_, i) => (
+              <div
+                key={`col-${i}`}
+                className="absolute top-0 bottom-0 w-[1px]"
+                style={{
+                  left: i * (CELL_W + CELL_GAP) - CELL_GAP / 2,
+                  backgroundColor: arrangeMode ? 'rgba(201,169,110,0.1)' : 'rgba(201,169,110,0.04)',
+                }}
+              />
+            ))}
+            {/* Row dividers */}
+            {Array.from({ length: GRID_ROWS + 1 }).map((_, i) => (
+              <div
+                key={`row-${i}`}
+                className="absolute left-0 right-0 h-[1px]"
+                style={{
+                  top: i * (CELL_H + CELL_GAP) - CELL_GAP / 2,
+                  backgroundColor: arrangeMode ? 'rgba(201,169,110,0.1)' : 'rgba(201,169,110,0.04)',
+                }}
+              />
+            ))}
+            {/* Cell backgrounds */}
+            {Array.from({ length: GRID_ROWS }).map((_, row) =>
+              Array.from({ length: GRID_COLS }).map((_, col) => (
                 <div
-                  key={`col-${i}`}
-                  className="absolute top-0 bottom-0 w-[1px]"
+                  key={`cell-${row}-${col}`}
+                  className="absolute rounded-sm border border-dashed"
                   style={{
-                    left: i * (CELL_W + CELL_GAP) - CELL_GAP / 2,
-                    backgroundColor: 'rgba(201,169,110,0.08)',
+                    left: col * (CELL_W + CELL_GAP),
+                    top: row * (CELL_H + CELL_GAP),
+                    width: CELL_W,
+                    height: CELL_H,
+                    borderColor: ghostPos && ghostPos.col === col && ghostPos.row === row
+                      ? 'rgba(201,169,110,0.4)'
+                      : arrangeMode
+                        ? 'rgba(201,169,110,0.1)'
+                        : 'rgba(201,169,110,0.03)',
+                    backgroundColor: ghostPos && ghostPos.col === col && ghostPos.row === row
+                      ? 'rgba(201,169,110,0.06)'
+                      : 'rgba(201,169,110,0.01)',
                   }}
                 />
-              ))}
-              {/* Row dividers */}
-              {Array.from({ length: GRID_ROWS + 1 }).map((_, i) => (
-                <div
-                  key={`row-${i}`}
-                  className="absolute left-0 right-0 h-[1px]"
-                  style={{
-                    top: i * (CELL_H + CELL_GAP) - CELL_GAP / 2,
-                    backgroundColor: 'rgba(201,169,110,0.08)',
-                  }}
-                />
-              ))}
-              {/* Cell backgrounds */}
-              {Array.from({ length: GRID_ROWS }).map((_, row) =>
-                Array.from({ length: GRID_COLS }).map((_, col) => (
-                  <div
-                    key={`cell-${row}-${col}`}
-                    className="absolute rounded-sm border border-dashed"
-                    style={{
-                      left: col * (CELL_W + CELL_GAP),
-                      top: row * (CELL_H + CELL_GAP),
-                      width: CELL_W,
-                      height: CELL_H,
-                      borderColor: ghostPos && ghostPos.col === col && ghostPos.row === row
-                        ? 'rgba(201,169,110,0.4)'
-                        : 'rgba(201,169,110,0.1)',
-                      backgroundColor: ghostPos && ghostPos.col === col && ghostPos.row === row
-                        ? 'rgba(201,169,110,0.06)'
-                        : 'rgba(201,169,110,0.02)',
-                    }}
-                  />
-                ))
-              )}
-            </div>
-          )}
+              ))
+            )}
+          </div>
 
-          {/* Ghost position (drop preview) */}
-          {arrangeMode && ghostPos && draggingId && (
+          {/* Ghost position (drop preview) - always show when dragging */}
+          {ghostPos && draggingId && (
             <motion.div
               className="absolute rounded-sm border-2 border-dashed border-[#c9a96e]/50 pointer-events-none"
               style={{
@@ -559,9 +559,9 @@ function BuildingIllustration({
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
                 <motion.button
-                  onClick={() => { if (!arrangeMode) onPositionClick(pos.id); }}
-                  disabled={!arrangeMode && !activeType}
-                  drag={arrangeMode}
+                  onClick={() => { if (!arrangeMode && activeType) onPositionClick(pos.id); }}
+                  disabled={false}
+                  drag={true}
                   dragMomentum={false}
                   dragElastic={0.1}
                   dragConstraints={containerRef}
@@ -570,18 +570,18 @@ function BuildingIllustration({
                   onDragEnd={(_e, info) => handleDragEnd(pos.id, _e, info)}
                   className={`relative flex flex-col items-center justify-center rounded-sm transition-colors duration-200 border-2 w-full h-full ${
                     isDragging
-                      ? 'border-[#c9a96e] shadow-[0_0_24px_rgba(201,169,110,0.35)] scale-105'
+                      ? 'border-[#c9a96e] shadow-[0_0_24px_rgba(201,169,110,0.35)] scale-105 cursor-grabbing'
                       : isFlashing
                         ? 'border-[#c9a96e] shadow-[0_0_20px_rgba(201,169,110,0.3)]'
                         : arrangeMode
                           ? 'border-[#c9a96e]/30 cursor-grab active:cursor-grabbing hover:border-[#c9a96e]/50 hover:shadow-[0_0_12px_rgba(201,169,110,0.15)]'
                           : isInteractive
-                            ? 'border-white/10 hover:border-[#c9a96e]/50 hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] cursor-pointer'
-                            : 'border-white/5 cursor-default'
+                            ? 'border-white/10 hover:border-[#c9a96e]/50 hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] cursor-grab active:cursor-grabbing'
+                            : 'border-white/5 cursor-grab active:cursor-grabbing hover:border-[#c9a96e]/20'
                   }`}
                   style={{ backgroundColor: wallHex }}
-                  whileHover={isInteractive ? { scale: 1.05 } : arrangeMode ? { scale: 1.02 } : {}}
-                  whileTap={isInteractive ? { scale: 0.98 } : {}}
+                  whileHover={isInteractive ? { scale: 1.05 } : arrangeMode ? { scale: 1.02 } : { scale: 1.02 }}
+                  whileTap={isDragging ? { scale: 1.05 } : { scale: 0.98 }}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: isDragging ? 1.05 : 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
@@ -594,12 +594,10 @@ function BuildingIllustration({
                     }}
                   />
 
-                  {/* Drag handle in arrange mode */}
-                  {arrangeMode && (
-                    <div className="absolute top-0.5 right-0.5 z-20">
-                      <GripVertical size={10} className="text-[#c9a96e]/50" />
-                    </div>
-                  )}
+                  {/* Drag handle - always visible */}
+                  <div className="absolute top-0.5 right-0.5 z-20">
+                    <Move size={10} className="text-[#c9a96e]/40 group-hover:text-[#c9a96e]/70 transition-colors" />
+                  </div>
 
                   {/* Ventilation hood for kitchen on upper floor */}
                   {hasHood && (
@@ -690,6 +688,17 @@ function BuildingIllustration({
         <div className="absolute -top-2 -right-2 bg-[#c9a96e] text-[#0a0a14] text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
           {totalModules}
         </div>
+
+        {/* Drag hint */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none"
+        >
+          <Move size={10} className="text-[#c9a96e]/30" />
+          <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/30 uppercase">{t('config.dragHint')}</span>
+        </motion.div>
 
         {/* Scale reference - person silhouette */}
         <div className="absolute -right-6 bottom-5 hidden sm:flex flex-col items-center opacity-15">

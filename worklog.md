@@ -963,3 +963,47 @@ Stage Summary:
 - All hardcoded German text replaced with t() function calls
 - Parameter interpolation for validation messages
 - Lint clean, dev server running correctly
+
+---
+Task ID: Refinement-Round-1
+Agent: Main
+Task: Fix VirtualTourSection camera, brighten 4-layer parallax, enhance Configurator drag, improve BeforeAfterSlider
+
+Work Log:
+- Fixed VirtualTourSection camera distance:
+  - Expanded SVG viewBox from "-8 -5 116 115" to "-16 -12 132 140" (more padding/spacing)
+  - Reduced parallax movement offsets (offsetX: -20→-15, offsetY: -12→-9) for less jarring motion
+  - Brightened night wall color from #14142a to #1a1a36
+  - Brightened floor colors from #101020/#1c1c34 to #181830/#282848
+- Brightened 4-layer parallax colors in VirtualTourSection:
+  - Wohnen: bgColor #242440→#2e2e50, furnitureColor #363650→#424268, windowColor opacity 0.3→0.4
+  - Schlafen: bgColor #282844→#323258, furnitureColor #3a3a54→#464668, windowColor opacity 0.2→0.3
+  - Küche: bgColor #262640→#2e2e4c, furnitureColor #383850→#424264, windowColor opacity 0.25→0.35
+  - Bad: bgColor #1e1e36→#282844, furnitureColor #2a2a44→#383858, windowColor opacity 0.2→0.3
+- Enhanced Configurator drag functionality:
+  - Changed drag from arrangeMode-only to always enabled (drag={true} instead of drag={arrangeMode})
+  - All modules now show cursor-grab by default, not just in arrange mode
+  - Made grid overlay always visible (subtle in normal mode, brighter in arrange mode)
+  - Ghost drop preview now shows during any drag, not just arrange mode
+  - Added Move icon as drag handle (always visible, replaces GripVertical)
+  - Expanded grid from 4x2 to 5x3 for more layout flexibility (L-shapes, T-shapes, etc.)
+  - Repositioned default module layout to center of larger grid
+  - Added drag hint text below building illustration ("Module ziehen & ablegen")
+  - Added config.dragHint translation key in both German and English
+- Improved BeforeAfterSlider visual contrast:
+  - Conventional side: Increased desaturation overlay opacity (50%→60% saturation, 35%→45% multiply)
+  - Conventional side: Stronger cold blue tint (60%→70% opacity gradient)
+  - Conventional side: More prominent scaffolding (25%→35% opacity, tighter grid spacing)
+  - Conventional side: Diagonal cross braces more visible (10%→15% opacity)
+  - Conventional side: Larger construction warning stripes (h-8→h-10, 30%→45% opacity)
+  - Conventional side: More visible construction crane (15%→22% opacity)
+  - Modular side: Brighter golden tint (12%→15% opacity)
+  - Modular side: Enhanced warm light overlay (15%→20% radial gradient)
+  - Modular side: Added green nature tint at bottom of modular side
+
+Stage Summary:
+- VirtualTourSection now has more comfortable viewing distance and brighter parallax layers
+- Configurator modules are always draggable - users can create custom shapes without needing arrange mode
+- BeforeAfterSlider shows much more dramatic visual contrast between conventional (cold, messy, under construction) and modular (warm, clean, finished)
+- Grid expanded from 4x2 to 5x3 for more creative layout options
+- Lint passes clean, dev server running successfully

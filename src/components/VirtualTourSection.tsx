@@ -35,10 +35,10 @@ const MODULE_INTERIORS: ModuleInterior[] = [
     labelKey: 'module.wohnen',
     icon: Home,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#242440',
-    furnitureColor: '#363650',
+    bgColor: '#2e2e50',
+    furnitureColor: '#424268',
     accentColor: '#c9a96e',
-    windowColor: 'rgba(135, 206, 235, 0.3)',
+    windowColor: 'rgba(135, 206, 235, 0.4)',
     hotspots: [
       { id: 'sofa', labelKey: 'hotspot.sofa', detailKey: 'hotspot.sofa.detail', dimsKey: 'hotspot.sofa.dims', matKey: 'hotspot.sofa.mat', x: 30, y: 65, depth: 3 },
       { id: 'coffee', labelKey: 'hotspot.coffee', detailKey: 'hotspot.coffee.detail', dimsKey: 'hotspot.coffee.dims', matKey: 'hotspot.coffee.mat', x: 40, y: 55, depth: 3 },
@@ -52,10 +52,10 @@ const MODULE_INTERIORS: ModuleInterior[] = [
     labelKey: 'module.schlafen',
     icon: Bed,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#282844',
-    furnitureColor: '#3a3a54',
+    bgColor: '#323258',
+    furnitureColor: '#464668',
     accentColor: '#c9a96e',
-    windowColor: 'rgba(135, 206, 235, 0.2)',
+    windowColor: 'rgba(135, 206, 235, 0.3)',
     hotspots: [
       { id: 'bed', labelKey: 'hotspot.bed', detailKey: 'hotspot.bed.detail', dimsKey: 'hotspot.bed.dims', matKey: 'hotspot.bed.mat', x: 35, y: 60, depth: 3 },
       { id: 'nightstand1', labelKey: 'hotspot.nightstand1', detailKey: 'hotspot.nightstand1.detail', dimsKey: 'hotspot.nightstand1.dims', matKey: 'hotspot.nightstand1.mat', x: 18, y: 55, depth: 3 },
@@ -69,10 +69,10 @@ const MODULE_INTERIORS: ModuleInterior[] = [
     labelKey: 'module.kueche',
     icon: UtensilsCrossed,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#262640',
-    furnitureColor: '#383850',
+    bgColor: '#2e2e4c',
+    furnitureColor: '#424264',
     accentColor: '#c9a96e',
-    windowColor: 'rgba(135, 206, 235, 0.25)',
+    windowColor: 'rgba(135, 206, 235, 0.35)',
     hotspots: [
       { id: 'counter', labelKey: 'hotspot.counter', detailKey: 'hotspot.counter.detail', dimsKey: 'hotspot.counter.dims', matKey: 'hotspot.counter.mat', x: 35, y: 50, depth: 3 },
       { id: 'stove', labelKey: 'hotspot.stove', detailKey: 'hotspot.stove.detail', dimsKey: 'hotspot.stove.dims', matKey: 'hotspot.stove.mat', x: 25, y: 45, depth: 3 },
@@ -86,10 +86,10 @@ const MODULE_INTERIORS: ModuleInterior[] = [
     labelKey: 'module.bad',
     icon: Bath,
     specs: { flaeche: '15 m²', hoehe: '2,6 m', laenge: '6,0 m', breite: '2,5 m' },
-    bgColor: '#1e1e36',
-    furnitureColor: '#2a2a44',
+    bgColor: '#282844',
+    furnitureColor: '#383858',
     accentColor: '#c9a96e',
-    windowColor: 'rgba(135, 206, 235, 0.2)',
+    windowColor: 'rgba(135, 206, 235, 0.3)',
     hotspots: [
       { id: 'shower', labelKey: 'hotspot.shower', detailKey: 'hotspot.shower.detail', dimsKey: 'hotspot.shower.dims', matKey: 'hotspot.shower.mat', x: 19, y: 45, depth: 3 },
       { id: 'vanity', labelKey: 'hotspot.vanity', detailKey: 'hotspot.vanity.detail', dimsKey: 'hotspot.vanity.dims', matKey: 'hotspot.vanity.mat', x: 55, y: 40, depth: 3 },
@@ -162,7 +162,7 @@ function SkyLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterio
 }
 
 function WallLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInterior; isNight: boolean; offsetX: number; offsetY: number }) {
-  const wallColor = isNight ? '#14142a' : module.bgColor;
+  const wallColor = isNight ? '#1a1a36' : module.bgColor;
   const winX = module.id === 'bad' ? 40 : 30;
   const winW = module.id === 'bad' ? 15 : module.id === 'schlafen' ? 25 : module.id === 'kueche' ? 30 : 40;
   const winY = module.id === 'bad' ? 5 : module.id === 'schlafen' ? 12 : 10;
@@ -211,7 +211,7 @@ function WallLayer({ module, isNight, offsetX, offsetY }: { module: ModuleInteri
       )}
 
       {/* Floor */}
-      <rect x="0" y="70" width="100" height="30" fill={isNight ? '#101020' : '#1c1c34'} />
+      <rect x="0" y="70" width="100" height="30" fill={isNight ? '#181830' : '#282848'} />
       {/* Floor texture - wood grain or tile */}
       {(module.id === 'wohnen' || module.id === 'schlafen') && (
         <g opacity="0.15">
@@ -564,8 +564,8 @@ export default function VirtualTourSection() {
 
   const currentModule = MODULE_INTERIORS.find((m) => m.id === activeModule) || MODULE_INTERIORS[0];
 
-  const offsetX = (mousePos.x - 0.5) * -20;
-  const offsetY = (mousePos.y - 0.5) * -12;
+  const offsetX = (mousePos.x - 0.5) * -15;
+  const offsetY = (mousePos.y - 0.5) * -9;
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!containerRef.current) return;
@@ -794,7 +794,7 @@ export default function VirtualTourSection() {
                   style={{ maxHeight: isZoomed ? 'none' : '500px', overflow: isZoomed ? 'visible' : 'hidden' }}
                 >
                   <svg
-                    viewBox="-8 -5 116 115"
+                    viewBox="-16 -12 132 140"
                     className="w-full h-full"
                     style={{ maxHeight: '500px' }}
                   >
