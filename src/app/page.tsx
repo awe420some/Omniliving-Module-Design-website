@@ -25,6 +25,7 @@ import FloorPlanSection from '@/components/FloorPlanSection';
 import VirtualTourSection from '@/components/VirtualTourSection';
 import ProjectTimelineSection from '@/components/ProjectTimelineSection';
 import { Phone, Mail, MapPin, Instagram, Linkedin, Facebook, ArrowUp, Send } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { useTranslation } from '@/lib/i18n';
@@ -213,10 +214,12 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="relative">
-                    <img
+                    <Image
                       src="/images/logo-omniliving.png"
                       alt="Omniliving Logo"
-                      className="w-10 h-10 object-contain"
+                      width={40}
+                      height={40}
+                      className="object-contain"
                     />
                   </div>
                   <div>

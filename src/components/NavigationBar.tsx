@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, Globe } from 'lucide-react';
+import Image from 'next/image';
 import { useTranslation } from '@/lib/i18n';
 import {
   Sheet,
@@ -203,10 +204,13 @@ export default function NavigationBar() {
             className="flex items-center gap-2 group"
           >
             <div className={`relative ${scrolled ? 'logo-shimmer' : ''}`}>
-              <img
+              <Image
                 src="/images/logo-omniliving.png"
                 alt="Omniliving"
-                className="w-8 h-8 object-contain transition-transform duration-300 group-hover:scale-110"
+                width={32}
+                height={32}
+                className="object-contain transition-transform duration-300 group-hover:scale-110"
+                priority
               />
             </div>
             <div className="flex flex-col">

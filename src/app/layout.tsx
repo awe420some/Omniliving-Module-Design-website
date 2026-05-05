@@ -18,21 +18,24 @@ export const metadata: Metadata = {
   description:
     "Modulare Containerhäuser in Premium-Qualität. Nachhaltig, flexibel und schnell aufgebaut – Ihr individuelles Zuhause von Omniliving.",
   keywords: [
-    "Modulhaus",
-    "Containerhaus",
-    "Nachhaltig Bauen",
-    "Modular",
-    "Omniliving",
-    "Premium Wohnen",
+    "Modulhaus", "Containerhaus", "Nachhaltig Bauen", "Modular", "Omniliving", "Premium Wohnen",
+    "modular house", "container home", "sustainable building", "prefab home",
   ],
   authors: [{ name: "Omniliving Module Design GmbH" }],
   icons: {
     icon: "/images/logo-omniliving.png",
   },
   openGraph: {
-    title: "Omniliving Module Design GmbH",
-    description: "Modul. Design. Leben. – Modulare Containerhäuser in Premium-Qualität",
+    title: "Omniliving Module Design GmbH | Modul. Design. Leben.",
+    description: "Modulare Containerhäuser in Premium-Qualität – nachhaltig, flexibel, schnell aufgebaut.",
     type: "website",
+    images: [{ url: "/images/hero-building.png", width: 1344, height: 896, alt: "Omniliving modulares Containerhaus" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Omniliving Module Design GmbH",
+    description: "Modulare Containerhäuser in Premium-Qualität",
+    images: ["/images/hero-building.png"],
   },
 };
 

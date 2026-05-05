@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CloudRain, AlertTriangle, Clock, Volume2, Cloud, DollarSign, Expand, Leaf } from 'lucide-react';
+import Image from 'next/image';
 import { useTranslation } from '@/lib/i18n';
 
 interface ComparisonMetric {
@@ -308,11 +309,14 @@ export default function BeforeAfterSlider() {
           >
             {/* AFTER image (Modular) - clean, warm, full quality */}
             <div className="absolute inset-0">
-              <img
+              <Image
                 src="/images/hero-building.png"
                 alt={t('compare.modular')}
-                className="w-full h-full object-cover"
+                fill
+                sizes="100vw"
+                className="object-cover"
                 style={{ filter: 'brightness(1.05) saturate(1.1)' }}
+                priority
               />
               {/* Sparkle animation */}
               <canvas
@@ -328,11 +332,14 @@ export default function BeforeAfterSlider() {
               style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
               {/* Base image — CSS filter makes it look cold, gray, under-construction */}
-              <img
+              <Image
                 src="/images/hero-building.png"
                 alt={t('compare.conventional')}
-                className="w-full h-full object-cover"
+                fill
+                sizes="100vw"
+                className="object-cover"
                 style={{ filter: 'saturate(0.25) brightness(0.75) hue-rotate(195deg)' }}
+                priority
               />
 
               {/* Concrete/mess texture noise overlay */}

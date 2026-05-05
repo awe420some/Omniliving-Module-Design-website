@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Search } from 'lucide-react';
+import Image from 'next/image';
 import {
   Dialog,
   DialogContent,
@@ -115,10 +116,12 @@ export default function GallerySection() {
               onClick={() => openLightbox(index)}
             >
               <div className={`relative rounded-lg overflow-hidden border border-white/5 transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#c9a96e]/20 group-hover:shadow-lg group-hover:shadow-black/30 ${aspectClasses[image.aspect]}`}>
-                <img
+                <Image
                   src={image.src}
                   alt={image.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 {/* Hover overlay with magnifying glass */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-end">
@@ -189,11 +192,15 @@ export default function GallerySection() {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="w-full"
             >
-              <img
-                src={currentImage.src}
-                alt={currentImage.title}
-                className="w-full max-h-[70vh] object-contain"
-              />
+              <div className="relative w-full" style={{ maxHeight: '70vh', minHeight: '200px' }}>
+                <Image
+                  src={currentImage.src}
+                  alt={currentImage.title}
+                  fill
+                  sizes="90vw"
+                  className="object-contain"
+                />
+              </div>
             </motion.div>
 
             {/* Title and description */}
