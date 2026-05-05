@@ -51,6 +51,7 @@ function AnimatedNumber({
           return;
         }
         const progress = Math.min(elapsed / totalMs, 1);
+        // Eased animation with cubic ease-out
         const eased = 1 - Math.pow(1 - progress, 3);
         setDisplayValue(Math.round(eased * value));
 
@@ -67,7 +68,7 @@ function AnimatedNumber({
   const isCO2 = prefix === 'CO₂';
 
   return (
-    <span className="text-4xl sm:text-5xl md:text-6xl font-light tracking-wider text-white">
+    <span className="text-4xl sm:text-5xl md:text-6xl font-light tracking-wider text-white transition-all duration-300 group-hover:text-[#dbb980] group-hover:scale-105 inline-block">
       {isCO2 ? (
         <>
           <span className="text-[#c9a96e]">CO</span>
@@ -111,6 +112,9 @@ export default function StatsSection() {
     <section id="stats" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a14] via-[#0f0f20] to-[#0a0a14]" />
 
+      {/* Noise texture overlay */}
+      <div className="absolute inset-0 noise-overlay pointer-events-none" />
+
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent via-[#c9a96e]/20 to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent via-[#c9a96e]/20 to-transparent" />
@@ -138,29 +142,66 @@ export default function StatsSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+          className="relative"
         >
-          {stats.map((stat, index) => (
+          {/* Connecting gold lines on desktop */}
+          <div className="hidden lg:block absolute top-1/2 left-[12.5%] right-[12.5%] h-[1px] -translate-y-1/2 pointer-events-none">
             <motion.div
-              key={stat.label}
-              variants={itemVariants}
-              className="relative flex flex-col items-center text-center group"
-            >
-              <div className="w-8 h-[1px] bg-[#c9a96e]/30 mb-6 group-hover:w-12 transition-all duration-500" />
-              <AnimatedNumber
-                value={stat.value}
-                suffix={stat.suffix}
-                prefix={stat.prefix}
-                inView={isInView}
-                delay={index * 0.15}
-                duration={2}
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
+              className="w-full h-full bg-gradient-to-r from-transparent via-[#c9a96e]/15 to-transparent origin-center"
+            />
+            {/* Dots at stat positions */}
+            {[0, 1, 2, 3].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 1 + i * 0.15 }}
+                className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#c9a96e]/30"
+                style={{ left: `${i * 33.33}%` }}
               />
-              <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
-                {stat.label}
-              </p>
-              <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />
-            </motion.div>
-          ))}
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                variants={itemVariants}
+                className="relative flex flex-col items-center text-center group"
+              >
+                {/* Subtle pulse/glow behind stat number */}
+                <div
+                  className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pulse-glow"
+                  style={{
+                    background: 'radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%)',
+                  }}
+                />
+
+                <div className="w-8 h-[1px] bg-[#c9a96e]/30 mb-6 group-hover:w-12 transition-all duration-500" />
+
+                <div className="relative">
+                  <AnimatedNumber
+                    value={stat.value}
+                    suffix={stat.suffix}
+                    prefix={stat.prefix}
+                    inView={isInView}
+                    delay={index * 0.15}
+                    duration={2}
+                  />
+                </div>
+
+                <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
+                  {stat.label}
+                </p>
+                <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

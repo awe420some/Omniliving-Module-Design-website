@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import {
   Sheet,
   SheetTrigger,
@@ -21,14 +21,83 @@ const navLinks = [
   { label: 'Kontakt', href: '#contact' },
 ];
 
+// Magnetic hover link component
+function MagneticNavLink({
+  label,
+  href,
+  isActive,
+  onClick,
+  indicatorStyle,
+}: {
+  label: string;
+  href: string;
+  isActive: boolean;
+  onClick: (href: string) => void;
+  indicatorStyle: React.CSSProperties;
+}) {
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!linkRef.current) return;
+    const rect = linkRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const deltaX = (e.clientX - centerX) * 0.15;
+    const deltaY = (e.clientY - centerY) * 0.15;
+    setOffset({ x: deltaX, y: deltaY });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setOffset({ x: 0, y: 0 });
+  }, []);
+
+  return (
+    <a
+      ref={linkRef}
+      href={href}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(href);
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300"
+      style={{
+        color: isActive ? '#c9a96e' : '#8888a8',
+        transform: `translate(${offset.x}px, ${offset.y}px)`,
+        transition: offset.x === 0 ? 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s' : 'transform 0.15s ease-out, color 0.3s',
+      }}
+    >
+      {label}
+      {/* Sliding gold underline indicator */}
+      <motion.div
+        className="absolute bottom-0 left-4 right-4 h-[1.5px]"
+        style={{ backgroundColor: '#c9a96e' }}
+        initial={false}
+        animate={{
+          scaleX: isActive ? 1 : 0,
+          opacity: isActive ? 1 : 0,
+        }}
+        transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+      />
+    </a>
+  );
+}
+
 export default function NavigationBar() {
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState('hero');
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 50);
+      // Calculate scroll progress for blur intensity
+      const progress = Math.min(scrollY / 300, 1);
+      setScrollProgress(progress);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -71,6 +140,10 @@ export default function NavigationBar() {
     []
   );
 
+  // Dynamic blur: 0px → 12px based on scroll
+  const blurAmount = scrollProgress * 12;
+  const borderGlowOpacity = scrollProgress * 0.15;
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -78,12 +151,13 @@ export default function NavigationBar() {
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
-        backgroundColor: scrolled ? 'rgba(10, 10, 20, 0.9)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled
-          ? '1px solid rgba(201, 169, 110, 0.15)'
-          : '1px solid transparent',
+        backgroundColor: `rgba(10, 10, 20, ${0.3 + scrollProgress * 0.65})`,
+        backdropFilter: `blur(${blurAmount}px)`,
+        WebkitBackdropFilter: `blur(${blurAmount}px)`,
+        borderBottom: `1px solid rgba(201, 169, 110, ${borderGlowOpacity})`,
+        boxShadow: scrolled
+          ? `0 4px 30px rgba(0, 0, 0, ${0.2 + scrollProgress * 0.3}), 0 0 20px rgba(201, 169, 110, ${borderGlowOpacity * 0.3})`
+          : 'none',
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,28 +185,14 @@ export default function NavigationBar() {
               const sectionId = link.href.replace('#', '');
               const isActive = activeSection === sectionId;
               return (
-                <a
+                <MagneticNavLink
                   key={link.label}
+                  label={link.label}
                   href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick(link.href);
-                  }}
-                  className="relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300"
-                  style={{ color: isActive ? '#c9a96e' : '#8888a8' }}
-                >
-                  {link.label}
-                  <motion.div
-                    className="absolute bottom-0 left-4 right-4 h-[1px]"
-                    style={{ backgroundColor: '#c9a96e' }}
-                    initial={false}
-                    animate={{
-                      scaleX: isActive ? 1 : 0,
-                      opacity: isActive ? 1 : 0,
-                    }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                  />
-                </a>
+                  isActive={isActive}
+                  onClick={handleNavClick}
+                  indicatorStyle={{ backgroundColor: '#c9a96e' }}
+                />
               );
             })}
           </div>
@@ -151,8 +211,15 @@ export default function NavigationBar() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="bg-[#0a0a14] border-l border-[#c9a96e]/15 w-[280px]"
+                className="bg-[#0a0a14]/95 border-l border-[#c9a96e]/15 w-[280px]"
+                style={{
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                }}
               >
+                {/* Blur overlay behind menu */}
+                <div className="absolute inset-0 bg-[#0a0a14]/80 -z-10" />
+
                 <SheetHeader className="mb-8">
                   <SheetTitle className="text-left text-sm tracking-[0.3em] text-white font-light uppercase">
                     OMNILIVING
@@ -165,9 +232,14 @@ export default function NavigationBar() {
                     return (
                       <motion.div
                         key={link.label}
-                        initial={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.08, duration: 0.3 }}
+                        exit={{ opacity: 0, x: 30 }}
+                        transition={{
+                          delay: index * 0.08,
+                          duration: 0.35,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }}
                       >
                         <SheetClose asChild>
                           <a
@@ -176,7 +248,7 @@ export default function NavigationBar() {
                               e.preventDefault();
                               handleNavClick(link.href);
                             }}
-                            className="flex items-center gap-3 px-4 py-3 rounded-md text-sm tracking-[0.1em] uppercase transition-all duration-300"
+                            className="flex items-center gap-3 px-4 py-3 rounded-md text-sm tracking-[0.1em] uppercase transition-all duration-300 animated-underline"
                             style={{
                               color: isActive ? '#c9a96e' : '#8888a8',
                               backgroundColor: isActive

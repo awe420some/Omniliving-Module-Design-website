@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { MessageSquare, Search, PenTool, Wallet, Hammer, KeyRound } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -69,9 +70,78 @@ const stepVariants = {
   },
 };
 
-export default function ProcessSection() {
+// SVG connecting line that draws itself
+function AnimatedConnectingLine({ width }: { width: number }) {
+  const ref = useRef<SVGSVGElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+
   return (
-    <section id="process" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
+    <svg
+      ref={ref}
+      width={width}
+      height="2"
+      viewBox={`0 0 ${width} 2`}
+      className="absolute top-[44px] left-0 right-0 pointer-events-none"
+      style={{ overflow: 'visible' }}
+    >
+      <motion.line
+        x1="0"
+        y1="1"
+        x2={width}
+        y2="1"
+        stroke="url(#goldGradient)"
+        strokeWidth="1"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={isInView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+        transition={{ duration: 1.5, delay: 0.3, ease: 'easeOut' }}
+      />
+      <defs>
+        <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#c9a96e" stopOpacity="0.15" />
+          <stop offset="50%" stopColor="#c9a96e" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#c9a96e" stopOpacity="0.15" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+// Progress dots along timeline
+function ProgressDots({ count, activeIndex }: { count: number; activeIndex: number }) {
+  return (
+    <div className="hidden lg:flex items-center justify-center gap-8 mt-6">
+      {Array.from({ length: count }).map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}
+          className="relative"
+        >
+          <div
+            className="w-2 h-2 rounded-full transition-all duration-500"
+            style={{
+              backgroundColor: i <= activeIndex ? '#c9a96e' : 'rgba(201, 169, 110, 0.15)',
+              boxShadow: i <= activeIndex ? '0 0 8px rgba(201, 169, 110, 0.4)' : 'none',
+            }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+export default function ProcessSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const sectionInView = useInView(sectionRef, { once: true, margin: '-100px' });
+
+  return (
+    <section
+      id="process"
+      ref={sectionRef}
+      className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]"
+    >
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -93,7 +163,7 @@ export default function ProcessSection() {
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Desktop: Horizontal timeline for first 3, second row for next 3 */}
+        {/* Desktop: Horizontal timeline with animated SVG line */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -102,9 +172,17 @@ export default function ProcessSection() {
           className="hidden lg:block relative"
         >
           <div className="grid grid-cols-3 gap-8 mb-8 relative">
-            {/* Connecting line row 1 */}
-            <div className="absolute top-[44px] left-[16%] right-[16%] h-[1px] bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
-            {steps.slice(0, 3).map((step) => {
+            {/* Animated connecting line row 1 */}
+            <div className="absolute top-[44px] left-[16%] right-[16%] h-[1px]">
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
+                className="w-full h-full bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20 origin-center"
+              />
+            </div>
+            {steps.slice(0, 3).map((step, i) => {
               const Icon = step.icon;
               return (
                 <motion.div
@@ -114,11 +192,19 @@ export default function ProcessSection() {
                 >
                   <div className="relative mb-6">
                     <div className="w-[88px] h-[88px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
-                      <Icon size={28} className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110" />
+                      <Icon size={28} className="text-[#c9a96e] icon-bounce" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center">
+                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center step-number-rotate">
                       <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
                     </div>
+                    {/* Progress dot indicator */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.8 + i * 0.15 }}
+                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#c9a96e]/40"
+                    />
                   </div>
                   <h3 className="text-lg font-medium tracking-wide text-white mb-2 group-hover:text-[#c9a96e] transition-colors duration-300">
                     {step.title}
@@ -131,9 +217,17 @@ export default function ProcessSection() {
             })}
           </div>
           <div className="grid grid-cols-3 gap-8 relative">
-            {/* Connecting line row 2 */}
-            <div className="absolute top-[44px] left-[16%] right-[16%] h-[1px] bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
-            {steps.slice(3, 6).map((step) => {
+            {/* Animated connecting line row 2 */}
+            <div className="absolute top-[44px] left-[16%] right-[16%] h-[1px]">
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, delay: 1.0, ease: 'easeOut' }}
+                className="w-full h-full bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20 origin-center"
+              />
+            </div>
+            {steps.slice(3, 6).map((step, i) => {
               const Icon = step.icon;
               return (
                 <motion.div
@@ -143,11 +237,19 @@ export default function ProcessSection() {
                 >
                   <div className="relative mb-6">
                     <div className="w-[88px] h-[88px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
-                      <Icon size={28} className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110" />
+                      <Icon size={28} className="text-[#c9a96e] icon-bounce" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center">
+                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center step-number-rotate">
                       <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
                     </div>
+                    {/* Progress dot indicator */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 1.3 + i * 0.15 }}
+                      className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#c9a96e]/40"
+                    />
                   </div>
                   <h3 className="text-lg font-medium tracking-wide text-white mb-2 group-hover:text-[#c9a96e] transition-colors duration-300">
                     {step.title}
@@ -159,9 +261,12 @@ export default function ProcessSection() {
               );
             })}
           </div>
+
+          {/* Progress dots */}
+          <ProgressDots count={6} activeIndex={sectionInView ? 5 : -1} />
         </motion.div>
 
-        {/* Mobile/Tablet: Vertical timeline */}
+        {/* Mobile/Tablet: Vertical timeline with numbered step indicators */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -169,7 +274,16 @@ export default function ProcessSection() {
           viewport={{ once: true, margin: '-50px' }}
           className="lg:hidden relative"
         >
-          <div className="absolute left-[43px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
+          {/* Animated vertical connecting line */}
+          <div className="absolute left-[43px] top-0 bottom-0 w-[1px]">
+            <motion.div
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, ease: 'easeOut' }}
+              className="w-full h-full bg-gradient-to-b from-[#c9a96e]/30 via-[#c9a96e]/50 to-[#c9a96e]/30 origin-top"
+            />
+          </div>
           <div className="flex flex-col gap-8">
             {steps.map((step) => {
               const Icon = step.icon;
@@ -181,9 +295,10 @@ export default function ProcessSection() {
                 >
                   <div className="relative shrink-0">
                     <div className="w-[80px] h-[80px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
-                      <Icon size={24} className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110" />
+                      <Icon size={24} className="text-[#c9a96e] icon-bounce" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center">
+                    {/* Numbered step indicator with rotate on hover */}
+                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center step-number-rotate">
                       <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
                     </div>
                   </div>

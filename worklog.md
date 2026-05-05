@@ -681,3 +681,84 @@ Stage Summary:
 - SEO: JSON-LD structured data
 - Performance: implement image lazy loading with next/image
 - Consider single-canvas approach for hero + scroll experience
+
+---
+Task ID: 6-b
+Agent: Full-stack developer subagent
+Task: Add new features - CookieConsent, PricingCalculator, ScrollProgress, Newsletter, useTextReveal hook
+
+Work Log:
+- Created src/components/CookieConsent.tsx - GDPR cookie consent banner:
+  - Fixed bottom bar, appears 2s after page load
+  - German text about cookies and Datenschutzerklärung
+  - Two buttons: "Akzeptieren" (gold gradient) and "Ablehnen" (outline)
+  - localStorage persistence ('cookie-consent': 'accepted'/'rejected')
+  - Checks localStorage on mount - if already set, doesn't show
+  - Smooth slide-up animation via framer-motion AnimatePresence
+  - Close button (X) in top-right corner
+  - Background: bg-[#12121f]/95 with backdrop-blur
+  - Border: border-t border-[#c9a96e]/20
+  - Responsive layout (stacked on mobile, inline on desktop)
+
+- Created src/components/PricingCalculator.tsx - Interactive pricing calculator:
+  - Section id="pricing"
+  - Section label: "KOSTENRECHNER" in gold tracking
+  - Heading: "Was kostet Ihr Modulhaus?" with text-gradient-gold
+  - Subtitle about configuration and cost estimation
+  - Interactive controls:
+    - Anzahl der Module: Slider 1-6 (default 3), gold gradient track
+    - Modultyp: Select (Standard 25k/Premium 32k/Luxus 35k per module)
+    - Geschossigkeit: Switch toggle (Erdgeschoss/Erdgeschoss + Obergeschoss), upper floor +20%
+    - Ausstattung: 5 checkboxes (Klimaanlage +5k, Smart Home +8k, Solaranlage +12k, Terrasse +6k, Einbauküche +7k)
+    - Standort: Select (Land/Stadt), Stadt +10%
+  - Real-time price calculation with AnimatedNumber component (framer-motion)
+  - Large total price display with decorative gold gradient background
+  - Price breakdown table (base price, upper floor addition, extras detail, location surcharge, total)
+  - CTA button: "Kostenschätzung anfordern" → smooth scroll to contact form
+  - All prices in EUR with German formatting (de-DE locale: 75.000 €)
+  - Uses shadcn/ui Slider, Select, Switch, Checkbox, Label components
+  - Responsive: stacks on mobile, 2-column on desktop
+  - framer-motion entrance animations for cards and price changes
+
+- Created src/hooks/useTextReveal.ts - Reusable scroll-triggered text reveal hook:
+  - Takes a ref, text string, and options (delay, duration, splitBy: 'word'|'char', threshold, stagger)
+  - Uses IntersectionObserver to trigger animation when element enters viewport
+  - Returns: isVisible, segments (split text), getAnimationProps(index) for framer-motion
+  - Words/chars slide up (y: 20 → 0) and fade in (opacity: 0 → 1) with configurable stagger
+  - Configurable delay, duration, and ease per segment
+
+- Created src/components/ScrollProgress.tsx - Gold scroll progress bar:
+  - Fixed position at very top of page, z-50
+  - Height: 2px
+  - Width: 0% → 100% based on scroll position
+  - Background: linear-gradient(to right, #c9a96e, #dbb980)
+  - Smooth CSS transition on width (0.15s ease-out)
+  - Disappears when at top (opacity: 0)
+  - Pointer-events: none to not block clicks
+
+- Updated src/app/page.tsx:
+  - Added ScrollProgress at very top of page (before LoadingScreen)
+  - Added PricingCalculator between Features and Gallery sections
+  - Added CookieConsent after BackToTopButton
+  - Added newsletter form to footer (between grid and bottom bar):
+    - Email input + "Anmelden" button, horizontal layout on desktop
+    - Text: "Bleiben Sie informiert über modulares Bauen."
+    - On submit: toast "Vielen Dank für Ihre Anmeldung!" and form reset
+    - No actual backend, just toast feedback
+  - Added "Kostenrechner" link (#pricing) to footer navigation
+  - Imported toast from @/hooks/use-toast for newsletter
+  - Removed unused useState import
+  - All section IDs verified unique
+
+Stage Summary:
+- 4 new components created (CookieConsent, PricingCalculator, ScrollProgress, useTextReveal)
+- 1 new hook created (useTextReveal)
+- Newsletter form integrated into footer
+- Page now has 18 distinct elements/sections
+- GDPR compliance with cookie consent banner
+- Interactive pricing calculator with real-time German-formatted price calculation
+- Scroll progress indicator for navigation feedback
+- Newsletter signup with toast confirmation
+- All text in German, dark luxury theme with gold accents
+- Lint passes with 0 errors
+- Dev server compiling and serving correctly
