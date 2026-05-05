@@ -15,8 +15,8 @@ import { Button } from '@/components/ui/button';
 
 const navLinks = [
   { label: 'Home', href: '#hero' },
-  { label: 'Konfigurator', href: '#module-selector' },
-  { label: 'Entdecken', href: '#reveal' },
+  { label: 'Konfigurator', href: '#configurator' },
+  { label: 'Entdecken', href: '#scroll-experience' },
   { label: 'Vorteile', href: '#features' },
   { label: 'Kontakt', href: '#contact' },
 ];
@@ -26,7 +26,6 @@ export default function NavigationBar() {
   const [activeSection, setActiveSection] = useState('hero');
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Handle scroll state
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -36,7 +35,6 @@ export default function NavigationBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Track active section via IntersectionObserver
   useEffect(() => {
     const sectionIds = navLinks.map((l) => l.href.replace('#', ''));
     const observers: IntersectionObserver[] = [];
@@ -90,7 +88,6 @@ export default function NavigationBar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
           <a
             href="#hero"
             onClick={(e) => {
@@ -109,7 +106,6 @@ export default function NavigationBar() {
             </span>
           </a>
 
-          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
               const sectionId = link.href.replace('#', '');
@@ -123,12 +119,9 @@ export default function NavigationBar() {
                     handleNavClick(link.href);
                   }}
                   className="relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300"
-                  style={{
-                    color: isActive ? '#c9a96e' : '#8888a8',
-                  }}
+                  style={{ color: isActive ? '#c9a96e' : '#8888a8' }}
                 >
                   {link.label}
-                  {/* Active indicator */}
                   <motion.div
                     className="absolute bottom-0 left-4 right-4 h-[1px]"
                     style={{ backgroundColor: '#c9a96e' }}
@@ -144,7 +137,6 @@ export default function NavigationBar() {
             })}
           </div>
 
-          {/* Mobile hamburger */}
           <div className="md:hidden">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
@@ -202,7 +194,6 @@ export default function NavigationBar() {
                     );
                   })}
                 </nav>
-                {/* Decorative bottom */}
                 <div className="absolute bottom-8 left-6 right-6">
                   <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/30 to-transparent mb-4" />
                   <p className="text-[10px] text-[#8888a8] tracking-wider text-center">

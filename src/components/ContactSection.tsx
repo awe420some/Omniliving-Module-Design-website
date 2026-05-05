@@ -72,7 +72,6 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="relative bg-[#0f0f20] px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-      {/* Top gold divider */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/40 to-transparent" />
 
       <div className="max-w-6xl mx-auto">
@@ -97,34 +96,34 @@ export default function ContactSection() {
               Sie, wie Ihr modulares Zuhause Wirklichkeit werden kann.
             </p>
 
-            {/* Contact details */}
+            {/* Contact details with REAL data */}
             <div className="flex flex-col gap-5">
               <a
-                href="tel:+4930123456789"
+                href="tel:+4915129530369"
                 className="flex items-center gap-3 text-sm text-[#8888a8] hover:text-[#c9a96e] transition-colors duration-300 group"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center group-hover:border-[#c9a96e]/30 transition-colors duration-300">
                   <Phone size={16} className="text-[#c9a96e]" />
                 </div>
-                +49 30 123 456 789
+                +49 151 29530369
               </a>
               <a
-                href="mailto:info@omniliving.de"
+                href="mailto:kontakt@omniliving-moduledesign-gmbh.com"
                 className="flex items-center gap-3 text-sm text-[#8888a8] hover:text-[#c9a96e] transition-colors duration-300 group"
               >
                 <div className="w-10 h-10 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center group-hover:border-[#c9a96e]/30 transition-colors duration-300">
                   <Mail size={16} className="text-[#c9a96e]" />
                 </div>
-                info@omniliving.de
+                kontakt@omniliving-moduledesign-gmbh.com
               </a>
               <div className="flex items-center gap-3 text-sm text-[#8888a8]">
                 <div className="w-10 h-10 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center shrink-0">
                   <MapPin size={16} className="text-[#c9a96e]" />
                 </div>
                 <span>
-                  Musterstraße 42
+                  Teutoburger Straße 23 a
                   <br />
-                  10115 Berlin, Deutschland
+                  33330 Gütersloh, Deutschland
                 </span>
               </div>
             </div>
@@ -143,7 +142,6 @@ export default function ContactSection() {
                 className="space-y-5"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {/* Vorname */}
                   <FormField
                     control={form.control}
                     name="vorname"
@@ -163,8 +161,6 @@ export default function ContactSection() {
                       </FormItem>
                     )}
                   />
-
-                  {/* Nachname */}
                   <FormField
                     control={form.control}
                     name="nachname"
@@ -187,7 +183,6 @@ export default function ContactSection() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {/* E-Mail */}
                   <FormField
                     control={form.control}
                     name="email"
@@ -208,8 +203,6 @@ export default function ContactSection() {
                       </FormItem>
                     )}
                   />
-
-                  {/* Telefon */}
                   <FormField
                     control={form.control}
                     name="telefon"
@@ -221,7 +214,7 @@ export default function ContactSection() {
                         <FormControl>
                           <Input
                             type="tel"
-                            placeholder="+49 30 ..."
+                            placeholder="+49 151 ..."
                             className={inputClasses}
                             {...field}
                           />
@@ -232,7 +225,6 @@ export default function ContactSection() {
                   />
                 </div>
 
-                {/* Interesse */}
                 <FormField
                   control={form.control}
                   name="interesse"
@@ -269,7 +261,6 @@ export default function ContactSection() {
                   )}
                 />
 
-                {/* Nachricht */}
                 <FormField
                   control={form.control}
                   name="nachricht"
@@ -290,7 +281,6 @@ export default function ContactSection() {
                   )}
                 />
 
-                {/* Submit button */}
                 <Button
                   type="submit"
                   size="lg"

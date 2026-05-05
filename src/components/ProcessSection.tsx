@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageSquare, Settings, Factory, Key } from 'lucide-react';
+import { MessageSquare, Search, PenTool, Wallet, Hammer, KeyRound } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface ProcessStep {
@@ -14,27 +14,39 @@ interface ProcessStep {
 const steps: ProcessStep[] = [
   {
     number: '01',
-    title: 'Beratung',
-    description: 'Wir besprechen Ihre Wünsche und Anforderungen',
+    title: 'Erstgespräch',
+    description: 'Wir besprechen Ihre Wünsche, Bedürfnisse und Rahmenbedingungen',
     icon: MessageSquare,
   },
   {
     number: '02',
-    title: 'Konfiguration',
-    description: 'Wählen Sie Module und gestalten Sie Ihr Zuhause',
-    icon: Settings,
+    title: 'Standortprüfung',
+    description: 'Prüfung der örtlichen Gegebenheiten und Genehmigungsfähigkeit',
+    icon: Search,
   },
   {
     number: '03',
-    title: 'Produktion',
-    description: 'Ihr Zuhause wird präzise vorgefertigt',
-    icon: Factory,
+    title: 'Entwurf',
+    description: 'Individuelle Planung und Gestaltung Ihres modularen Zuhauses',
+    icon: PenTool,
   },
   {
     number: '04',
-    title: 'Bezug',
-    description: 'Schlüsselübergabe und Einzug in Ihr neues Zuhause',
-    icon: Key,
+    title: 'Finanzierungsmodell',
+    description: 'Pacht, Kauf oder individuelle Kombination – wir finden die passende Lösung',
+    icon: Wallet,
+  },
+  {
+    number: '05',
+    title: 'Realisierung',
+    description: 'Serielle Vorfertigung in der Halle, Montage vor Ort in wenigen Tagen',
+    icon: Hammer,
+  },
+  {
+    number: '06',
+    title: 'Übergabe',
+    description: 'Schlüsselübergabe und Einzug – weniger als sechs Monate Gesamtprojekt',
+    icon: KeyRound,
   },
 ];
 
@@ -43,7 +55,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.15,
     },
   },
 };
@@ -76,12 +88,12 @@ export default function ProcessSection() {
             So funktioniert<span className="text-gradient-gold">&apos;s</span>
           </h2>
           <p className="text-sm sm:text-base text-[#8888a8] max-w-xl mx-auto mt-4">
-            In vier einfachen Schritten zu Ihrem modularen Traumhaus.
+            In sechs Schritten zu Ihrem modularen Zuhause – von der Idee bis zum Einzug.
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Desktop: Horizontal timeline */}
+        {/* Desktop: Horizontal timeline for first 3, second row for next 3 */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -89,11 +101,10 @@ export default function ProcessSection() {
           viewport={{ once: true, margin: '-50px' }}
           className="hidden lg:block relative"
         >
-          {/* Horizontal connecting line */}
-          <div className="absolute top-[72px] left-[12%] right-[12%] h-[1px] bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
-
-          <div className="grid grid-cols-4 gap-6 relative">
-            {steps.map((step, index) => {
+          <div className="grid grid-cols-3 gap-8 mb-8 relative">
+            {/* Connecting line row 1 */}
+            <div className="absolute top-[44px] left-[16%] right-[16%] h-[1px] bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
+            {steps.slice(0, 3).map((step) => {
               const Icon = step.icon;
               return (
                 <motion.div
@@ -101,28 +112,46 @@ export default function ProcessSection() {
                   variants={stepVariants}
                   className="flex flex-col items-center text-center group"
                 >
-                  {/* Icon circle */}
                   <div className="relative mb-6">
                     <div className="w-[88px] h-[88px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
-                      <Icon
-                        size={28}
-                        className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110"
-                      />
+                      <Icon size={28} className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110" />
                     </div>
-                    {/* Step number badge */}
                     <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center">
-                      <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">
-                        {step.number}
-                      </span>
+                      <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
                     </div>
                   </div>
-
-                  {/* Title */}
                   <h3 className="text-lg font-medium tracking-wide text-white mb-2 group-hover:text-[#c9a96e] transition-colors duration-300">
                     {step.title}
                   </h3>
-
-                  {/* Description */}
+                  <p className="text-sm text-[#8888a8] leading-relaxed max-w-[220px]">
+                    {step.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+          <div className="grid grid-cols-3 gap-8 relative">
+            {/* Connecting line row 2 */}
+            <div className="absolute top-[44px] left-[16%] right-[16%] h-[1px] bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
+            {steps.slice(3, 6).map((step) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={step.number}
+                  variants={stepVariants}
+                  className="flex flex-col items-center text-center group"
+                >
+                  <div className="relative mb-6">
+                    <div className="w-[88px] h-[88px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
+                      <Icon size={28} className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110" />
+                    </div>
+                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-medium tracking-wide text-white mb-2 group-hover:text-[#c9a96e] transition-colors duration-300">
+                    {step.title}
+                  </h3>
                   <p className="text-sm text-[#8888a8] leading-relaxed max-w-[220px]">
                     {step.description}
                   </p>
@@ -140,9 +169,7 @@ export default function ProcessSection() {
           viewport={{ once: true, margin: '-50px' }}
           className="lg:hidden relative"
         >
-          {/* Vertical connecting line */}
           <div className="absolute left-[43px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20" />
-
           <div className="flex flex-col gap-8">
             {steps.map((step) => {
               const Icon = step.icon;
@@ -152,23 +179,14 @@ export default function ProcessSection() {
                   variants={stepVariants}
                   className="flex gap-5 items-start group"
                 >
-                  {/* Icon circle */}
                   <div className="relative shrink-0">
-                    <div className="w-[88px] h-[88px] sm:w-[80px] sm:h-[80px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
-                      <Icon
-                        size={26}
-                        className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110"
-                      />
+                    <div className="w-[80px] h-[80px] rounded-full flex items-center justify-center border border-[#c9a96e]/20 bg-[#0f0f20] transition-all duration-500 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]">
+                      <Icon size={24} className="text-[#c9a96e] transition-transform duration-500 group-hover:scale-110" />
                     </div>
-                    {/* Step number badge */}
                     <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-[#c9a96e] flex items-center justify-center">
-                      <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">
-                        {step.number}
-                      </span>
+                      <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
                     </div>
                   </div>
-
-                  {/* Text content */}
                   <div className="pt-4">
                     <h3 className="text-lg font-medium tracking-wide text-white mb-2 group-hover:text-[#c9a96e] transition-colors duration-300">
                       {step.title}

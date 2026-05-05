@@ -11,9 +11,9 @@ interface StatItem {
 }
 
 const stats: StatItem[] = [
-  { value: 150, suffix: '+', label: 'M² Wohnfläche', prefix: '' },
-  { value: 48, suffix: '', label: 'Stunden Aufbauzeit', prefix: '' },
-  { value: 98, suffix: '%', label: 'Kundenzufriedenheit', prefix: '' },
+  { value: 70, suffix: '%', label: 'kürzere Bauzeiten', prefix: 'bis zu' },
+  { value: 48, suffix: '', label: 'Stunden Montage vor Ort', prefix: '' },
+  { value: 6, suffix: '', label: 'Monate Gesamtprojekt', prefix: '<' },
   { value: 100, suffix: '', label: 'Neutral Wohnen', prefix: 'CO₂' },
 ];
 
@@ -51,7 +51,6 @@ function AnimatedNumber({
           return;
         }
         const progress = Math.min(elapsed / totalMs, 1);
-        // Ease out cubic
         const eased = 1 - Math.pow(1 - progress, 3);
         setDisplayValue(Math.round(eased * value));
 
@@ -65,7 +64,6 @@ function AnimatedNumber({
     return () => clearTimeout(timeout);
   }, [inView, value, duration, delay]);
 
-  // Special case for CO₂ - only show the prefix
   const isCO2 = prefix === 'CO₂';
 
   return (
@@ -77,7 +75,7 @@ function AnimatedNumber({
         </>
       ) : (
         <>
-          {prefix && <span className="text-[#c9a96e]">{prefix}</span>}
+          {prefix && <span className="text-lg sm:text-xl text-[#c9a96e] mr-1">{prefix}</span>}
           {displayValue}
         </>
       )}
@@ -111,17 +109,14 @@ export default function StatsSection() {
 
   return (
     <section id="stats" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8">
-      {/* Subtle gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a14] via-[#0f0f20] to-[#0a0a14]" />
 
-      {/* Subtle decorative lines */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent via-[#c9a96e]/20 to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent via-[#c9a96e]/20 to-transparent" />
       </div>
 
       <div ref={ref} className="relative max-w-6xl mx-auto">
-        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -138,7 +133,6 @@ export default function StatsSection() {
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
         </motion.div>
 
-        {/* Stats grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -152,10 +146,7 @@ export default function StatsSection() {
               variants={itemVariants}
               className="relative flex flex-col items-center text-center group"
             >
-              {/* Gold divider above */}
               <div className="w-8 h-[1px] bg-[#c9a96e]/30 mb-6 group-hover:w-12 transition-all duration-500" />
-
-              {/* Number */}
               <AnimatedNumber
                 value={stat.value}
                 suffix={stat.suffix}
@@ -164,13 +155,9 @@ export default function StatsSection() {
                 delay={index * 0.15}
                 duration={2}
               />
-
-              {/* Label */}
               <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
                 {stat.label}
               </p>
-
-              {/* Gold divider below */}
               <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />
             </motion.div>
           ))}
