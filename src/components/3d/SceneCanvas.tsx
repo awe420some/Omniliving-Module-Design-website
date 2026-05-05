@@ -499,13 +499,15 @@ function setupRenderer(mount: HTMLDivElement): THREE.WebGLRenderer | null {
       powerPreference: 'high-performance',
       failIfMajorPerformanceCaveat: false,
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    // Cap pixel ratio at 1.5 for performance (retina screens at full 2x are expensive)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
+    // PCFSoftShadowMap is expensive — use BasicShadowMap for better performance
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.shadowMap.type = THREE.BasicShadowMap;
     mount.appendChild(renderer.domElement);
     return renderer;
   } catch (err) {
@@ -770,12 +772,12 @@ export default function SceneCanvas() {
     // ─── External staircase ───
     const staircase = createExternalStaircase(root);
 
-    // ─── Pointer tracking ───
+    // ─── Pointer tracking — window-level for reliable sticky-scroll coverage ───
     const pointerRef = { x: 0, y: 0 };
     const onPointerMove = (event: PointerEvent) => {
-      const rect = mount.getBoundingClientRect();
-      pointerRef.x = ((event.clientX - rect.left) / Math.max(1, rect.width) - 0.5) * 2;
-      pointerRef.y = ((event.clientY - rect.top) / Math.max(1, rect.height) - 0.5) * 2;
+      // Use viewport-relative position so tracking works through sticky scroll
+      pointerRef.x = (event.clientX / Math.max(1, window.innerWidth) - 0.5) * 2;
+      pointerRef.y = (event.clientY / Math.max(1, window.innerHeight) - 0.5) * 2;
     };
 
     // ─── Orbit Controls State ───
@@ -904,6 +906,9 @@ export default function SceneCanvas() {
     let startTime = performance.now();
     let frameId = 0;
     let lastMode = 'hero';
+    let lastFrameTime = 0;
+    const TARGET_FPS = 60;
+    const FRAME_MS = 1000 / TARGET_FPS;
 
     // Camera smoothing state
     const camPos = new THREE.Vector3(0.8, 1.6, 8.2);
@@ -912,8 +917,13 @@ export default function SceneCanvas() {
     // Camera shake state
     const shakeState = { intensity: 0, targetIntensity: 0 };
 
-    const animate = () => {
+    const animate = (now: number = 0) => {
       if (!alive) return;
+      frameId = window.requestAnimationFrame(animate);
+
+      // Cap at 60fps to avoid GPU thrashing on high-refresh displays
+      if (now - lastFrameTime < FRAME_MS) return;
+      lastFrameTime = now;
 
       const t = (performance.now() - startTime) / 1000;
       const s = storeRef.current;
@@ -1018,11 +1028,11 @@ export default function SceneCanvas() {
         targetLookAt = new THREE.Vector3(0, 0.28 + dolly * 0.14, 0);
       } else if (s.experienceMode === 'sectioncut') {
         targetCamPos = new THREE.Vector3(
-          1.5 + px * 0.3,
-          3.0 + py * 0.15,
+          1.5 + px * 1.8,
+          3.0 + py * 0.8,
           5.5,
         );
-        targetLookAt = new THREE.Vector3(0, 0.8, 0);
+        targetLookAt = new THREE.Vector3(px * 0.5, 0.8 + py * 0.3, 0);
       } else {
         // Configurator: orbit controls
         const baseDist = 9.0 / orbitState.zoom;
@@ -1235,12 +1245,11 @@ export default function SceneCanvas() {
       }
 
       renderer.render(scene, camera);
-      frameId = window.requestAnimationFrame(animate);
     };
 
     // ─── Start ───
     window.addEventListener('resize', resize);
-    mount.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove);
     mount.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
@@ -1257,7 +1266,7 @@ export default function SceneCanvas() {
       alive = false;
       window.cancelAnimationFrame(frameId);
       window.removeEventListener('resize', resize);
-      mount.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointermove', onPointerMove);
       mount.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);

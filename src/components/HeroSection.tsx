@@ -312,14 +312,15 @@ export default function HeroSection() {
 
   return (
     <section id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-      {/* Background video — intro flythrough */}
+      {/* Background video — intro flythrough (only on fast connections / desktop) */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        style={{ opacity: 0.18, filter: 'brightness(0.6) saturate(0.7)' }}
+        preload="none"
+        className="absolute inset-0 w-full h-full object-cover z-0 hidden sm:block"
+        style={{ opacity: 0.15, filter: 'brightness(0.5) saturate(0.6)' }}
       >
         <source src="/intro.mp4" type="video/mp4" />
       </video>

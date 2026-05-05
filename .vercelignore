@@ -1,0 +1,23 @@
+# Large source/upload files — not needed for deployment
+uploads_files_*
+upload/
+*.obj
+*.fbx
+*.blend
+*.zip
+intro.mp4
+
+# Screenshots
+1.png
+2.png
+3.png
+4.png
+5.png
+
+# Dev logs
+dev.log
+server.log
+worklog*.md
+
+# Prisma (not used at runtime on Vercel)
+db/
