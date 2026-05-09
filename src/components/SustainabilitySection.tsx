@@ -18,7 +18,7 @@ const statKeys = [
   { icon: Leaf, labelKey: 'sustain.co2Neutral', value: 100, suffix: '%', descKey: 'sustain.co2NeutralDesc', color: '#22c55e' },
   { icon: Recycle, labelKey: 'sustain.lessWaste', value: 70, suffix: '%', descKey: 'sustain.lessWasteDesc', color: '#4ade80' },
   { icon: Building, labelKey: 'sustain.recyclable', value: 95, suffix: '%', descKey: 'sustain.recyclableDesc', color: '#86efac' },
-  { icon: Award, labelKey: 'sustain.dgnb', value: 100, suffix: '%', descKey: 'sustain.dgnbDesc', color: '#c9a96e' },
+  { icon: Award, labelKey: 'sustain.dgnb', value: 100, suffix: '%', descKey: 'sustain.dgnbDesc', color: '#C3F8BD' },
 ];
 
 function CircularProgress({
@@ -90,7 +90,7 @@ function CircularProgress({
         <span className="text-2xl sm:text-3xl font-light text-white tabular-nums">
           {animatedValue}
         </span>
-        <span className="text-xs text-[#8888a8]">{suffix}</span>
+        <span className="text-xs text-[#D4C5A0]">{suffix}</span>
       </div>
     </div>
   );
@@ -125,7 +125,7 @@ export default function SustainabilitySection() {
       className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
     >
       {/* Green-tinted gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a10] via-[#0a0a14] to-[#0a0a14]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a1a10] via-[#1E3429] to-[#1E3429]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(34,197,94,0.06)_0%,transparent_70%)]" />
 
       {/* Top divider */}
@@ -146,7 +146,7 @@ export default function SustainabilitySection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('sustain.title').split(t('sustain.titleAccent'))[0]}<span className="text-gradient-gold">{t('sustain.titleAccent')}</span>{t('sustain.title').split(t('sustain.titleAccent'))[1]}
           </h2>
-          <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4">
             {t('sustain.desc')}
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-green-400 to-transparent mx-auto mt-6" />
@@ -167,7 +167,7 @@ export default function SustainabilitySection() {
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 className="group"
               >
-                <div className="bg-[#12121f]/40 border border-white/5 rounded-xl p-6 text-center hover:border-green-500/20 hover:bg-[#12121f]/60 transition-all duration-500">
+                <div className="bg-[#2D4A3E]/40 border border-white/5 rounded-xl p-6 text-center hover:border-green-500/20 hover:bg-[#2D4A3E]/60 transition-all duration-500">
                   {/* Icon */}
                   <div className="flex items-center justify-center mb-4">
                     <div
@@ -190,7 +190,7 @@ export default function SustainabilitySection() {
                   <h3 className="text-base sm:text-lg font-light text-white mt-4 tracking-wide">
                     {label}
                   </h3>
-                  <p className="text-xs text-[#8888a8] mt-2 leading-relaxed">
+                  <p className="text-xs text-[#D4C5A0] mt-2 leading-relaxed">
                     {description}
                   </p>
                 </div>
@@ -207,7 +207,7 @@ export default function SustainabilitySection() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-12 text-center"
         >
-          <p className="text-sm text-[#8888a8] max-w-xl mx-auto">
+          <p className="text-sm text-[#D4C5A0] max-w-xl mx-auto">
             {t('sustain.footerNote')}
           </p>
         </motion.div>

@@ -52,3 +52,5 @@ prompt
 server.log
 # Skills directory
 /skills/
+# OMNI Design System reference (not deployed)
+OMNI LIVING Design System/

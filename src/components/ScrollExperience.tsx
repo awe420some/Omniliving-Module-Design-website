@@ -17,10 +17,10 @@ if (typeof window !== 'undefined') {
 function SceneCanvasLoader() {
   const { t } = useTranslation();
   return (
-    <div className="w-full h-full bg-[#0a0a14] flex items-center justify-center">
+    <div className="w-full h-full bg-[#1E3429] flex items-center justify-center">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-[#c9a96e]/30 border-t-[#c9a96e] rounded-full animate-spin" />
-        <span className="text-xs text-[#8888a8] tracking-wider">{t('scroll.sceneLoading')}</span>
+        <div className="w-8 h-8 border-2 border-[#C3F8BD]/30 border-t-[#C3F8BD] rounded-full animate-spin" />
+        <span className="text-xs text-[#D4C5A0] tracking-wider">{t('scroll.sceneLoading')}</span>
       </div>
     </div>
   );
@@ -123,11 +123,11 @@ export default function ScrollExperience() {
               className="bg-black/60 backdrop-blur-md px-5 py-4 rounded-xl border border-white/5"
             >
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-[#c9a96e]/15 flex items-center justify-center">
-                  <PhaseIcon size={16} className="text-[#c9a96e]" />
+                <div className="w-8 h-8 rounded-lg bg-[#C3F8BD]/15 flex items-center justify-center">
+                  <PhaseIcon size={16} className="text-[#C3F8BD]" />
                 </div>
                 <div>
-                  <p className="text-[10px] tracking-[0.3em] text-[#c9a96e] uppercase">
+                  <p className="text-[10px] tracking-[0.3em] text-[#C3F8BD] uppercase">
                     Phase {currentPhase}/5
                   </p>
                   <p className="text-sm text-white font-light tracking-wide">
@@ -135,7 +135,7 @@ export default function ScrollExperience() {
                   </p>
                 </div>
               </div>
-              <p className="text-xs text-[#8888a8] ml-11">
+              <p className="text-xs text-[#D4C5A0] ml-11">
                 {phaseDesc}
               </p>
             </motion.div>
@@ -151,8 +151,8 @@ export default function ScrollExperience() {
               className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-lg border border-white/5"
             >
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#c9a96e] animate-pulse" />
-                <p className="text-[10px] tracking-[0.2em] uppercase text-[#8888a8]">
+                <div className="w-2 h-2 rounded-full bg-[#C3F8BD] animate-pulse" />
+                <p className="text-[10px] tracking-[0.2em] uppercase text-[#D4C5A0]">
                   {experienceMode === 'building' && t('scroll.building')}
                   {experienceMode === 'sectioncut' && t('scroll.sectionCut')}
                   {experienceMode === 'configurator' && t('scroll.configurator')}
@@ -170,18 +170,18 @@ export default function ScrollExperience() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="absolute bottom-8 left-1/2 -translate-x-1/2"
             >
-              <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-[#c9a96e]/20">
+              <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-[#C3F8BD]/20">
                 <div className="flex items-center gap-3">
                   <motion.div
                     animate={{ x: [0, 5, 0], y: [0, -3, 0] }}
                     transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-[#c9a96e]">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-[#C3F8BD]">
                       <path d="M1 1L6 6M6 6V2M6 6H2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       <path d="M15 15L10 10M10 10V14M10 10H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </motion.div>
-                  <p className="text-sm text-[#c9a96e] tracking-wider">
+                  <p className="text-sm text-[#C3F8BD] tracking-wider">
                     {t('scroll.cursorHint')}
                   </p>
                 </div>
@@ -201,8 +201,8 @@ export default function ScrollExperience() {
                   className="absolute"
                   style={{ left: mod.x, top: mod.y, transform: 'translate(-50%, -50%)' }}
                 >
-                  <div className="bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-md border border-[#c9a96e]/20">
-                    <p className="text-[9px] text-[#c9a96e] tracking-wider whitespace-nowrap">
+                  <div className="bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-md border border-[#C3F8BD]/20">
+                    <p className="text-[9px] text-[#C3F8BD] tracking-wider whitespace-nowrap">
                       {t(mod.labelKey)}
                     </p>
                   </div>
@@ -214,7 +214,7 @@ export default function ScrollExperience() {
           {/* Vertical scroll progress bar - right side */}
           <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-[2px] h-32 bg-white/5 rounded-full overflow-hidden">
             <motion.div
-              className="w-full bg-gradient-to-b from-[#c9a96e] to-[#c9a96e]/30 rounded-full"
+              className="w-full bg-gradient-to-b from-[#C3F8BD] to-[#C3F8BD]/30 rounded-full"
               style={{ height: `${scrollProgress * 100}%` }}
               transition={{ duration: 0.3 }}
             />
@@ -223,7 +223,7 @@ export default function ScrollExperience() {
           {/* Horizontal progress bar at bottom */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/5">
             <motion.div
-              className="h-full bg-gradient-to-r from-[#c9a96e] via-[#dbb980] to-[#c9a96e]/30"
+              className="h-full bg-gradient-to-r from-[#C3F8BD] via-[#DFFCD9] to-[#C3F8BD]/30"
               style={{ width: `${scrollProgress * 100}%` }}
               transition={{ duration: 0.3 }}
             />

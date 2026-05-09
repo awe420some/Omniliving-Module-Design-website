@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 export default function DatenschutzPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a14] text-white">
+    <div className="min-h-screen bg-[#1E3429] text-white">
       {/* Header */}
-      <div className="border-b border-white/5 bg-[#0a0a14]/95 backdrop-blur-md sticky top-0 z-50">
+      <div className="border-b border-white/5 bg-[#1E3429]/95 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 group">
             <Image
@@ -21,27 +21,27 @@ export default function DatenschutzPage() {
               height={28}
               className="object-contain"
             />
-            <span className="text-sm tracking-[0.2em] text-[#c9a96e]/80 uppercase font-light group-hover:text-[#c9a96e] transition-colors">
+            <span className="text-sm tracking-[0.2em] text-[#C3F8BD]/80 uppercase font-light group-hover:text-[#C3F8BD] transition-colors">
               Omniliving
             </span>
           </Link>
           <span className="text-white/10">|</span>
-          <span className="text-sm text-[#8888a8] tracking-wider">Datenschutz</span>
+          <span className="text-sm text-[#D4C5A0] tracking-wider">Datenschutz</span>
         </div>
       </div>
 
       {/* Content */}
       <main className="max-w-4xl mx-auto px-6 py-16 sm:py-24">
         <div className="mb-12">
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">Rechtliches</p>
+          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">Rechtliches</p>
           <h1 className="text-3xl sm:text-4xl font-light tracking-wider text-white mb-4">
             Datenschutzerklärung
           </h1>
-          <p className="text-sm text-[#8888a8]">Gemäß DSGVO, BDSG und TMG</p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mt-6" />
+          <p className="text-sm text-[#D4C5A0]">Gemäß DSGVO, BDSG und TMG</p>
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mt-6" />
         </div>
 
-        <div className="space-y-10 text-[#8888a8] text-sm leading-relaxed">
+        <div className="space-y-10 text-[#D4C5A0] text-sm leading-relaxed">
           <section>
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">1. Datenschutz auf einen Blick</h2>
             <h3 className="text-white/70 font-medium mb-2">Allgemeine Hinweise</h3>
@@ -59,8 +59,8 @@ export default function DatenschutzPage() {
               Teutoburger Straße 23a<br />
               33330 Gütersloh<br />
               Deutschland<br /><br />
-              E-Mail: <a href="mailto:kontakt@omniliving-moduledesign-gmbh.com" className="text-[#c9a96e] hover:underline">kontakt@omniliving-moduledesign-gmbh.com</a><br />
-              Telefon: <a href="tel:+4915129530369" className="text-[#c9a96e] hover:underline">+49 151 29530369</a>
+              E-Mail: <a href="mailto:kontakt@omniliving-moduledesign-gmbh.com" className="text-[#C3F8BD] hover:underline">kontakt@omniliving-moduledesign-gmbh.com</a><br />
+              Telefon: <a href="tel:+4915129530369" className="text-[#C3F8BD] hover:underline">+49 151 29530369</a>
             </p>
           </section>
 
@@ -91,7 +91,7 @@ export default function DatenschutzPage() {
                 href="https://vercel.com/legal/privacy-policy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#c9a96e] hover:underline"
+                className="text-[#C3F8BD] hover:underline"
               >
                 Datenschutzerklärung von Vercel
               </a>.
@@ -135,7 +135,7 @@ export default function DatenschutzPage() {
                 href="https://www.datenschutz-berlin.de"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#c9a96e] hover:underline"
+                className="text-[#C3F8BD] hover:underline"
               >
                 Berliner Beauftragte für Datenschutz und Informationsfreiheit
               </a>.
@@ -151,7 +151,7 @@ export default function DatenschutzPage() {
             </p>
           </section>
 
-          <p className="text-xs text-[#8888a8]/50 pt-4 border-t border-white/5">
+          <p className="text-xs text-[#D4C5A0]/50 pt-4 border-t border-white/5">
             Stand: Mai 2026
           </p>
         </div>
@@ -159,7 +159,7 @@ export default function DatenschutzPage() {
         <div className="mt-16 pt-8 border-t border-white/5">
           <Link
             href="/"
-            className="text-sm text-[#c9a96e] hover:text-[#dbb980] transition-colors tracking-wide"
+            className="text-sm text-[#C3F8BD] hover:text-[#DFFCD9] transition-colors tracking-wide"
           >
             ← Zurück zur Startseite
           </Link>

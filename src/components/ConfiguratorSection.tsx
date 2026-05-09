@@ -43,7 +43,7 @@ const MODULE_TYPES: {
     descKey: 'module.wohnen.desc',
     icon: Home,
     interiorIcon: Sofa,
-    color: '#c9a96e',
+    color: '#C3F8BD',
     emissiveColor: '#ffcc88',
     windowCount: 2,
     windowSize: 'large',
@@ -460,11 +460,11 @@ function BuildingIllustration({
                 y1="12"
                 x2={25 + i * (effectiveRoofSpan * 100 / (effectiveRoofSpan * 3))}
                 y2="35"
-                stroke="rgba(201,169,110,0.08)"
+                stroke="rgba(195, 248, 189,0.08)"
                 strokeWidth="1"
               />
             ))}
-            <line x1="15" y1="8" x2={`${effectiveRoofSpan * 100 + 25}`} y2="8" stroke="rgba(201,169,110,0.2)" strokeWidth="1" />
+            <line x1="15" y1="8" x2={`${effectiveRoofSpan * 100 + 25}`} y2="8" stroke="rgba(195, 248, 189,0.2)" strokeWidth="1" />
           </svg>
         </div>
 
@@ -483,7 +483,7 @@ function BuildingIllustration({
                 className="absolute top-0 bottom-0 w-[1px]"
                 style={{
                   left: i * (CELL_W + CELL_GAP) - CELL_GAP / 2,
-                  backgroundColor: arrangeMode ? 'rgba(201,169,110,0.1)' : 'rgba(201,169,110,0.04)',
+                  backgroundColor: arrangeMode ? 'rgba(195, 248, 189,0.1)' : 'rgba(195, 248, 189,0.04)',
                 }}
               />
             ))}
@@ -494,7 +494,7 @@ function BuildingIllustration({
                 className="absolute left-0 right-0 h-[1px]"
                 style={{
                   top: i * (CELL_H + CELL_GAP) - CELL_GAP / 2,
-                  backgroundColor: arrangeMode ? 'rgba(201,169,110,0.1)' : 'rgba(201,169,110,0.04)',
+                  backgroundColor: arrangeMode ? 'rgba(195, 248, 189,0.1)' : 'rgba(195, 248, 189,0.04)',
                 }}
               />
             ))}
@@ -510,13 +510,13 @@ function BuildingIllustration({
                     width: CELL_W,
                     height: CELL_H,
                     borderColor: ghostPos && ghostPos.col === col && ghostPos.row === row
-                      ? 'rgba(201,169,110,0.4)'
+                      ? 'rgba(195, 248, 189,0.4)'
                       : arrangeMode
-                        ? 'rgba(201,169,110,0.1)'
-                        : 'rgba(201,169,110,0.03)',
+                        ? 'rgba(195, 248, 189,0.1)'
+                        : 'rgba(195, 248, 189,0.03)',
                     backgroundColor: ghostPos && ghostPos.col === col && ghostPos.row === row
-                      ? 'rgba(201,169,110,0.06)'
-                      : 'rgba(201,169,110,0.01)',
+                      ? 'rgba(195, 248, 189,0.06)'
+                      : 'rgba(195, 248, 189,0.01)',
                   }}
                 />
               ))
@@ -526,13 +526,13 @@ function BuildingIllustration({
           {/* Ghost position (drop preview) - always show when dragging */}
           {ghostPos && draggingId && (
             <motion.div
-              className="absolute rounded-sm border-2 border-dashed border-[#c9a96e]/50 pointer-events-none"
+              className="absolute rounded-sm border-2 border-dashed border-[#C3F8BD]/50 pointer-events-none"
               style={{
                 left: ghostPos.col * (CELL_W + CELL_GAP),
                 top: ghostPos.row * (CELL_H + CELL_GAP),
                 width: CELL_W,
                 height: CELL_H,
-                backgroundColor: 'rgba(201,169,110,0.08)',
+                backgroundColor: 'rgba(195, 248, 189,0.08)',
               }}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -580,14 +580,14 @@ function BuildingIllustration({
                   onDragEnd={(_e, info) => handleDragEnd(pos.id, _e, info)}
                   className={`relative flex flex-col items-center justify-center rounded-sm transition-colors duration-200 border-2 w-full h-full ${
                     isDragging
-                      ? 'border-[#c9a96e] shadow-[0_0_24px_rgba(201,169,110,0.35)] scale-105 cursor-grabbing'
+                      ? 'border-[#C3F8BD] shadow-[0_0_24px_rgba(195, 248, 189,0.35)] scale-105 cursor-grabbing'
                       : isFlashing
-                        ? 'border-[#c9a96e] shadow-[0_0_20px_rgba(201,169,110,0.3)]'
+                        ? 'border-[#C3F8BD] shadow-[0_0_20px_rgba(195, 248, 189,0.3)]'
                         : arrangeMode
-                          ? 'border-[#c9a96e]/30 cursor-grab active:cursor-grabbing hover:border-[#c9a96e]/50 hover:shadow-[0_0_12px_rgba(201,169,110,0.15)]'
+                          ? 'border-[#C3F8BD]/30 cursor-grab active:cursor-grabbing hover:border-[#C3F8BD]/50 hover:shadow-[0_0_12px_rgba(195, 248, 189,0.15)]'
                           : isInteractive
-                            ? 'border-white/10 hover:border-[#c9a96e]/50 hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] cursor-grab active:cursor-grabbing'
-                            : 'border-white/5 cursor-grab active:cursor-grabbing hover:border-[#c9a96e]/20'
+                            ? 'border-white/10 hover:border-[#C3F8BD]/50 hover:shadow-[0_0_15px_rgba(195, 248, 189,0.15)] cursor-grab active:cursor-grabbing'
+                            : 'border-white/5 cursor-grab active:cursor-grabbing hover:border-[#C3F8BD]/20'
                   }`}
                   style={{ backgroundColor: wallHex }}
                   whileHover={isInteractive ? { scale: 1.05 } : arrangeMode ? { scale: 1.02 } : { scale: 1.02 }}
@@ -606,7 +606,7 @@ function BuildingIllustration({
 
                   {/* Drag handle - always visible */}
                   <div className="absolute top-0.5 right-0.5 z-20">
-                    <Move size={10} className="text-[#c9a96e]/40 group-hover:text-[#c9a96e]/70 transition-colors" />
+                    <Move size={10} className="text-[#C3F8BD]/40 group-hover:text-[#C3F8BD]/70 transition-colors" />
                   </div>
 
                   {/* Ventilation hood for kitchen on upper floor */}
@@ -649,7 +649,7 @@ function BuildingIllustration({
         {/* Connection line between floors */}
         <div className="relative h-3 flex items-center justify-center">
           <div
-            className="h-[2px] bg-gradient-to-r from-[#c9a96e]/10 via-[#c9a96e]/25 to-[#c9a96e]/10"
+            className="h-[2px] bg-gradient-to-r from-[#C3F8BD]/10 via-[#C3F8BD]/25 to-[#C3F8BD]/10"
             style={{ width: `${effectiveRoofSpan / GRID_COLS * 100}%` }}
           />
         </div>
@@ -687,15 +687,15 @@ function BuildingIllustration({
         {/* Floor labels */}
         {sizeConfig.upperModules > 0 && (
           <div className="absolute left-0 top-[30%] -translate-y-1/2 -translate-x-full pr-2 hidden sm:block">
-            <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/40 uppercase whitespace-nowrap">{t('config.floorOG')}</span>
+            <span className="text-[8px] tracking-[0.15em] text-[#C3F8BD]/40 uppercase whitespace-nowrap">{t('config.floorOG')}</span>
           </div>
         )}
         <div className="absolute left-0 top-[75%] -translate-y-1/2 -translate-x-full pr-2 hidden sm:block">
-          <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/40 uppercase whitespace-nowrap">{t('config.floorEG')}</span>
+          <span className="text-[8px] tracking-[0.15em] text-[#C3F8BD]/40 uppercase whitespace-nowrap">{t('config.floorEG')}</span>
         </div>
 
         {/* Module count badge */}
-        <div className="absolute -top-2 -right-2 bg-[#c9a96e] text-[#0a0a14] text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+        <div className="absolute -top-2 -right-2 bg-[#C3F8BD] text-[#1E3429] text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
           {totalModules}
         </div>
 
@@ -706,8 +706,8 @@ function BuildingIllustration({
           transition={{ delay: 1.5 }}
           className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1.5 pointer-events-none"
         >
-          <Move size={10} className="text-[#c9a96e]/30" />
-          <span className="text-[8px] tracking-[0.15em] text-[#c9a96e]/30 uppercase">{t('config.dragHint')}</span>
+          <Move size={10} className="text-[#C3F8BD]/30" />
+          <span className="text-[8px] tracking-[0.15em] text-[#C3F8BD]/30 uppercase">{t('config.dragHint')}</span>
         </motion.div>
 
         {/* Scale reference - person silhouette */}
@@ -740,9 +740,9 @@ function StepIndicator({ step, currentStep, label }: { step: number; currentStep
       <div
         className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
           isActive
-            ? 'bg-[#c9a96e] text-[#0a0a14]'
+            ? 'bg-[#C3F8BD] text-[#1E3429]'
             : isCompleted
-              ? 'bg-[#c9a96e]/30 text-[#c9a96e]'
+              ? 'bg-[#C3F8BD]/30 text-[#C3F8BD]'
               : 'bg-white/5 text-white/30 border border-white/10'
         }`}
       >
@@ -750,7 +750,7 @@ function StepIndicator({ step, currentStep, label }: { step: number; currentStep
       </div>
       <span
         className={`text-xs tracking-wide transition-colors duration-300 hidden sm:inline ${
-          isActive ? 'text-[#c9a96e]' : isCompleted ? 'text-white/60' : 'text-white/30'
+          isActive ? 'text-[#C3F8BD]' : isCompleted ? 'text-white/60' : 'text-white/30'
         }`}
       >
         {label}
@@ -780,7 +780,7 @@ function StepSizeConfig() {
         <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-2">
           {t('config.sizeTitle')}
         </h3>
-        <p className="text-[11px] text-[#8888a8] leading-relaxed mb-6">
+        <p className="text-[11px] text-[#D4C5A0] leading-relaxed mb-6">
           {t('config.sizeDesc', { area: MODULE_AREA })}
         </p>
       </div>
@@ -789,27 +789,27 @@ function StepSizeConfig() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-white tracking-wide">{t('config.groundFloor')}</span>
-          <span className="text-sm text-[#c9a96e] font-light">{sizeConfig.groundModules} {t('config.modules')}</span>
+          <span className="text-sm text-[#C3F8BD] font-light">{sizeConfig.groundModules} {t('config.modules')}</span>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => setSizeConfig({ groundModules: Math.max(1, sizeConfig.groundModules - 1) })}
             disabled={sizeConfig.groundModules <= 1}
-            className="w-10 h-10 rounded-lg border border-white/10 bg-[#12121f]/60 flex items-center justify-center text-white/60 hover:border-[#c9a96e]/30 hover:text-[#c9a96e] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-10 h-10 rounded-lg border border-white/10 bg-[#2D4A3E]/60 flex items-center justify-center text-white/60 hover:border-[#C3F8BD]/30 hover:text-[#C3F8BD] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Ein Modul weniger im Erdgeschoss"
           >
             <Minus size={16} />
           </button>
           <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#c9a96e] to-[#dbb980] rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#C3F8BD] to-[#DFFCD9] rounded-full transition-all duration-300"
               style={{ width: `${((sizeConfig.groundModules - 1) / 3) * 100}%` }}
             />
           </div>
           <button
             onClick={() => setSizeConfig({ groundModules: Math.min(4, sizeConfig.groundModules + 1) })}
             disabled={sizeConfig.groundModules >= 4}
-            className="w-10 h-10 rounded-lg border border-white/10 bg-[#12121f]/60 flex items-center justify-center text-white/60 hover:border-[#c9a96e]/30 hover:text-[#c9a96e] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-10 h-10 rounded-lg border border-white/10 bg-[#2D4A3E]/60 flex items-center justify-center text-white/60 hover:border-[#C3F8BD]/30 hover:text-[#C3F8BD] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Ein Modul mehr im Erdgeschoss"
           >
             <Plus size={16} />
@@ -825,7 +825,7 @@ function StepSizeConfig() {
       <div>
         <div className="flex items-center justify-between mb-3">
           <span className="text-xs text-white tracking-wide">{t('config.upperFloor')}</span>
-          <span className="text-sm text-[#c9a96e] font-light">
+          <span className="text-sm text-[#C3F8BD] font-light">
             {sizeConfig.upperModules === 0 ? t('config.none') : `${sizeConfig.upperModules} ${t('config.modules')}`}
           </span>
         </div>
@@ -833,21 +833,21 @@ function StepSizeConfig() {
           <button
             onClick={() => setSizeConfig({ upperModules: Math.max(0, sizeConfig.upperModules - 1) })}
             disabled={sizeConfig.upperModules <= 0}
-            className="w-10 h-10 rounded-lg border border-white/10 bg-[#12121f]/60 flex items-center justify-center text-white/60 hover:border-[#c9a96e]/30 hover:text-[#c9a96e] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-10 h-10 rounded-lg border border-white/10 bg-[#2D4A3E]/60 flex items-center justify-center text-white/60 hover:border-[#C3F8BD]/30 hover:text-[#C3F8BD] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Ein Modul weniger im Obergeschoss"
           >
             <Minus size={16} />
           </button>
           <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[#c9a96e] to-[#dbb980] rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-[#C3F8BD] to-[#DFFCD9] rounded-full transition-all duration-300"
               style={{ width: `${(sizeConfig.upperModules / 4) * 100}%` }}
             />
           </div>
           <button
             onClick={() => setSizeConfig({ upperModules: Math.min(4, sizeConfig.upperModules + 1) })}
             disabled={sizeConfig.upperModules >= 4}
-            className="w-10 h-10 rounded-lg border border-white/10 bg-[#12121f]/60 flex items-center justify-center text-white/60 hover:border-[#c9a96e]/30 hover:text-[#c9a96e] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="w-10 h-10 rounded-lg border border-white/10 bg-[#2D4A3E]/60 flex items-center justify-center text-white/60 hover:border-[#C3F8BD]/30 hover:text-[#C3F8BD] transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Ein Modul mehr im Obergeschoss"
           >
             <Plus size={16} />
@@ -858,22 +858,22 @@ function StepSizeConfig() {
           <span className="text-[9px] text-white/20">max. {4 * MODULE_AREA} m²</span>
         </div>
         {sizeConfig.upperModules === 0 && (
-          <p className="text-[10px] text-[#c9a96e]/50 mt-2 flex items-center gap-1">
+          <p className="text-[10px] text-[#C3F8BD]/50 mt-2 flex items-center gap-1">
             <ArrowDown size={10} /> {t('config.singleStory')}
           </p>
         )}
       </div>
 
       {/* Summary card */}
-      <div className="bg-[#12121f]/40 border border-white/5 rounded-lg p-4">
+      <div className="bg-[#2D4A3E]/40 border border-white/5 rounded-lg p-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-xs text-[#8888a8]">{t('config.totalArea')}</span>
-          <span className="text-lg text-[#c9a96e] font-light">
+          <span className="text-xs text-[#D4C5A0]">{t('config.totalArea')}</span>
+          <span className="text-lg text-[#C3F8BD] font-light">
             {(sizeConfig.groundModules + sizeConfig.upperModules) * MODULE_AREA} m²
           </span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.totalModules')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.totalModules')}</span>
           <span className="text-sm text-white">{sizeConfig.groundModules + sizeConfig.upperModules}</span>
         </div>
       </div>
@@ -965,7 +965,7 @@ function StepModuleAssignment({
         <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-2">
           {t('config.assignTitle')}
         </h3>
-        <p className="text-[11px] text-[#8888a8] leading-relaxed mb-4">
+        <p className="text-[11px] text-[#D4C5A0] leading-relaxed mb-4">
           {arrangeMode
             ? t('config.arrangeDesc')
             : t('config.assignDesc')}
@@ -978,8 +978,8 @@ function StepModuleAssignment({
           onClick={() => { setArrangeMode(!arrangeMode); if (!arrangeMode) setActiveType(null); }}
           className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-300 text-[10px] tracking-wider uppercase min-h-[44px] ${
             arrangeMode
-              ? 'border-[#c9a96e]/50 bg-[#c9a96e]/15 text-[#c9a96e]'
-              : 'border-white/10 bg-[#12121f]/60 text-white/50 hover:border-white/20 hover:text-white/70'
+              ? 'border-[#C3F8BD]/50 bg-[#C3F8BD]/15 text-[#C3F8BD]'
+              : 'border-white/10 bg-[#2D4A3E]/60 text-white/50 hover:border-white/20 hover:text-white/70'
           }`}
         >
           <Move size={14} />
@@ -1000,7 +1000,7 @@ function StepModuleAssignment({
               });
               useAppStore.getState().setModuleLayout(defaultLayout);
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 bg-[#12121f]/60 text-white/50 hover:border-white/20 hover:text-white/70 transition-all duration-300 text-[10px] tracking-wider uppercase min-h-[44px]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/10 bg-[#2D4A3E]/60 text-white/50 hover:border-white/20 hover:text-white/70 transition-all duration-300 text-[10px] tracking-wider uppercase min-h-[44px]"
           >
             <RotateCcw size={12} />
             {t('config.arrangeReset')}
@@ -1019,20 +1019,20 @@ function StepModuleAssignment({
               onClick={() => setActiveType(isActive ? null : mod.id)}
               className={`group p-3 sm:p-4 rounded-lg border transition-all duration-300 text-left min-h-[44px] ${
                 isActive
-                  ? 'border-[#c9a96e]/50 bg-[#c9a96e]/10'
-                  : 'border-white/5 bg-[#12121f]/60 hover:border-white/10'
+                  ? 'border-[#C3F8BD]/50 bg-[#C3F8BD]/10'
+                  : 'border-white/5 bg-[#2D4A3E]/60 hover:border-white/10'
               }`}
             >
               <Icon
                 size={18}
                 className="mb-1.5 transition-colors duration-300"
-                style={{ color: isActive ? mod.color : '#8888a8' }}
+                style={{ color: isActive ? mod.color : '#D4C5A0' }}
               />
               <p className="text-[10px] sm:text-xs font-medium text-white tracking-wide">
                 {t(mod.labelKey)}
               </p>
               {isActive && (
-                <Check size={12} className="mt-1 text-[#c9a96e]" />
+                <Check size={12} className="mt-1 text-[#C3F8BD]" />
               )}
             </button>
           );
@@ -1049,7 +1049,7 @@ function StepModuleAssignment({
 
         return (
           <div key={key}>
-            <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-2">
+            <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD] uppercase mb-2">
               {label}
             </p>
             <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${floorPositions.length}, 1fr)` }}>
@@ -1064,10 +1064,10 @@ function StepModuleAssignment({
                     disabled={!activeType}
                     className={`p-2 sm:p-3 rounded-md border text-center transition-all duration-300 relative overflow-hidden min-h-[44px] ${
                       isFlashing
-                        ? 'border-[#c9a96e] bg-[#c9a96e]/20 scale-105'
+                        ? 'border-[#C3F8BD] bg-[#C3F8BD]/20 scale-105'
                         : activeType
-                          ? 'border-white/5 bg-[#12121f]/40 hover:border-white/10 cursor-pointer'
-                          : 'border-white/5 bg-[#12121f]/20 opacity-50 cursor-not-allowed'
+                          ? 'border-white/5 bg-[#2D4A3E]/40 hover:border-white/10 cursor-pointer'
+                          : 'border-white/5 bg-[#2D4A3E]/20 opacity-50 cursor-not-allowed'
                     }`}
                   >
                     {assignment && (
@@ -1080,7 +1080,7 @@ function StepModuleAssignment({
                       {t(pos.labelKey)}
                     </p>
                     {assignment && (
-                      <p className="text-[7px] sm:text-[8px] text-[#c9a96e]/70 mt-0.5 truncate relative z-10">
+                      <p className="text-[7px] sm:text-[8px] text-[#C3F8BD]/70 mt-0.5 truncate relative z-10">
                         {t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '')}
                       </p>
                     )}
@@ -1096,9 +1096,9 @@ function StepModuleAssignment({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
+          className="bg-[#C3F8BD]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#C3F8BD]/20"
         >
-          <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
+          <p className="text-[10px] tracking-[0.15em] text-[#C3F8BD]">
             {t('config.assignHint', { module: t(MODULE_TYPES.find(m => m.id === activeType)?.labelKey || '') })}
           </p>
         </motion.div>
@@ -1130,14 +1130,14 @@ function StepMaterial() {
         <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-2">
           {t('config.materialTitle')}
         </h3>
-        <p className="text-[11px] text-[#8888a8] leading-relaxed">
+        <p className="text-[11px] text-[#D4C5A0] leading-relaxed">
           {t('config.materialDesc')}
         </p>
       </div>
 
       {/* Module Quality */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.quality')}</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD] uppercase mb-3">{t('config.quality')}</p>
         <div className="grid grid-cols-2 gap-2">
           {(['standard', 'premium'] as const).map((q) => (
             <button
@@ -1145,12 +1145,12 @@ function StepMaterial() {
               onClick={() => setModuleQuality(q)}
               className={`p-3 rounded-lg border transition-all duration-300 text-left min-h-[44px] ${
                 moduleQuality === q
-                  ? 'border-[#c9a96e]/50 bg-[#c9a96e]/10'
-                  : 'border-white/5 bg-[#12121f]/60 hover:border-white/10'
+                  ? 'border-[#C3F8BD]/50 bg-[#C3F8BD]/10'
+                  : 'border-white/5 bg-[#2D4A3E]/60 hover:border-white/10'
               }`}
             >
               <p className="text-xs text-white tracking-wide">{t(q === 'standard' ? 'config.qualityStandard' : 'config.qualityPremium')}</p>
-              <p className="text-[9px] text-[#8888a8] mt-0.5">
+              <p className="text-[9px] text-[#D4C5A0] mt-0.5">
                 {t(q === 'standard' ? 'config.qualityStandardPrice' : 'config.qualityPremiumPrice')}
               </p>
             </button>
@@ -1160,7 +1160,7 @@ function StepMaterial() {
 
       {/* Wall Color */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.wallColor')}</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD] uppercase mb-3">{t('config.wallColor')}</p>
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {WALL_COLORS.map((color) => {
             const isSelected = materialConfig.wallColor === color.id;
@@ -1170,22 +1170,22 @@ function StepMaterial() {
                 onClick={() => setMaterialConfig({ wallColor: color.id })}
                 className={`relative flex flex-col items-center gap-2 p-2 sm:p-3 rounded-lg border transition-all duration-300 min-h-[44px] ${
                   isSelected
-                    ? 'border-[#c9a96e]/50 bg-[#c9a96e]/10'
-                    : 'border-white/5 bg-[#12121f]/60 hover:border-white/10'
+                    ? 'border-[#C3F8BD]/50 bg-[#C3F8BD]/10'
+                    : 'border-white/5 bg-[#2D4A3E]/60 hover:border-white/10'
                 }`}
               >
                 <div
                   className={`w-8 h-8 sm:w-10 sm:h-10 rounded-md border-2 transition-all ${
-                    isSelected ? 'border-[#c9a96e] shadow-[0_0_8px_rgba(201,169,110,0.2)]' : 'border-white/10'
+                    isSelected ? 'border-[#C3F8BD] shadow-[0_0_8px_rgba(195, 248, 189,0.2)]' : 'border-white/10'
                   }`}
                   style={{ backgroundColor: color.hex }}
                 />
                 <span className="text-[8px] sm:text-[9px] text-white/70 tracking-wide">{t(color.labelKey)}</span>
                 {color.premium > 0 && (
-                  <span className="text-[7px] text-[#c9a96e]/60">+{formatPrice(color.premium)}</span>
+                  <span className="text-[7px] text-[#C3F8BD]/60">+{formatPrice(color.premium)}</span>
                 )}
                 {isSelected && (
-                  <Check size={10} className="absolute top-1 right-1 text-[#c9a96e]" />
+                  <Check size={10} className="absolute top-1 right-1 text-[#C3F8BD]" />
                 )}
               </button>
             );
@@ -1195,7 +1195,7 @@ function StepMaterial() {
 
       {/* Roof Color */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.roofColor')}</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD] uppercase mb-3">{t('config.roofColor')}</p>
         <div className="grid grid-cols-4 gap-2 sm:gap-3">
           {ROOF_COLORS.map((color) => {
             const isSelected = materialConfig.roofColor === color.id;
@@ -1205,19 +1205,19 @@ function StepMaterial() {
                 onClick={() => setMaterialConfig({ roofColor: color.id })}
                 className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-all duration-300 min-h-[44px] ${
                   isSelected
-                    ? 'border-[#c9a96e]/50 bg-[#c9a96e]/10'
-                    : 'border-white/5 bg-[#12121f]/60 hover:border-white/10'
+                    ? 'border-[#C3F8BD]/50 bg-[#C3F8BD]/10'
+                    : 'border-white/5 bg-[#2D4A3E]/60 hover:border-white/10'
                 }`}
               >
                 <div
                   className={`w-7 h-7 sm:w-9 sm:h-9 rounded-md border-2 transition-all ${
-                    isSelected ? 'border-[#c9a96e] shadow-[0_0_8px_rgba(201,169,110,0.2)]' : 'border-white/10'
+                    isSelected ? 'border-[#C3F8BD] shadow-[0_0_8px_rgba(195, 248, 189,0.2)]' : 'border-white/10'
                   }`}
                   style={{ backgroundColor: color.hex }}
                 />
                 <span className="text-[7px] sm:text-[8px] text-white/70 tracking-wide">{t(color.labelKey)}</span>
                 {isSelected && (
-                  <Check size={8} className="absolute top-0.5 right-0.5 text-[#c9a96e]" />
+                  <Check size={8} className="absolute top-0.5 right-0.5 text-[#C3F8BD]" />
                 )}
               </button>
             );
@@ -1227,7 +1227,7 @@ function StepMaterial() {
 
       {/* Window Style */}
       <div>
-        <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase mb-3">{t('config.windowStyle')}</p>
+        <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD] uppercase mb-3">{t('config.windowStyle')}</p>
         <div className="space-y-2">
           {WINDOW_STYLES.map((style) => {
             const isSelected = materialConfig.windowStyle === style.id;
@@ -1237,14 +1237,14 @@ function StepMaterial() {
                 onClick={() => setMaterialConfig({ windowStyle: style.id })}
                 className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-300 min-h-[44px] ${
                   isSelected
-                    ? 'border-[#c9a96e]/50 bg-[#c9a96e]/10'
-                    : 'border-white/5 bg-[#12121f]/60 hover:border-white/10'
+                    ? 'border-[#C3F8BD]/50 bg-[#C3F8BD]/10'
+                    : 'border-white/5 bg-[#2D4A3E]/60 hover:border-white/10'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   {/* Window style icon */}
                   <div className="w-10 h-7 rounded border flex items-center justify-center" style={{
-                    borderColor: isSelected ? '#c9a96e50' : 'rgba(255,255,255,0.15)',
+                    borderColor: isSelected ? '#C3F8BD50' : 'rgba(255,255,255,0.15)',
                     backgroundColor: 'rgba(200,220,255,0.08)',
                   }}>
                     {style.id === 'panorama' ? (
@@ -1260,14 +1260,14 @@ function StepMaterial() {
                   </div>
                   <div className="text-left">
                     <p className="text-[10px] sm:text-xs text-white tracking-wide">{t(style.labelKey)}</p>
-                    <p className="text-[8px] sm:text-[9px] text-[#8888a8]">{t(style.descKey)}</p>
+                    <p className="text-[8px] sm:text-[9px] text-[#D4C5A0]">{t(style.descKey)}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {style.premiumPerModule > 0 && (
-                    <span className="text-[8px] text-[#c9a96e]/60">+{formatPrice(style.premiumPerModule)}/Mod.</span>
+                    <span className="text-[8px] text-[#C3F8BD]/60">+{formatPrice(style.premiumPerModule)}/Mod.</span>
                   )}
-                  {isSelected && <Check size={14} className="text-[#c9a96e]" />}
+                  {isSelected && <Check size={14} className="text-[#C3F8BD]" />}
                 </div>
               </button>
             );
@@ -1315,7 +1315,7 @@ function SummaryPanel() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className="bg-[#12121f]/40 border border-white/5 rounded-lg p-4 sm:p-6 mt-6"
+      className="bg-[#2D4A3E]/40 border border-white/5 rounded-lg p-4 sm:p-6 mt-6"
     >
       <h3 className="text-sm tracking-[0.15em] text-white uppercase mb-4">
         {t('config.summary')}
@@ -1327,7 +1327,7 @@ function SummaryPanel() {
           const assignment = mergedAssignments[pos.id];
           return (
             <div key={pos.id} className="flex items-center justify-between text-[10px]">
-              <span className="text-[#8888a8]">{t('config.floorEG')} – {t(pos.labelKey)}</span>
+              <span className="text-[#D4C5A0]">{t('config.floorEG')} – {t(pos.labelKey)}</span>
               <span className="flex items-center gap-1.5">
                 {assignment && (
                   <span
@@ -1335,7 +1335,7 @@ function SummaryPanel() {
                     style={{ backgroundColor: assignment.emissiveColor }}
                   />
                 )}
-                <span className="text-[#c9a96e]">{assignment ? t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '') : '—'}</span>
+                <span className="text-[#C3F8BD]">{assignment ? t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '') : '—'}</span>
                 <span className="text-white/30">{MODULE_AREA} m²</span>
               </span>
             </div>
@@ -1345,7 +1345,7 @@ function SummaryPanel() {
           const assignment = mergedAssignments[pos.id];
           return (
             <div key={pos.id} className="flex items-center justify-between text-[10px]">
-              <span className="text-[#8888a8]">{t('config.floorOG')} – {t(pos.labelKey)}</span>
+              <span className="text-[#D4C5A0]">{t('config.floorOG')} – {t(pos.labelKey)}</span>
               <span className="flex items-center gap-1.5">
                 {assignment && (
                   <span
@@ -1353,7 +1353,7 @@ function SummaryPanel() {
                     style={{ backgroundColor: assignment.emissiveColor }}
                   />
                 )}
-                <span className="text-[#c9a96e]">{assignment ? t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '') : '—'}</span>
+                <span className="text-[#C3F8BD]">{assignment ? t(MODULE_TYPES.find(m => m.id === assignment.type)?.labelKey || '') : '—'}</span>
                 <span className="text-white/30">{MODULE_AREA} m²</span>
               </span>
             </div>
@@ -1363,19 +1363,19 @@ function SummaryPanel() {
 
       <div className="border-t border-white/5 pt-3 space-y-2">
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.livingArea')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.livingArea')}</span>
           <span className="text-sm text-white">{totalArea} m²</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.floors')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.floors')}</span>
           <span className="text-sm text-white">{sizeConfig.upperModules > 0 ? '2' : '1'}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.estimatedBuildTime')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.estimatedBuildTime')}</span>
           <span className="text-sm text-white">~{estimatedWeeks} {t('config.weeks')}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.exteriorWall')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.exteriorWall')}</span>
           <div className="flex items-center gap-2">
             <span
               className="w-3 h-3 rounded-sm inline-block border border-white/10"
@@ -1385,7 +1385,7 @@ function SummaryPanel() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.roof')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.roof')}</span>
           <div className="flex items-center gap-2">
             <span
               className="w-3 h-3 rounded-sm inline-block border border-white/10"
@@ -1395,7 +1395,7 @@ function SummaryPanel() {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-xs text-[#8888a8]">{t('config.windows')}</span>
+          <span className="text-xs text-[#D4C5A0]">{t('config.windows')}</span>
           <span className="text-sm text-white">{t(WINDOW_STYLES.find(w => w.id === materialConfig.windowStyle)?.labelKey || '')}</span>
         </div>
       </div>
@@ -1404,13 +1404,13 @@ function SummaryPanel() {
       <div className="border-t border-white/5 pt-3 mt-3 space-y-1.5">
         {priceData.breakdown.map((item, i) => (
           <div key={i} className="flex justify-between items-center">
-            <span className="text-[10px] text-[#8888a8]">{t(item.labelKey)}</span>
+            <span className="text-[10px] text-[#D4C5A0]">{t(item.labelKey)}</span>
             <span className="text-[10px] text-white/60">{formatPrice(item.value)}</span>
           </div>
         ))}
-        <div className="flex justify-between items-center pt-2 border-t border-[#c9a96e]/20">
-          <span className="text-xs text-[#c9a96e] font-medium tracking-wide">{t('config.estimatedPrice')}</span>
-          <span className="text-lg text-[#c9a96e] font-light">
+        <div className="flex justify-between items-center pt-2 border-t border-[#C3F8BD]/20">
+          <span className="text-xs text-[#C3F8BD] font-medium tracking-wide">{t('config.estimatedPrice')}</span>
+          <span className="text-lg text-[#C3F8BD] font-light">
             <AnimatedPrice value={priceData.total} />
           </span>
         </div>
@@ -1420,7 +1420,7 @@ function SummaryPanel() {
       <div className="flex flex-col sm:flex-row gap-3 mt-4">
         <Button
           onClick={handleRequestConfiguration}
-          className="flex-1 bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase text-xs min-h-[44px]"
+          className="flex-1 bg-gradient-to-r from-[#C3F8BD] to-[#8EDA88] hover:from-[#DFFCD9] hover:to-[#C3F8BD] text-[#1E3429] font-medium tracking-[0.1em] uppercase text-xs min-h-[44px]"
         >
           <FileText size={14} className="mr-2" />
           {t('config.requestConfig')}
@@ -1428,7 +1428,7 @@ function SummaryPanel() {
         <Button
           onClick={handleDownloadPdf}
           variant="outline"
-          className="flex-1 border-white/10 text-[#8888a8] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
+          className="flex-1 border-white/10 text-[#D4C5A0] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
         >
           <Download size={14} className="mr-2" />
           {t('config.downloadPdf')}
@@ -1539,7 +1539,7 @@ export default function ConfiguratorSection() {
   ];
 
   return (
-    <section id="configurator" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
+    <section id="configurator" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -1554,14 +1554,14 @@ export default function ConfiguratorSection() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mb-4 origin-center"
+            className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mb-4 origin-center"
           />
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4"
+            className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4"
           >
             {t('config.label')}
           </motion.p>
@@ -1583,11 +1583,11 @@ export default function ConfiguratorSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4"
+            className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4"
           >
             {t('config.subtitle')}
           </motion.p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Wizard Step Indicators */}
@@ -1597,7 +1597,7 @@ export default function ConfiguratorSection() {
               <StepIndicator step={s.step} currentStep={configuratorStep} label={s.label} />
               {i < steps.length - 1 && (
                 <div className={`w-6 sm:w-12 h-[1px] mx-2 transition-colors duration-300 ${
-                  configuratorStep > s.step ? 'bg-[#c9a96e]/50' : 'bg-white/10'
+                  configuratorStep > s.step ? 'bg-[#C3F8BD]/50' : 'bg-white/10'
                 }`} />
               )}
             </div>
@@ -1612,7 +1612,7 @@ export default function ConfiguratorSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-3 h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden border border-white/5 bg-[#0d0d1a] relative"
+            className="lg:col-span-3 h-[400px] sm:h-[500px] lg:h-[600px] rounded-lg overflow-hidden border border-white/5 bg-[#1E3429] relative"
           >
             <BuildingIllustration
               moduleAssignments={mergedAssignments}
@@ -1624,7 +1624,7 @@ export default function ConfiguratorSection() {
               arrangeMode={configuratorStep === 2 && arrangeMode}
             />
             <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-md border border-white/5">
-              <p className="text-[10px] tracking-[0.2em] text-[#8888a8] uppercase">
+              <p className="text-[10px] tracking-[0.2em] text-[#D4C5A0] uppercase">
                 {arrangeMode && configuratorStep === 2 ? t('config.arrangeToggle') : t('config.modulePreview')}
               </p>
             </div>
@@ -1633,10 +1633,10 @@ export default function ConfiguratorSection() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
+              className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#C3F8BD]/20"
             >
-              <p className="text-[8px] tracking-[0.15em] text-[#8888a8] uppercase mb-0.5">{t('config.estimatedPrice')}</p>
-              <p className="text-sm text-[#c9a96e] font-light tracking-wide">
+              <p className="text-[8px] tracking-[0.15em] text-[#D4C5A0] uppercase mb-0.5">{t('config.estimatedPrice')}</p>
+              <p className="text-sm text-[#C3F8BD] font-light tracking-wide">
                 <AnimatedPrice value={priceData.total} />
               </p>
             </motion.div>
@@ -1646,9 +1646,9 @@ export default function ConfiguratorSection() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute bottom-4 left-4 right-20 bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
+                className="absolute bottom-4 left-4 right-20 bg-[#C3F8BD]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#C3F8BD]/20"
               >
-                <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
+                <p className="text-[10px] tracking-[0.15em] text-[#C3F8BD]">
                   {t('config.dragHint')}
                 </p>
               </motion.div>
@@ -1659,9 +1659,9 @@ export default function ConfiguratorSection() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute bottom-4 left-4 right-20 bg-[#c9a96e]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#c9a96e]/20"
+                className="absolute bottom-4 left-4 right-20 bg-[#C3F8BD]/10 backdrop-blur-sm px-4 py-2.5 rounded-md border border-[#C3F8BD]/20"
               >
-                <p className="text-[10px] tracking-[0.15em] text-[#c9a96e]">
+                <p className="text-[10px] tracking-[0.15em] text-[#C3F8BD]">
                   {t('config.clickPosition', { module: t(MODULE_TYPES.find(m => m.id === activeType)?.labelKey || '') })}
                 </p>
               </motion.div>
@@ -1677,7 +1677,7 @@ export default function ConfiguratorSection() {
             className="lg:col-span-2 min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] overflow-y-auto max-h-[700px]"
             style={{
               scrollbarWidth: 'thin',
-              scrollbarColor: 'rgba(201, 169, 110, 0.3) transparent',
+              scrollbarColor: 'rgba(195, 248, 189, 0.3) transparent',
             }}
           >
             <div className="space-y-4">
@@ -1705,7 +1705,7 @@ export default function ConfiguratorSection() {
                   <Button
                     onClick={() => changeStep(configuratorStep - 1)}
                     variant="outline"
-                    className="flex-1 border-white/10 text-[#8888a8] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
+                    className="flex-1 border-white/10 text-[#D4C5A0] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
                   >
                     <ChevronLeft size={14} className="mr-1" />
                     Zurück
@@ -1714,7 +1714,7 @@ export default function ConfiguratorSection() {
                 {configuratorStep < 3 ? (
                   <Button
                     onClick={() => changeStep(configuratorStep + 1)}
-                    className="flex-1 bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase text-xs min-h-[44px]"
+                    className="flex-1 bg-gradient-to-r from-[#C3F8BD] to-[#8EDA88] hover:from-[#DFFCD9] hover:to-[#C3F8BD] text-[#1E3429] font-medium tracking-[0.1em] uppercase text-xs min-h-[44px]"
                   >
                     Weiter
                     <ChevronRight size={14} className="ml-1" />
@@ -1723,7 +1723,7 @@ export default function ConfiguratorSection() {
                   <Button
                     onClick={handleReset}
                     variant="outline"
-                    className="flex-1 border-white/10 text-[#8888a8] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
+                    className="flex-1 border-white/10 text-[#D4C5A0] hover:text-white hover:border-white/20 tracking-wider text-xs uppercase min-h-[44px]"
                   >
                     <RotateCcw size={14} className="mr-2" />
                     Neu starten

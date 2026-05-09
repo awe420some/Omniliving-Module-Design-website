@@ -110,9 +110,9 @@ export default function PricingCalculator() {
   };
 
   return (
-    <section id="pricing" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
+    <section id="pricing" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
       {/* Top divider */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/30 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/30 to-transparent" />
 
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
@@ -123,16 +123,16 @@ export default function PricingCalculator() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
             {t('pricing.label').toUpperCase()}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('pricing.title').split(t('pricing.titleAccent'))[0]}<span className="text-gradient-gold">{t('pricing.titleAccent')}</span>{t('pricing.title').split(t('pricing.titleAccent'))[1]}
           </h2>
-          <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4">
             {t('pricing.subtitle')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -145,10 +145,10 @@ export default function PricingCalculator() {
             className="space-y-8"
           >
             {/* Module Count Slider */}
-            <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
+            <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <Label className="text-sm text-white tracking-wide">{t('pricing.moduleCount')}</Label>
-                <span className="text-lg font-light text-[#c9a96e] tabular-nums">{moduleCount}</span>
+                <span className="text-lg font-light text-[#C3F8BD] tabular-nums">{moduleCount}</span>
               </div>
               <Slider
                 value={[moduleCount]}
@@ -156,30 +156,30 @@ export default function PricingCalculator() {
                 max={6}
                 step={1}
                 onValueChange={(v) => setModuleCount(v[0])}
-                className="w-full [&_[data-slot=slider-track]]:bg-white/10 [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-[#c9a96e] [&_[data-slot=slider-range]]:to-[#dbb980] [&_[data-slot=slider-thumb]]:bg-[#c9a96e] [&_[data-slot=slider-thumb]]:border-[#c9a96e] [&_[data-slot=slider-thumb]]:h-5 [&_[data-slot=slider-thumb]]:w-5"
+                className="w-full [&_[data-slot=slider-track]]:bg-white/10 [&_[data-slot=slider-range]]:bg-gradient-to-r [&_[data-slot=slider-range]]:from-[#C3F8BD] [&_[data-slot=slider-range]]:to-[#DFFCD9] [&_[data-slot=slider-thumb]]:bg-[#C3F8BD] [&_[data-slot=slider-thumb]]:border-[#C3F8BD] [&_[data-slot=slider-thumb]]:h-5 [&_[data-slot=slider-thumb]]:w-5"
               />
-              <div className="flex justify-between mt-2 text-xs text-[#8888a8]">
+              <div className="flex justify-between mt-2 text-xs text-[#D4C5A0]">
                 <span>1</span>
                 <span>6</span>
               </div>
-              <p className="text-xs text-[#8888a8] mt-3">
+              <p className="text-xs text-[#D4C5A0] mt-3">
                 {t('pricing.perModule')} {formatEuro(MODULE_TYPES[moduleType].pricePerModule)}/{t('pricing.perModule').split(' ')[0]}
               </p>
             </div>
 
             {/* Module Type Select */}
-            <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
+            <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-6">
               <Label className="text-sm text-white tracking-wide mb-3 block">{t('pricing.moduleType')}</Label>
               <Select value={moduleType} onValueChange={(v) => setModuleType(v as ModuleType)}>
-                <SelectTrigger aria-label={t('pricing.moduleType')} className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
+                <SelectTrigger aria-label={t('pricing.moduleType')} className="w-full bg-[#1E3429] border border-white/10 text-white h-11 hover:border-[#C3F8BD]/30 focus:border-[#C3F8BD] [&_svg]:text-[#C3F8BD]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#12121f] border border-white/10 text-white">
+                <SelectContent className="bg-[#2D4A3E] border border-white/10 text-white">
                   {Object.entries(MODULE_TYPES).map(([key, val]) => (
                     <SelectItem
                       key={key}
                       value={key}
-                      className="text-white focus:bg-[#1a1a2e] focus:text-white"
+                      className="text-white focus:bg-[#3E6151] focus:text-white"
                     >
                       {val.label} – ab {formatEuro(val.pricePerModule)}/{t('pricing.perModule').split(' ')[0]}
                     </SelectItem>
@@ -189,24 +189,24 @@ export default function PricingCalculator() {
             </div>
 
             {/* Floor Toggle */}
-            <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
+            <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-sm text-white tracking-wide">{t('pricing.stories')}</Label>
-                  <p className="text-xs text-[#8888a8] mt-1">
+                  <p className="text-xs text-[#D4C5A0] mt-1">
                     {hasUpperFloor ? t('pricing.groundUpper') : t('pricing.groundOnly')}
                   </p>
                 </div>
                 <Switch
                   checked={hasUpperFloor}
                   onCheckedChange={setHasUpperFloor}
-                  className="data-[state=checked]:bg-[#c9a96e] data-[state=unchecked]:bg-white/10 w-11 h-6 [&>span]:h-5 [&>span]:w-5"
+                  className="data-[state=checked]:bg-[#C3F8BD] data-[state=unchecked]:bg-white/10 w-11 h-6 [&>span]:h-5 [&>span]:w-5"
                 />
               </div>
             </div>
 
             {/* Extras Checkboxes */}
-            <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
+            <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-6">
               <Label className="text-sm text-white tracking-wide mb-4 block">{t('pricing.equipment')}</Label>
               <div className="space-y-3">
                 {EXTRAS.map((extra) => (
@@ -217,16 +217,16 @@ export default function PricingCalculator() {
                         aria-label={extra.label}
                         checked={selectedExtras.has(extra.id)}
                         onCheckedChange={() => toggleExtra(extra.id)}
-                        className="data-[state=checked]:bg-[#c9a96e] data-[state=checked]:border-[#c9a96e] data-[state=checked]:text-[#0a0a14] border-white/20 h-4 w-4"
+                        className="data-[state=checked]:bg-[#C3F8BD] data-[state=checked]:border-[#C3F8BD] data-[state=checked]:text-[#1E3429] border-white/20 h-4 w-4"
                       />
                       <Label
                         htmlFor={extra.id}
-                        className="text-sm text-[#8888a8] cursor-pointer hover:text-white transition-colors"
+                        className="text-sm text-[#D4C5A0] cursor-pointer hover:text-white transition-colors"
                       >
                         {extra.label}
                       </Label>
                     </div>
-                    <span className="text-xs text-[#c9a96e]/70 tabular-nums shrink-0">
+                    <span className="text-xs text-[#C3F8BD]/70 tabular-nums shrink-0">
                       +{formatEuro(extra.price)}
                     </span>
                   </div>
@@ -235,18 +235,18 @@ export default function PricingCalculator() {
             </div>
 
             {/* Location Select */}
-            <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6">
+            <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-6">
               <Label className="text-sm text-white tracking-wide mb-3 block">{t('pricing.location')}</Label>
               <Select value={location} onValueChange={(v) => setLocation(v as Location)}>
-                <SelectTrigger aria-label={t('pricing.location')} className="w-full bg-[#0a0a14] border border-white/10 text-white h-11 hover:border-[#c9a96e]/30 focus:border-[#c9a96e] [&_svg]:text-[#c9a96e]">
+                <SelectTrigger aria-label={t('pricing.location')} className="w-full bg-[#1E3429] border border-white/10 text-white h-11 hover:border-[#C3F8BD]/30 focus:border-[#C3F8BD] [&_svg]:text-[#C3F8BD]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-[#12121f] border border-white/10 text-white">
+                <SelectContent className="bg-[#2D4A3E] border border-white/10 text-white">
                   {Object.entries(LOCATIONS).map(([key, val]) => (
                     <SelectItem
                       key={key}
                       value={key}
-                      className="text-white focus:bg-[#1a1a2e] focus:text-white"
+                      className="text-white focus:bg-[#3E6151] focus:text-white"
                     >
                       {val.label}
                       {val.modifier > 1 ? ' (+10%)' : ''}
@@ -266,13 +266,13 @@ export default function PricingCalculator() {
             className="flex flex-col"
           >
             {/* Total Price Card */}
-            <div className="bg-[#12121f]/80 border border-[#c9a96e]/20 rounded-xl p-8 text-center mb-6 relative overflow-hidden">
+            <div className="bg-[#2D4A3E]/80 border border-[#C3F8BD]/20 rounded-xl p-8 text-center mb-6 relative overflow-hidden">
               {/* Decorative background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#c9a96e]/5 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#C3F8BD]/5 via-transparent to-transparent pointer-events-none" />
               <div className="relative">
                 <div className="flex items-center justify-center gap-2 mb-4">
-                  <Calculator size={20} className="text-[#c9a96e]" />
-                  <span className="text-xs tracking-[0.2em] text-[#c9a96e] uppercase">
+                  <Calculator size={20} className="text-[#C3F8BD]" />
+                  <span className="text-xs tracking-[0.2em] text-[#C3F8BD] uppercase">
                     {t('pricing.estimatedCost')}
                   </span>
                 </div>
@@ -288,21 +288,21 @@ export default function PricingCalculator() {
                     </p>
                   </motion.div>
                 </AnimatePresence>
-                <p className="text-xs text-[#8888a8] mt-3 tracking-wide">
+                <p className="text-xs text-[#D4C5A0] mt-3 tracking-wide">
                   {t('pricing.unbinding')}
                 </p>
               </div>
             </div>
 
             {/* Price Breakdown Table */}
-            <div className="bg-[#12121f]/60 border border-white/5 rounded-xl p-6 flex-1">
+            <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-6 flex-1">
               <h4 className="text-sm font-medium text-white tracking-wider uppercase mb-5">
                 {t('pricing.breakdown')}
               </h4>
               <div className="space-y-3">
                 {/* Base price */}
                 <div className="flex items-center justify-between py-2 border-b border-white/5">
-                  <span className="text-sm text-[#8888a8]">
+                  <span className="text-sm text-[#D4C5A0]">
                     {t('pricing.basePrice')} ({moduleCount} × {MODULE_TYPES[moduleType].label})
                   </span>
                   <span className="text-sm text-white tabular-nums">
@@ -318,7 +318,7 @@ export default function PricingCalculator() {
                     exit={{ opacity: 0, height: 0 }}
                     className="flex items-center justify-between py-2 border-b border-white/5"
                   >
-                    <span className="text-sm text-[#8888a8]">{t('pricing.upperFloor')}</span>
+                    <span className="text-sm text-[#D4C5A0]">{t('pricing.upperFloor')}</span>
                     <span className="text-sm text-white tabular-nums">
                       +<AnimatedNumber value={calculation.upperFloorAddition} />
                     </span>
@@ -328,12 +328,12 @@ export default function PricingCalculator() {
                 {/* Extras */}
                 {selectedExtras.size > 0 && (
                   <div className="py-2 border-b border-white/5">
-                    <span className="text-sm text-[#8888a8]">{t('pricing.equipment')}</span>
+                    <span className="text-sm text-[#D4C5A0]">{t('pricing.equipment')}</span>
                     <div className="mt-2 space-y-1 pl-3">
                       {EXTRAS.filter((e) => selectedExtras.has(e.id)).map((extra) => (
                         <div key={extra.id} className="flex items-center justify-between">
-                          <span className="text-xs text-[#8888a8]/70">{extra.label}</span>
-                          <span className="text-xs text-[#8888a8] tabular-nums">
+                          <span className="text-xs text-[#D4C5A0]/70">{extra.label}</span>
+                          <span className="text-xs text-[#D4C5A0] tabular-nums">
                             +{formatEuro(extra.price)}
                           </span>
                         </div>
@@ -350,7 +350,7 @@ export default function PricingCalculator() {
                     exit={{ opacity: 0, height: 0 }}
                     className="flex items-center justify-between py-2 border-b border-white/5"
                   >
-                    <span className="text-sm text-[#8888a8]">{t('pricing.citySurcharge')}</span>
+                    <span className="text-sm text-[#D4C5A0]">{t('pricing.citySurcharge')}</span>
                     <span className="text-sm text-white tabular-nums">
                       +<AnimatedNumber value={calculation.locationAddition} />
                     </span>
@@ -360,7 +360,7 @@ export default function PricingCalculator() {
                 {/* Total */}
                 <div className="flex items-center justify-between pt-4">
                   <span className="text-base font-medium text-white tracking-wide">{t('pricing.total')}</span>
-                  <span className="text-lg font-light text-[#c9a96e] tabular-nums">
+                  <span className="text-lg font-light text-[#C3F8BD] tabular-nums">
                     <AnimatedNumber value={calculation.total} />
                   </span>
                 </div>
@@ -370,7 +370,7 @@ export default function PricingCalculator() {
             {/* CTA */}
             <button
               onClick={scrollToContact}
-              className="mt-6 w-full py-4 rounded-xl bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase text-sm transition-all duration-500 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#c9a96e]/20"
+              className="mt-6 w-full py-4 rounded-xl bg-gradient-to-r from-[#C3F8BD] to-[#8EDA88] hover:from-[#DFFCD9] hover:to-[#C3F8BD] text-[#1E3429] font-medium tracking-[0.1em] uppercase text-sm transition-all duration-500 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#C3F8BD]/20"
             >
               {t('pricing.requestEstimate')}
               <ArrowDown size={16} />

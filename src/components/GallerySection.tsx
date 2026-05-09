@@ -77,7 +77,7 @@ export default function GallerySection() {
   const currentImage = galleryImages[selectedIndex];
 
   return (
-    <section id="gallery" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
+    <section id="gallery" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
       <div className="max-w-7xl mx-auto">
         {/* Section header with image count indicator */}
         <motion.div
@@ -88,20 +88,20 @@ export default function GallerySection() {
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase">
+            <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase">
               {t('gallery.label')}
             </p>
-            <span className="text-[10px] text-[#8888a8]/50 tracking-wider">
+            <span className="text-[10px] text-[#D4C5A0]/50 tracking-wider">
               ({t('gallery.imageCount', { count: galleryImages.length })})
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('gallery.title').split(t('gallery.titleAccent'))[0]}<span className="text-gradient-gold">{t('gallery.titleAccent')}</span>{t('gallery.title').split(t('gallery.titleAccent'))[1]}
           </h2>
-          <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4">
             {t('gallery.desc')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Masonry Grid with better gap handling */}
@@ -116,7 +116,7 @@ export default function GallerySection() {
               className="break-inside-avoid group cursor-pointer"
               onClick={() => openLightbox(index)}
             >
-              <div className={`relative rounded-lg overflow-hidden border border-white/5 transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#c9a96e]/20 group-hover:shadow-lg group-hover:shadow-black/30 ${aspectClasses[image.aspect]}`}>
+              <div className={`relative rounded-lg overflow-hidden border border-white/5 transition-all duration-500 group-hover:scale-[1.02] group-hover:border-[#C3F8BD]/20 group-hover:shadow-lg group-hover:shadow-black/30 ${aspectClasses[image.aspect]}`}>
                 <Image
                   src={image.src}
                   alt={image.title}
@@ -127,15 +127,15 @@ export default function GallerySection() {
                 {/* Hover overlay with magnifying glass */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center justify-end">
                   {/* Magnifying glass icon center */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-2 border-[#c9a96e]/50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all duration-500 scale-50 group-hover:scale-100 opacity-0 group-hover:opacity-100">
-                    <Search size={20} className="text-[#c9a96e]" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-2 border-[#C3F8BD]/50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-all duration-500 scale-50 group-hover:scale-100 opacity-0 group-hover:opacity-100">
+                    <Search size={20} className="text-[#C3F8BD]" />
                   </div>
                   {/* Title and hint at bottom */}
                   <div className="p-4 sm:p-6 w-full">
                     <p className="text-sm sm:text-base font-light tracking-wider text-white">
                       {image.title}
                     </p>
-                    <p className="text-xs text-[#c9a96e] mt-1 tracking-wide">
+                    <p className="text-xs text-[#C3F8BD] mt-1 tracking-wide">
                       {t('gallery.clickEnlarge')}
                     </p>
                   </div>
@@ -149,7 +149,7 @@ export default function GallerySection() {
       {/* Lightbox Modal */}
       <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
         <DialogContent
-          className="sm:max-w-5xl bg-[#0a0a14] border-white/10 p-0 overflow-hidden"
+          className="sm:max-w-5xl bg-[#1E3429] border-white/10 p-0 overflow-hidden"
           showCloseButton={false}
         >
           <DialogTitle className="sr-only">{currentImage.title}</DialogTitle>
@@ -157,7 +157,7 @@ export default function GallerySection() {
           {/* Close button */}
           <button
             onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
+            className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#C3F8BD]/30 transition-all duration-300"
             aria-label={t('gallery.close')}
           >
             <X size={18} />
@@ -169,7 +169,7 @@ export default function GallerySection() {
               e.stopPropagation();
               goToPrev();
             }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#C3F8BD]/30 transition-all duration-300"
             aria-label={t('gallery.prev')}
           >
             <ChevronLeft size={20} />
@@ -179,7 +179,7 @@ export default function GallerySection() {
               e.stopPropagation();
               goToNext();
             }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#c9a96e]/30 transition-all duration-300"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/60 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:border-[#C3F8BD]/30 transition-all duration-300"
             aria-label={t('gallery.next')}
           >
             <ChevronRight size={20} />
@@ -210,10 +210,10 @@ export default function GallerySection() {
               <h3 className="text-lg font-light tracking-wider text-white">
                 {currentImage.title}
               </h3>
-              <p className="text-sm text-[#8888a8] mt-1 leading-relaxed">
+              <p className="text-sm text-[#D4C5A0] mt-1 leading-relaxed">
                 {currentImage.description}
               </p>
-              <p className="text-xs text-[#c9a96e]/60 mt-2 tracking-wide">
+              <p className="text-xs text-[#C3F8BD]/60 mt-2 tracking-wide">
                 {selectedIndex + 1} / {galleryImages.length}
               </p>
             </div>

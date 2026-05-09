@@ -86,8 +86,8 @@ function FloatingModuleIcons() {
           style={{ opacity: 0.15 }}
         >
           <div className="flex flex-col items-center gap-1">
-            <item.Icon size={20} className="text-[#c9a96e]" />
-            <span className="text-[8px] text-[#c9a96e]/60 tracking-widest uppercase">{item.label}</span>
+            <item.Icon size={20} className="text-[#C3F8BD]" />
+            <span className="text-[8px] text-[#C3F8BD]/60 tracking-widest uppercase">{item.label}</span>
           </div>
         </motion.div>
       ))}
@@ -123,7 +123,7 @@ function TypewriterText({ text, delay = 0 }: { text: string; delay: number }) {
     <span>
       {displayedText}
       {started && displayedText.length < text.length && (
-        <span className="inline-block w-[2px] h-[1em] bg-[#c9a96e] ml-0.5 animate-pulse align-middle" />
+        <span className="inline-block w-[2px] h-[1em] bg-[#C3F8BD] ml-0.5 animate-pulse align-middle" />
       )}
     </span>
   );
@@ -253,7 +253,7 @@ export default function HeroSection() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(201, 169, 110, ${alpha})`;
+            ctx.strokeStyle = `rgba(195, 248, 189, ${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -269,25 +269,25 @@ export default function HeroSection() {
         if (p.isLarge) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size * 6, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(201, 169, 110, ${alpha * 0.08})`;
+          ctx.fillStyle = `rgba(195, 248, 189, ${alpha * 0.08})`;
           ctx.fill();
 
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size * 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(201, 169, 110, ${alpha * 0.15})`;
+          ctx.fillStyle = `rgba(195, 248, 189, ${alpha * 0.15})`;
           ctx.fill();
         }
 
         // Core particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201, 169, 110, ${alpha})`;
+        ctx.fillStyle = `rgba(195, 248, 189, ${alpha})`;
         ctx.fill();
 
         // Standard glow
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201, 169, 110, ${alpha * 0.15})`;
+        ctx.fillStyle = `rgba(195, 248, 189, ${alpha * 0.15})`;
         ctx.fill();
       });
 
@@ -344,9 +344,9 @@ export default function HeroSection() {
         style={{
           background: `
             radial-gradient(ellipse 80% 60% at ${50 + (mousePos.x - 0.5) * 10}% ${40 + (mousePos.y - 0.5) * 10}%, rgba(45, 74, 62, 0.3) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 40% at 20% 80%, rgba(201, 169, 110, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 40% at 20% 80%, rgba(195, 248, 189, 0.08) 0%, transparent 50%),
             radial-gradient(ellipse 60% 50% at 80% 20%, rgba(74, 158, 255, 0.05) 0%, transparent 50%),
-            #0a0a14
+            #1E3429
           `,
         }}
       />
@@ -356,16 +356,16 @@ export default function HeroSection() {
         className="absolute inset-0 z-0 opacity-[0.03]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(201, 169, 110, 0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201, 169, 110, 0.3) 1px, transparent 1px)
+            linear-gradient(rgba(195, 248, 189, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(195, 248, 189, 0.3) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
         }}
       />
 
       {/* Dark gradient overlays for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a14]/60 via-transparent to-[#0a0a14]/60 pointer-events-none z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a14] via-transparent to-[#0a0a14]/40 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#1E3429]/60 via-transparent to-[#1E3429]/60 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#1E3429] via-transparent to-[#1E3429]/40 pointer-events-none z-[1]" />
 
       {/* Cinematic letterbox bars */}
       <div
@@ -375,7 +375,7 @@ export default function HeroSection() {
         <div
           className="h-[8vh]"
           style={{
-            background: 'linear-gradient(to bottom, #0a0a14 40%, rgba(10,10,20,0.6) 75%, transparent 100%)',
+            background: 'linear-gradient(to bottom, #1E3429 40%, rgba(10,10,20,0.6) 75%, transparent 100%)',
           }}
         />
       </div>
@@ -386,7 +386,7 @@ export default function HeroSection() {
         <div
           className="h-[8vh]"
           style={{
-            background: 'linear-gradient(to top, #0a0a14 40%, rgba(10,10,20,0.6) 75%, transparent 100%)',
+            background: 'linear-gradient(to top, #1E3429 40%, rgba(10,10,20,0.6) 75%, transparent 100%)',
           }}
         />
       </div>
@@ -403,13 +403,13 @@ export default function HeroSection() {
           />
           <defs>
             <linearGradient id="heroGoldLineGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#c9a96e" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#c9a96e" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#c9a96e" stopOpacity="0.9" />
+              <stop offset="0%" stopColor="#C3F8BD" stopOpacity="0.1" />
+              <stop offset="50%" stopColor="#C3F8BD" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#C3F8BD" stopOpacity="0.9" />
             </linearGradient>
           </defs>
           {lineProgress > 0.05 && (
-            <circle cx="1" cy={300 - 300 * lineProgress} r="3" fill="#c9a96e" opacity={0.8 * lineProgress}>
+            <circle cx="1" cy={300 - 300 * lineProgress} r="3" fill="#C3F8BD" opacity={0.8 * lineProgress}>
               <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
             </circle>
           )}
@@ -426,9 +426,9 @@ export default function HeroSection() {
             stroke="url(#heroGoldLineGradient2)" strokeWidth="1" strokeLinecap="round" />
           <defs>
             <linearGradient id="heroGoldLineGradient2" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#c9a96e" stopOpacity="0.9" />
-              <stop offset="50%" stopColor="#c9a96e" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#c9a96e" stopOpacity="0.1" />
+              <stop offset="0%" stopColor="#C3F8BD" stopOpacity="0.9" />
+              <stop offset="50%" stopColor="#C3F8BD" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#C3F8BD" stopOpacity="0.1" />
             </linearGradient>
           </defs>
         </svg>
@@ -439,7 +439,7 @@ export default function HeroSection() {
         {[1, 2, 3, 4, 5].map((i) => (
           <motion.div
             key={i}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#c9a96e]/10"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#C3F8BD]/10"
             animate={{
               scale: [1, 1.5 + i * 0.3],
               opacity: [0.12 / i, 0],
@@ -471,7 +471,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
         >
-          <p className="text-[10px] sm:text-xs tracking-[0.4em] text-[#c9a96e]/60 uppercase mb-6">
+          <p className="eyebrow text-[#C3F8BD] mb-6">
             {t('hero.sublabel')}
           </p>
         </motion.div>
@@ -482,7 +482,7 @@ export default function HeroSection() {
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[500px] md:h-[500px] rounded-full pointer-events-none"
             animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.08, 0.04] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ background: 'radial-gradient(circle, rgba(201, 169, 110, 0.15) 0%, transparent 70%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(195, 248, 189, 0.15) 0%, transparent 70%)' }}
           />
 
           <motion.div
@@ -490,7 +490,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }}
           >
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-extralight tracking-[0.2em] sm:tracking-[0.3em] text-white mb-4 relative">
+            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-medium tracking-[0.04em] text-omni-paper mb-4 relative leading-[1.05]">
               OMNI<span className="text-gradient-gold-shimmer">LIVING</span>
             </h1>
           </motion.div>
@@ -512,7 +512,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.6 }}
         >
-          <p className="text-[10px] sm:text-xs tracking-[0.3em] text-[#c9a96e]/50 font-light">
+          <p className="text-[10px] sm:text-xs tracking-[0.3em] text-[#C3F8BD]/50 font-light">
             {t('hero.company')}
           </p>
         </motion.div>
@@ -522,7 +522,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, scaleX: 1 }}
           transition={{ duration: 1.2, delay: 0.8 }}
         >
-          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/60 to-transparent mx-auto mb-10 mt-6" />
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/60 to-transparent mx-auto mb-10 mt-6" />
         </motion.div>
 
         <motion.div
@@ -533,13 +533,13 @@ export default function HeroSection() {
           <div className="inline-block gold-border-animate rounded-sm">
             <Button
               size="lg"
-              className="group relative bg-[#0a0a14] border-0 text-[#c9a96e] hover:bg-[#c9a96e] hover:text-[#0a0a14] px-10 py-7 text-xs tracking-[0.2em] uppercase transition-all duration-500 rounded-sm overflow-hidden"
+              className="group relative bg-[#1E3429] border-0 text-[#C3F8BD] hover:bg-[#C3F8BD] hover:text-[#1E3429] px-10 py-7 text-xs tracking-[0.2em] uppercase transition-all duration-500 rounded-sm overflow-hidden"
               onClick={() => {
                 document.getElementById('scroll-experience')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
               <span className="relative z-10">{t('hero.cta')}</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#c9a96e] to-[#dbb980] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#C3F8BD] to-[#DFFCD9] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Button>
           </div>
         </motion.div>
@@ -552,7 +552,7 @@ export default function HeroSection() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
       >
-        <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-[#c9a96e]/50 uppercase">
+        <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-[#C3F8BD]/50 uppercase">
           {t('hero.scroll')}
         </span>
         <div className="relative">
@@ -566,13 +566,13 @@ export default function HeroSection() {
             <circle
               cx="20" cy="20" r="16"
               fill="none"
-              stroke="rgba(201, 169, 110, 0.15)"
+              stroke="rgba(195, 248, 189, 0.15)"
               strokeWidth="1.5"
             />
             <circle
               cx="20" cy="20" r="16"
               fill="none"
-              stroke="rgba(201, 169, 110, 0.6)"
+              stroke="rgba(195, 248, 189, 0.6)"
               strokeWidth="1.5"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -582,11 +582,11 @@ export default function HeroSection() {
             />
           </svg>
           <div className="bounce-down flex items-center justify-center w-10 h-10">
-            <ChevronDown size={16} className="text-[#c9a96e]/60" />
+            <ChevronDown size={16} className="text-[#C3F8BD]/60" />
           </div>
         </div>
         <motion.div
-          className="w-[1px] h-10 bg-gradient-to-b from-[#c9a96e]/60 to-transparent"
+          className="w-[1px] h-10 bg-gradient-to-b from-[#C3F8BD]/60 to-transparent"
           animate={{ scaleY: [0, 1, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           style={{ transformOrigin: 'top' }}
@@ -598,7 +598,7 @@ export default function HeroSection() {
         <div className="h-32" style={{
           background: `
             linear-gradient(to top,
-              #0a0a14 0%,
+              #1E3429 0%,
               rgba(10, 10, 20, 0.9) 30%,
               rgba(10, 10, 20, 0.6) 60%,
               rgba(10, 10, 20, 0.2) 85%,
@@ -608,18 +608,18 @@ export default function HeroSection() {
         }} />
         {/* Decorative gold accent lines at the transition */}
         <div className="absolute bottom-24 left-0 right-0">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/15 to-transparent" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/15 to-transparent" />
         </div>
         <div className="absolute bottom-28 left-0 right-0">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/8 to-transparent" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/8 to-transparent" />
         </div>
         <div className="absolute bottom-20 left-0 right-0">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/5 to-transparent" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/5 to-transparent" />
         </div>
       </div>
 
       {/* Bottom decorative accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/20 to-transparent z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/20 to-transparent z-10" />
     </section>
   );
 }

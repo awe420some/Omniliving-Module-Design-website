@@ -76,12 +76,12 @@ function ContactInfoCard({
   return (
     <Wrapper
       {...wrapperProps}
-      className="contact-card-lift flex items-center gap-4 p-4 rounded-lg bg-[#12121f]/40 border border-white/5 cursor-pointer group"
+      className="contact-card-lift flex items-center gap-4 p-4 rounded-lg bg-[#2D4A3E]/40 border border-white/5 cursor-pointer group"
     >
-      <div className="w-12 h-12 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center group-hover:border-[#c9a96e]/30 transition-colors duration-300 shrink-0">
-        <Icon size={18} className="text-[#c9a96e]" />
+      <div className="w-12 h-12 rounded-lg bg-[#2D4A3E] border border-white/5 flex items-center justify-center group-hover:border-[#C3F8BD]/30 transition-colors duration-300 shrink-0">
+        <Icon size={18} className="text-[#C3F8BD]" />
       </div>
-      <div className="text-sm text-[#8888a8] group-hover:text-[#c9a96e] transition-colors duration-300">
+      <div className="text-sm text-[#D4C5A0] group-hover:text-[#C3F8BD] transition-colors duration-300">
         {children}
       </div>
     </Wrapper>
@@ -91,14 +91,14 @@ function ContactInfoCard({
 // Map placeholder with pin animation
 function MapPlaceholder() {
   return (
-    <div className="relative w-full h-48 sm:h-56 rounded-lg overflow-hidden border border-white/5 bg-[#12121f]/30">
+    <div className="relative w-full h-48 sm:h-56 rounded-lg overflow-hidden border border-white/5 bg-[#2D4A3E]/30">
       {/* Stylized map grid */}
       <div
         className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(201, 169, 110, 0.5) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201, 169, 110, 0.5) 1px, transparent 1px)
+            linear-gradient(rgba(195, 248, 189, 0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(195, 248, 189, 0.5) 1px, transparent 1px)
           `,
           backgroundSize: '30px 30px',
         }}
@@ -113,16 +113,16 @@ function MapPlaceholder() {
       {/* Pin */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full pin-bounce">
         <div className="relative">
-          <MapPinned size={32} className="text-[#c9a96e]" />
+          <MapPinned size={32} className="text-[#C3F8BD]" />
         </div>
       </div>
       {/* Pin shadow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-1">
-        <div className="w-4 h-1.5 rounded-full bg-[#c9a96e]/20 pin-shadow-pulse" />
+        <div className="w-4 h-1.5 rounded-full bg-[#C3F8BD]/20 pin-shadow-pulse" />
       </div>
       {/* Address label */}
       <div className="absolute bottom-3 left-3 right-3 text-center">
-        <p className="text-[10px] text-[#8888a8]/60 tracking-wider">
+        <p className="text-[10px] text-[#D4C5A0]/60 tracking-wider">
           Teutoburger Straße 23 a, 33330 Gütersloh
         </p>
       </div>
@@ -198,19 +198,19 @@ export default function ContactSection() {
   }
 
   const inputClasses =
-    'bg-[#12121f] border border-white/10 text-white focus:border-[#c9a96e] focus-visible:border-[#c9a96e] focus-visible:ring-[#c9a96e]/20 focus-visible:ring-2 placeholder:text-[#8888a8] transition-all duration-300';
+    'bg-[#2D4A3E] border border-white/10 text-white focus:border-[#C3F8BD] focus-visible:border-[#C3F8BD] focus-visible:ring-[#C3F8BD]/20 focus-visible:ring-2 placeholder:text-[#D4C5A0] transition-all duration-300';
 
   return (
-    <section id="contact" className="relative bg-[#0f0f20] px-4 sm:px-6 lg:px-8 py-20 sm:py-28 overflow-hidden">
+    <section id="contact" className="relative bg-[#1E3429] px-4 sm:px-6 lg:px-8 py-20 sm:py-28 overflow-hidden">
       {/* Top gold divider */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/40 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/40 to-transparent" />
 
       {/* Subtle background pattern */}
       <div className="absolute inset-0 diagonal-lines pointer-events-none" />
 
       {/* Decorative corners */}
-      <div className="absolute top-8 left-8 w-20 h-20 border-t border-l border-[#c9a96e]/10 pointer-events-none" />
-      <div className="absolute bottom-8 right-8 w-20 h-20 border-b border-r border-[#c9a96e]/10 pointer-events-none" />
+      <div className="absolute top-8 left-8 w-20 h-20 border-t border-l border-[#C3F8BD]/10 pointer-events-none" />
+      <div className="absolute bottom-8 right-8 w-20 h-20 border-b border-r border-[#C3F8BD]/10 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
@@ -223,13 +223,13 @@ export default function ContactSection() {
             className="flex flex-col justify-center"
           >
             <div className="decorative-corners p-1">
-              <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+              <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
                 {t('contact.label').toUpperCase()}
               </p>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-6 leading-tight">
                 {t('contact.title').split(t('contact.titleAccent'))[0]}<span className="text-gradient-gold">{t('contact.titleAccent')}</span>{t('contact.title').split(t('contact.titleAccent'))[1]}
               </h2>
-              <p className="text-sm sm:text-base text-[#8888a8] leading-relaxed mb-10 max-w-md">
+              <p className="text-sm sm:text-base text-[#D4C5A0] leading-relaxed mb-10 max-w-md">
                 {t('contact.descFull')}
               </p>
             </div>
@@ -277,7 +277,7 @@ export default function ContactSection() {
                     name="vorname"
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
-                        <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
+                        <FormLabel className="text-xs text-[#D4C5A0] tracking-wider uppercase">
                           {t('contact.firstName')}
                         </FormLabel>
                         <FormControl>
@@ -296,7 +296,7 @@ export default function ContactSection() {
                     name="nachname"
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
-                        <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
+                        <FormLabel className="text-xs text-[#D4C5A0] tracking-wider uppercase">
                           {t('contact.lastName')}
                         </FormLabel>
                         <FormControl>
@@ -318,7 +318,7 @@ export default function ContactSection() {
                     name="email"
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
-                        <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
+                        <FormLabel className="text-xs text-[#D4C5A0] tracking-wider uppercase">
                           {t('contact.email')}
                         </FormLabel>
                         <FormControl>
@@ -338,7 +338,7 @@ export default function ContactSection() {
                     name="telefon"
                     render={({ field }) => (
                       <FormItem className="floating-label-group">
-                        <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
+                        <FormLabel className="text-xs text-[#D4C5A0] tracking-wider uppercase">
                           {t('contact.phone')}
                         </FormLabel>
                         <FormControl>
@@ -360,7 +360,7 @@ export default function ContactSection() {
                   name="interesse"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
+                      <FormLabel className="text-xs text-[#D4C5A0] tracking-wider uppercase">
                         {t('contact.interest')}
                       </FormLabel>
                       <Select
@@ -374,12 +374,12 @@ export default function ContactSection() {
                             <SelectValue placeholder={t('contact.selectPlaceholder')} />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="bg-[#12121f] border border-white/10 text-white">
+                        <SelectContent className="bg-[#2D4A3E] border border-white/10 text-white">
                           {interestOptions.map((option) => (
                             <SelectItem
                               key={option.value}
                               value={option.value}
-                              className="text-white focus:bg-[#1a1a2e] focus:text-white"
+                              className="text-white focus:bg-[#3E6151] focus:text-white"
                             >
                               {option.label}
                             </SelectItem>
@@ -396,7 +396,7 @@ export default function ContactSection() {
                   name="nachricht"
                   render={({ field }) => (
                     <FormItem className="floating-label-group">
-                      <FormLabel className="text-xs text-[#8888a8] tracking-wider uppercase">
+                      <FormLabel className="text-xs text-[#D4C5A0] tracking-wider uppercase">
                         {t('contact.message')}
                       </FormLabel>
                       <FormControl>
@@ -415,7 +415,7 @@ export default function ContactSection() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className={`w-full sm:w-auto bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] font-medium tracking-[0.1em] uppercase px-8 py-6 text-sm transition-all duration-500 rounded-none border-0 relative overflow-hidden ${isSubmitting ? 'btn-loading' : ''}`}
+                  className={`w-full sm:w-auto bg-gradient-to-r from-[#C3F8BD] to-[#8EDA88] hover:from-[#DFFCD9] hover:to-[#C3F8BD] text-[#1E3429] font-medium tracking-[0.1em] uppercase px-8 py-6 text-sm transition-all duration-500 rounded-none border-0 relative overflow-hidden ${isSubmitting ? 'btn-loading' : ''}`}
                 >
                   <AnimatePresence mode="wait">
                     {isSubmitting ? (

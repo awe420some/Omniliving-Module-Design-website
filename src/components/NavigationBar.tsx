@@ -67,13 +67,13 @@ function MagneticNavLink({
       onMouseLeave={handleMouseLeave}
       className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
         isActive
-          ? 'active text-[#c9a96e]'
-          : 'text-[#8888a8] hover:text-white'
+          ? 'active text-[#C3F8BD]'
+          : 'text-[#D4C5A0] hover:text-white'
       }`}
       style={{
         transform: `translate(${offset.x}px, ${offset.y}px)`,
         transition: offset.x === 0 ? 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.3s' : 'transform 0.15s ease-out, color 0.3s',
-        textShadow: isActive ? '0 0 12px rgba(201, 169, 110, 0.4), 0 0 24px rgba(201, 169, 110, 0.15)' : 'none',
+        textShadow: isActive ? '0 0 12px rgba(195, 248, 189, 0.4), 0 0 24px rgba(195, 248, 189, 0.15)' : 'none',
       }}
     >
       {label}
@@ -82,7 +82,7 @@ function MagneticNavLink({
         className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[1.5px] rounded-full transition-all duration-300 ease-out"
         style={{
           width: isActive || isHovered ? '80%' : '0%',
-          background: 'linear-gradient(90deg, #c9a96e, #dbb980, #c9a96e)',
+          background: 'linear-gradient(90deg, #C3F8BD, #DFFCD9, #C3F8BD)',
           opacity: isActive || isHovered ? 1 : 0,
         }}
       />
@@ -177,9 +177,9 @@ export default function NavigationBar() {
         backgroundColor: `rgba(10, 10, 20, ${0.3 + scrollProgress * 0.65})`,
         backdropFilter: `blur(${blurAmount}px)`,
         WebkitBackdropFilter: `blur(${blurAmount}px)`,
-        borderBottom: `1px solid rgba(201, 169, 110, ${borderGlowOpacity})`,
+        borderBottom: `1px solid rgba(195, 248, 189, ${borderGlowOpacity})`,
         boxShadow: scrolled
-          ? `0 4px 30px rgba(0, 0, 0, ${0.2 + scrollProgress * 0.3}), 0 0 20px rgba(201, 169, 110, ${borderGlowOpacity * 0.3}), 0 0 ${goldGlowIntensity * 40}px rgba(201, 169, 110, ${goldGlowIntensity * 0.15})`
+          ? `0 4px 30px rgba(0, 0, 0, ${0.2 + scrollProgress * 0.3}), 0 0 20px rgba(195, 248, 189, ${borderGlowOpacity * 0.3}), 0 0 ${goldGlowIntensity * 40}px rgba(195, 248, 189, ${goldGlowIntensity * 0.15})`
           : 'none',
       }}
     >
@@ -214,10 +214,10 @@ export default function NavigationBar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#c9a96e] transition-colors duration-300 ${scrolled ? 'text-[#c9a96e]/80' : ''}`}>
+              <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#C3F8BD] transition-colors duration-300 ${scrolled ? 'text-[#C3F8BD]/80' : ''}`}>
                 OMNILIVING
               </span>
-              <span className="text-[7px] tracking-[0.2em] text-[#8888a8]/50 uppercase leading-none">
+              <span className="text-[7px] tracking-[0.2em] text-[#D4C5A0]/50 uppercase leading-none">
                 {t('hero.sublabel')}
               </span>
             </div>
@@ -240,7 +240,7 @@ export default function NavigationBar() {
             {/* Language Toggle */}
             <button
               onClick={toggleLocale}
-              className="ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-white/10 hover:border-[#c9a96e]/30 bg-transparent hover:bg-[#c9a96e]/5 transition-all duration-300 text-[#8888a8] hover:text-[#c9a96e]"
+              className="ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-white/10 hover:border-[#C3F8BD]/30 bg-transparent hover:bg-[#C3F8BD]/5 transition-all duration-300 text-[#D4C5A0] hover:text-[#C3F8BD]"
               aria-label={t('lang.switchLabel')}
             >
               <Globe size={14} />
@@ -254,7 +254,7 @@ export default function NavigationBar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[#8888a8] hover:text-[#c9a96e] hover:bg-transparent transition-colors duration-300"
+                  className="text-[#D4C5A0] hover:text-[#C3F8BD] hover:bg-transparent transition-colors duration-300"
                 >
                   <Menu size={22} />
                   <span className="sr-only">{t('nav.openMenu')}</span>
@@ -262,19 +262,19 @@ export default function NavigationBar() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="bg-[#0a0a14]/95 border-l border-[#c9a96e]/15 w-[280px]"
+                className="bg-[#1E3429]/95 border-l border-[#C3F8BD]/15 w-[280px]"
                 style={{
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                 }}
               >
-                <div className="absolute inset-0 bg-[#0a0a14]/80 -z-10" />
+                <div className="absolute inset-0 bg-[#1E3429]/80 -z-10" />
 
                 <SheetHeader className="mb-8">
                   <SheetTitle className="text-left text-sm tracking-[0.3em] text-white font-light uppercase">
                     OMNILIVING
                   </SheetTitle>
-                  <p className="text-left text-[9px] tracking-[0.2em] text-[#c9a96e]/40 uppercase">
+                  <p className="text-left text-[9px] tracking-[0.2em] text-[#C3F8BD]/40 uppercase">
                     {t('hero.sublabel')}
                   </p>
                 </SheetHeader>
@@ -304,14 +304,14 @@ export default function NavigationBar() {
                               }}
                               className="flex items-center gap-3 px-4 py-3 rounded-md text-sm tracking-[0.1em] uppercase transition-all duration-300 animated-underline"
                               style={{
-                                color: isActive ? '#c9a96e' : '#8888a8',
+                                color: isActive ? '#C3F8BD' : '#D4C5A0',
                                 backgroundColor: isActive
-                                  ? 'rgba(201, 169, 110, 0.08)'
+                                  ? 'rgba(195, 248, 189, 0.08)'
                                   : 'transparent',
                                 borderLeft: isActive
-                                  ? '2px solid #c9a96e'
+                                  ? '2px solid #C3F8BD'
                                   : '2px solid transparent',
-                                textShadow: isActive ? '0 0 10px rgba(201, 169, 110, 0.3)' : 'none',
+                                textShadow: isActive ? '0 0 10px rgba(195, 248, 189, 0.3)' : 'none',
                               }}
                             >
                               {link.label}
@@ -323,14 +323,14 @@ export default function NavigationBar() {
                   </AnimatePresence>
                 </nav>
                 <div className="absolute bottom-8 left-6 right-6">
-                  <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e]/30 to-transparent mb-4" />
-                  <p className="text-[10px] text-[#8888a8] tracking-wider text-center">
+                  <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/30 to-transparent mb-4" />
+                  <p className="text-[10px] text-[#D4C5A0] tracking-wider text-center">
                     Module Design GmbH
                   </p>
                   {/* Language Toggle Mobile */}
                   <button
                     onClick={() => { toggleLocale(); }}
-                    className="mt-3 mx-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/10 hover:border-[#c9a96e]/30 bg-transparent hover:bg-[#c9a96e]/5 transition-all duration-300 text-[#8888a8] hover:text-[#c9a96e]"
+                    className="mt-3 mx-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/10 hover:border-[#C3F8BD]/30 bg-transparent hover:bg-[#C3F8BD]/5 transition-all duration-300 text-[#D4C5A0] hover:text-[#C3F8BD]"
                   >
                     <Globe size={14} />
                     <span className="text-[10px] tracking-[0.1em] uppercase font-medium">{locale === 'de' ? 'English' : 'Deutsch'}</span>

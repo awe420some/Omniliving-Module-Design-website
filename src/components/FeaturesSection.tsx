@@ -11,7 +11,7 @@ const featureKeys = [
     icon: Zap,
     titleKey: 'features.fast',
     descKey: 'features.fast.desc',
-    accent: '#c9a96e',
+    accent: '#C3F8BD',
   },
   {
     icon: ShieldCheck,
@@ -35,7 +35,7 @@ const featureKeys = [
     icon: Recycle,
     titleKey: 'features.sustainable',
     descKey: 'features.sustainable.desc',
-    accent: '#c9a96e',
+    accent: '#C3F8BD',
   },
   {
     icon: Clock,
@@ -101,7 +101,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 export default function FeaturesSection() {
   const { t } = useTranslation();
   return (
-    <section id="features" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
+    <section id="features" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
       {/* Diagonal line pattern overlay */}
       <div className="absolute inset-0 diagonal-lines pointer-events-none" />
 
@@ -119,14 +119,14 @@ export default function FeaturesSection() {
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mb-4 origin-center"
+            className="w-12 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mb-4 origin-center"
           />
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4"
+            className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4"
           >
             {t('features.label')}
           </motion.p>
@@ -144,11 +144,11 @@ export default function FeaturesSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4"
+            className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4"
           >
             {t('features.subtitle')}
           </motion.p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Feature cards */}
@@ -165,10 +165,10 @@ export default function FeaturesSection() {
             return (
               <motion.div key={feature.titleKey} variants={cardVariants}>
                 <TiltCard>
-                  <Card className="group bg-[#12121f]/60 border border-white/5 hover:border-[#c9a96e]/20 transition-all duration-500 rounded-lg overflow-hidden h-full shimmer-sweep feature-card-glow hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(201,169,110,0.06)] relative">
+                  <Card className="group bg-[#2D4A3E]/60 border border-white/5 hover:border-[#C3F8BD]/20 transition-all duration-500 rounded-lg overflow-hidden h-full shimmer-sweep feature-card-glow hover:shadow-[0_16px_50px_rgba(0,0,0,0.4),0_0_20px_rgba(195, 248, 189,0.06)] relative">
                     {/* Numbered badge */}
-                    <div className="absolute top-4 right-4 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center bg-[#0a0a14]/50 group-hover:border-[#c9a96e]/30 group-hover:bg-[#c9a96e]/10 transition-all duration-500">
-                      <span className="text-[10px] font-medium text-[#8888a8] group-hover:text-[#c9a96e] tracking-wider transition-colors duration-300">
+                    <div className="absolute top-4 right-4 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center bg-[#1E3429]/50 group-hover:border-[#C3F8BD]/30 group-hover:bg-[#C3F8BD]/10 transition-all duration-500">
+                      <span className="text-[10px] font-medium text-[#D4C5A0] group-hover:text-[#C3F8BD] tracking-wider transition-colors duration-300">
                         {badgeNumber}
                       </span>
                     </div>
@@ -188,10 +188,10 @@ export default function FeaturesSection() {
                           style={{ color: feature.accent }}
                         />
                       </div>
-                      <h3 className="text-lg font-medium tracking-wide text-white mb-3 group-hover:text-[#dbb980] transition-colors duration-300">
+                      <h3 className="text-lg font-medium tracking-wide text-white mb-3 group-hover:text-[#DFFCD9] transition-colors duration-300">
                         {t(feature.titleKey)}
                       </h3>
-                      <p className="text-sm text-[#8888a8] leading-relaxed">
+                      <p className="text-sm text-[#D4C5A0] leading-relaxed">
                         {t(feature.descKey)}
                       </p>
                       {/* Progress bar at bottom of card that fills on hover */}

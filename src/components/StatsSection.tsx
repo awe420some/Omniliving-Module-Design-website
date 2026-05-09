@@ -81,16 +81,16 @@ function AnimatedNumber({
     <span className="text-4xl sm:text-5xl md:text-6xl font-light tracking-wider text-white stat-glow inline-block">
       {isCO2 ? (
         <>
-          <span className="text-[#c9a96e]">CO</span>
-          <sub className="text-2xl sm:text-3xl align-baseline text-[#c9a96e]">₂</sub>
+          <span className="text-[#C3F8BD]">CO</span>
+          <sub className="text-2xl sm:text-3xl align-baseline text-[#C3F8BD]">₂</sub>
         </>
       ) : (
         <>
-          {prefix && <span className="text-lg sm:text-xl text-[#c9a96e] mr-1">{prefix}</span>}
+          {prefix && <span className="text-lg sm:text-xl text-[#C3F8BD] mr-1">{prefix}</span>}
           {displayValue}
         </>
       )}
-      {suffix && <span className="text-[#c9a96e]">{suffix}</span>}
+      {suffix && <span className="text-[#C3F8BD]">{suffix}</span>}
     </span>
   );
 }
@@ -137,14 +137,14 @@ export default function StatsSection() {
 
   return (
     <section id="stats" ref={sectionRef} className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 diagonal-lines">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a14] via-[#0f0f20] to-[#0a0a14]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1E3429] via-[#1E3429] to-[#1E3429]" />
 
       {/* Noise texture overlay */}
       <div className="absolute inset-0 noise-overlay pointer-events-none" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent via-[#c9a96e]/20 to-transparent" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent via-[#c9a96e]/20 to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-b from-transparent via-[#C3F8BD]/20 to-transparent" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1px] h-16 bg-gradient-to-t from-transparent via-[#C3F8BD]/20 to-transparent" />
       </div>
 
       <div className="relative max-w-6xl mx-auto">
@@ -155,13 +155,13 @@ export default function StatsSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-14"
         >
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
             {t('stats.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('stats.title')} <span className="text-gradient-gold">{t('stats.titleAccent')}</span>
           </h2>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
         </motion.div>
 
         <motion.div
@@ -178,7 +178,7 @@ export default function StatsSection() {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
-              className="w-full h-full bg-gradient-to-r from-transparent via-[#c9a96e]/15 to-transparent origin-center"
+              className="w-full h-full bg-gradient-to-r from-transparent via-[#C3F8BD]/15 to-transparent origin-center"
             />
             {[0, 1, 2, 3].map((i) => (
               <motion.div
@@ -187,7 +187,7 @@ export default function StatsSection() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 1 + i * 0.15 }}
-                className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#c9a96e]/30"
+                className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#C3F8BD]/30"
                 style={{ left: `${i * 33.33}%` }}
               />
             ))}
@@ -209,16 +209,16 @@ export default function StatsSection() {
                   <div
                     className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pulse-glow"
                     style={{
-                      background: 'radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%)',
+                      background: 'radial-gradient(circle, rgba(195, 248, 189, 0.08) 0%, transparent 70%)',
                     }}
                   />
 
                   {/* Icon illustration */}
-                  <div className="w-10 h-10 rounded-lg bg-[#12121f]/60 border border-[#c9a96e]/15 flex items-center justify-center mb-4 group-hover:border-[#c9a96e]/30 group-hover:bg-[#12121f]/80 transition-all duration-500">
-                    <Icon size={18} className="text-[#c9a96e]/60 group-hover:text-[#c9a96e] transition-colors duration-500" />
+                  <div className="w-10 h-10 rounded-lg bg-[#2D4A3E]/60 border border-[#C3F8BD]/15 flex items-center justify-center mb-4 group-hover:border-[#C3F8BD]/30 group-hover:bg-[#2D4A3E]/80 transition-all duration-500">
+                    <Icon size={18} className="text-[#C3F8BD]/60 group-hover:text-[#C3F8BD] transition-colors duration-500" />
                   </div>
 
-                  <div className="w-8 h-[1px] bg-[#c9a96e]/30 mb-6 group-hover:w-12 transition-all duration-500" />
+                  <div className="w-8 h-[1px] bg-[#C3F8BD]/30 mb-6 group-hover:w-12 transition-all duration-500" />
 
                   <div className="relative">
                     <AnimatedNumber
@@ -231,16 +231,16 @@ export default function StatsSection() {
                     />
                   </div>
 
-                  <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#8888a8] uppercase">
+                  <p className="mt-3 text-xs sm:text-sm tracking-[0.1em] text-[#D4C5A0] uppercase">
                     {t(stat.labelKey)}
                   </p>
 
                   {/* Description below stat */}
-                  <p className="mt-1.5 text-[10px] tracking-wider text-[#8888a8]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <p className="mt-1.5 text-[10px] tracking-wider text-[#D4C5A0]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     {t(stat.descKey)}
                   </p>
 
-                  <div className="w-8 h-[1px] bg-[#c9a96e]/30 mt-6 group-hover:w-12 transition-all duration-500" />
+                  <div className="w-8 h-[1px] bg-[#C3F8BD]/30 mt-6 group-hover:w-12 transition-all duration-500" />
                 </motion.div>
               );
             })}

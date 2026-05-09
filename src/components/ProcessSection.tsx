@@ -104,18 +104,18 @@ function StepCard({
 
       <div className="relative mb-6">
         <div
-          className={`w-[88px] h-[88px] rounded-full flex items-center justify-center border bg-[#0f0f20] transition-all duration-500 ${
+          className={`w-[88px] h-[88px] rounded-full flex items-center justify-center border bg-[#1E3429] transition-all duration-500 ${
             isCurrent
-              ? 'border-[#c9a96e]/60 shadow-[0_0_30px_rgba(201,169,110,0.2)] current-step-ring'
-              : 'border-[#c9a96e]/20 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]'
+              ? 'border-[#C3F8BD]/60 shadow-[0_0_30px_rgba(195, 248, 189,0.2)] current-step-ring'
+              : 'border-[#C3F8BD]/20 group-hover:border-[#C3F8BD]/50 group-hover:shadow-[0_0_30px_rgba(195, 248, 189,0.15)]'
           }`}
         >
-          <Icon size={28} className="text-[#c9a96e] icon-bounce" />
+          <Icon size={28} className="text-[#C3F8BD] icon-bounce" />
         </div>
         <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center step-number-rotate ${
-          isCurrent ? 'bg-[#dbb980]' : 'bg-[#c9a96e]'
+          isCurrent ? 'bg-[#DFFCD9]' : 'bg-[#C3F8BD]'
         }`}>
-          <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
+          <span className="text-[10px] font-bold text-[#1E3429] tracking-wider">{step.number}</span>
         </div>
         {/* Progress dot indicator */}
         <motion.div
@@ -124,16 +124,16 @@ function StepCard({
           viewport={{ once: true }}
           transition={{ duration: 0.4, delay: 0.8 + index * 0.15 }}
           className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full ${
-            isCurrent ? 'bg-[#c9a96e]' : 'bg-[#c9a96e]/40'
+            isCurrent ? 'bg-[#C3F8BD]' : 'bg-[#C3F8BD]/40'
           }`}
         />
       </div>
       <h3 className={`text-lg font-medium tracking-wide mb-2 transition-colors duration-300 ${
-        isCurrent ? 'text-[#c9a96e]' : 'text-white group-hover:text-[#c9a96e]'
+        isCurrent ? 'text-[#C3F8BD]' : 'text-white group-hover:text-[#C3F8BD]'
       }`}>
         {step.titleKey ? t(step.titleKey) : ''}
       </h3>
-      <p className="text-sm text-[#8888a8] leading-relaxed max-w-[220px]">
+      <p className="text-sm text-[#D4C5A0] leading-relaxed max-w-[220px]">
         {t(step.descKey)}
       </p>
     </motion.div>
@@ -150,7 +150,7 @@ export default function ProcessSection() {
     <section
       id="process"
       ref={sectionRef}
-      className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#0a0a14] dot-pattern"
+      className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#1E3429] dot-pattern"
     >
       <div className="max-w-6xl mx-auto relative">
         {/* Section header */}
@@ -161,16 +161,16 @@ export default function ProcessSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-20"
         >
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
             {t('process.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('process.title').replace("'s", '')}<span className="text-gradient-gold">&apos;s</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#8888a8] max-w-xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-xl mx-auto mt-4">
             {t('process.subtitle')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Desktop: Horizontal timeline with animated SVG line */}
@@ -192,7 +192,7 @@ export default function ProcessSection() {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2, delay: 0.5, ease: 'easeOut' }}
-                className="w-full h-full bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20 origin-center timeline-glow"
+                className="w-full h-full bg-gradient-to-r from-[#C3F8BD]/20 via-[#C3F8BD]/40 to-[#C3F8BD]/20 origin-center timeline-glow"
               />
             </div>
             {steps.slice(0, 3).map((step, i) => (
@@ -219,7 +219,7 @@ export default function ProcessSection() {
                 whileInView={{ scaleX: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.2, delay: 1.0, ease: 'easeOut' }}
-                className="w-full h-full bg-gradient-to-r from-[#c9a96e]/20 via-[#c9a96e]/40 to-[#c9a96e]/20 origin-center timeline-glow"
+                className="w-full h-full bg-gradient-to-r from-[#C3F8BD]/20 via-[#C3F8BD]/40 to-[#C3F8BD]/20 origin-center timeline-glow"
               />
             </div>
             {steps.slice(3, 6).map((step, i) => (
@@ -252,7 +252,7 @@ export default function ProcessSection() {
               whileInView={{ scaleY: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.5, ease: 'easeOut' }}
-              className="w-full h-full bg-gradient-to-b from-[#c9a96e]/30 via-[#c9a96e]/50 to-[#c9a96e]/30 origin-top timeline-glow"
+              className="w-full h-full bg-gradient-to-b from-[#C3F8BD]/30 via-[#C3F8BD]/50 to-[#C3F8BD]/30 origin-top timeline-glow"
             />
           </div>
           <div className="flex flex-col gap-8">
@@ -269,31 +269,31 @@ export default function ProcessSection() {
                 >
                   <div className="relative shrink-0">
                     <div
-                      className={`w-[80px] h-[80px] rounded-full flex items-center justify-center border bg-[#0f0f20] transition-all duration-500 ${
+                      className={`w-[80px] h-[80px] rounded-full flex items-center justify-center border bg-[#1E3429] transition-all duration-500 ${
                         isCurrent
-                          ? 'border-[#c9a96e]/60 shadow-[0_0_30px_rgba(201,169,110,0.2)] current-step-ring'
-                          : 'border-[#c9a96e]/20 group-hover:border-[#c9a96e]/50 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.15)]'
+                          ? 'border-[#C3F8BD]/60 shadow-[0_0_30px_rgba(195, 248, 189,0.2)] current-step-ring'
+                          : 'border-[#C3F8BD]/20 group-hover:border-[#C3F8BD]/50 group-hover:shadow-[0_0_30px_rgba(195, 248, 189,0.15)]'
                       }`}
                     >
-                      <Icon size={24} className="text-[#c9a96e] icon-bounce" />
+                      <Icon size={24} className="text-[#C3F8BD] icon-bounce" />
                     </div>
                     {/* Numbered step indicator with rotate on hover */}
                     <div className={`absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center step-number-rotate ${
-                      isCurrent ? 'bg-[#dbb980]' : 'bg-[#c9a96e]'
+                      isCurrent ? 'bg-[#DFFCD9]' : 'bg-[#C3F8BD]'
                     }`}>
-                      <span className="text-[10px] font-bold text-[#0a0a14] tracking-wider">{step.number}</span>
+                      <span className="text-[10px] font-bold text-[#1E3429] tracking-wider">{step.number}</span>
                     </div>
                   </div>
                   <div className="pt-4">
                     <h3 className={`text-lg font-medium tracking-wide mb-2 transition-colors duration-300 ${
-                      isCurrent ? 'text-[#c9a96e]' : 'text-white group-hover:text-[#c9a96e]'
+                      isCurrent ? 'text-[#C3F8BD]' : 'text-white group-hover:text-[#C3F8BD]'
                     }`}>
                       {t(step.titleKey)}
                     </h3>
-                    <p className="text-sm text-[#8888a8] leading-relaxed">
+                    <p className="text-sm text-[#D4C5A0] leading-relaxed">
                       {t(step.descKey)}
                     </p>
-                    <p className="text-[10px] text-[#c9a96e]/50 mt-1 tracking-wider">
+                    <p className="text-[10px] text-[#C3F8BD]/50 mt-1 tracking-wider">
                       {t(step.tooltipKey)}
                     </p>
                   </div>
