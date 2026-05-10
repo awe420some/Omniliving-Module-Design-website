@@ -29,7 +29,7 @@ export default function ScrollProgress() {
         className="h-full"
         style={{
           width: `${scrollPercent}%`,
-          background: 'linear-gradient(to right, #c9a96e, #dbb980)',
+          background: 'linear-gradient(to right, #C3F8BD, #DFFCD9)',
           transition: 'width 0.15s ease-out',
         }}
       />

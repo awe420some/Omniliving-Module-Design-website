@@ -79,6 +79,7 @@ export default function BeforeAfterSlider() {
 
   // Rain animation on conventional side
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = rainCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -136,6 +137,7 @@ export default function BeforeAfterSlider() {
 
   // Sparkle animation on modular side
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = sparkleCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -251,7 +253,7 @@ export default function BeforeAfterSlider() {
   }, [isDragging, handleMove]);
 
   return (
-    <section id="comparison" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#0a0a14]">
+    <section id="comparison" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-omni-forest-deep">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -261,16 +263,16 @@ export default function BeforeAfterSlider() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-omni-mint uppercase mb-4">
             {t('compare.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('compare.title').split(' vs. ')[0]} vs. <span className="text-gradient-gold">{t('compare.titleAccent')}</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#8888a8] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-omni-cream max-w-2xl mx-auto mt-4">
             {t('compare.desc')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Instruction text */}
@@ -279,7 +281,7 @@ export default function BeforeAfterSlider() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center text-xs sm:text-sm text-[#8888a8]/60 tracking-wider mb-6"
+          className="text-center text-xs sm:text-sm text-omni-cream/60 tracking-wider mb-6"
         >
           ← {t('compare.drag')} →
         </motion.p>
@@ -428,7 +430,7 @@ export default function BeforeAfterSlider() {
                 <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-[#8a5020]" />
               </div>
               <div className="absolute bottom-[20%] left-[15%] opacity-30">
-                <CloudRain className="w-5 h-5 sm:w-6 sm:h-6 text-[#6a7a9a]" />
+                <CloudRain className="w-5 h-5 sm:w-6 sm:h-6 text-omni-cream-deep" />
               </div>
 
               {/* Additional construction mess elements */}
@@ -459,7 +461,7 @@ export default function BeforeAfterSlider() {
               <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-6 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               
               {/* Main line */}
-              <div className="w-[2px] h-full bg-white/90 mx-auto shadow-[0_0_12px_rgba(255,255,255,0.4),0_0_24px_rgba(201,169,110,0.2)]" />
+              <div className="w-[2px] h-full bg-white/90 mx-auto shadow-[0_0_12px_rgba(255,255,255,0.4),0_0_24px_rgba(195, 248, 189,0.2)]" />
 
               {/* Handle with glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto cursor-col-resize">
@@ -468,19 +470,19 @@ export default function BeforeAfterSlider() {
                   className="absolute inset-[-8px] rounded-full"
                   animate={{
                     boxShadow: isDragging
-                      ? '0 0 20px rgba(201,169,110,0.5), 0 0 40px rgba(201,169,110,0.2)'
-                      : '0 0 10px rgba(201,169,110,0.3), 0 0 20px rgba(201,169,110,0.1)',
+                      ? '0 0 20px rgba(195, 248, 189,0.5), 0 0 40px rgba(195, 248, 189,0.2)'
+                      : '0 0 10px rgba(195, 248, 189,0.3), 0 0 20px rgba(195, 248, 189,0.1)',
                   }}
                   transition={{ duration: 0.3 }}
                 />
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0a0a14] border-2 border-[#c9a96e] flex items-center justify-center shadow-lg shadow-[#c9a96e]/30">
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-omni-forest-deep border-2 border-omni-mint flex items-center justify-center shadow-lg shadow-[#C3F8BD]/30">
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="sm:w-6 sm:h-6">
-                    <path d="M6 10L2 10" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="M2 10L4 8" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="M2 10L4 12" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="M14 10L18 10" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="M18 10L16 8" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="M18 10L16 12" stroke="#c9a96e" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M6 10L2 10" stroke="#C3F8BD" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M2 10L4 8" stroke="#C3F8BD" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M2 10L4 12" stroke="#C3F8BD" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M14 10L18 10" stroke="#C3F8BD" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M18 10L16 8" stroke="#C3F8BD" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M18 10L16 12" stroke="#C3F8BD" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 </div>
               </div>
@@ -492,8 +494,8 @@ export default function BeforeAfterSlider() {
               animate={{ x: sliderPosition < 15 ? -60 : 0, opacity: sliderPosition < 15 ? 0 : 1 }}
               transition={{ duration: 0.2 }}
             >
-              <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-md bg-[#0a0a14]/85 backdrop-blur-md border border-[#6a7a9a]/20 text-xs sm:text-sm tracking-[0.15em] text-[#8a9aaa] uppercase shadow-lg shadow-black/30">
-                <CloudRain className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6a7a9a]" />
+              <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-md bg-omni-forest-deep/85 backdrop-blur-md border border-omni-cream-deep/20 text-xs sm:text-sm tracking-[0.15em] text-omni-cream-deep uppercase shadow-lg shadow-black/30">
+                <CloudRain className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-omni-cream-deep" />
                 {t('compare.conventional')}
               </span>
             </motion.div>
@@ -502,9 +504,9 @@ export default function BeforeAfterSlider() {
               animate={{ x: sliderPosition > 85 ? 60 : 0, opacity: sliderPosition > 85 ? 0 : 1 }}
               transition={{ duration: 0.2 }}
             >
-              <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-md bg-[#0a0a14]/85 backdrop-blur-md border border-[#c9a96e]/25 text-xs sm:text-sm tracking-[0.15em] text-[#c9a96e] uppercase shadow-lg shadow-black/30">
+              <span className="inline-flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-md bg-omni-forest-deep/85 backdrop-blur-md border border-omni-mint/25 text-xs sm:text-sm tracking-[0.15em] text-omni-mint uppercase shadow-lg shadow-black/30">
                 {t('compare.modular')}
-                <span className="w-2 h-2 rounded-full bg-[#c9a96e] shadow-[0_0_6px_rgba(201,169,110,0.6)]" />
+                <span className="w-2 h-2 rounded-full bg-omni-mint shadow-[0_0_6px_rgba(195, 248, 189,0.6)]" />
               </span>
             </motion.div>
 
@@ -519,9 +521,9 @@ export default function BeforeAfterSlider() {
                     transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
                     className="absolute top-1/2 right-[8%] -translate-y-1/2 z-20 pointer-events-none"
                   >
-                    <div className="px-4 py-2 sm:px-5 sm:py-3 rounded-lg bg-[#c9a96e]/20 backdrop-blur-md border border-[#c9a96e]/30 shadow-[0_0_20px_rgba(201,169,110,0.2)]">
+                    <div className="px-4 py-2 sm:px-5 sm:py-3 rounded-lg bg-omni-mint/20 backdrop-blur-md border border-omni-mint/30 shadow-[0_0_20px_rgba(195, 248, 189,0.2)]">
                       <p className="text-lg sm:text-2xl font-light text-gradient-gold">70%</p>
-                      <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#c9a96e]/80 uppercase">{t('compare.faster')}</p>
+                      <p className="text-[10px] sm:text-xs tracking-[0.1em] text-omni-mint/80 uppercase">{t('compare.faster')}</p>
                     </div>
                   </motion.div>
                   <motion.div
@@ -531,7 +533,7 @@ export default function BeforeAfterSlider() {
                     transition={{ duration: 0.5, type: 'spring', stiffness: 200, delay: 0.15 }}
                     className="absolute top-[70%] right-[5%] z-20 pointer-events-none"
                   >
-                    <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md bg-[#2d4a3e]/30 backdrop-blur-md border border-[#2d4a3e]/40 shadow-[0_0_12px_rgba(45,74,62,0.2)]">
+                    <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-md bg-omni-forest/30 backdrop-blur-md border border-omni-forest/40 shadow-[0_0_12px_rgba(45,74,62,0.2)]">
                       <p className="text-[10px] sm:text-xs tracking-[0.1em] text-[#6aaa8a] uppercase font-medium">{t('compare.weatherIndependent')}</p>
                     </div>
                   </motion.div>
@@ -568,13 +570,13 @@ export default function BeforeAfterSlider() {
             {/* Column headers */}
             <div className="grid grid-cols-[1fr_1fr_1fr] gap-4 mb-4 px-2">
               <div className="text-center">
-                <p className="text-[10px] sm:text-xs tracking-[0.2em] text-[#6a7a9a]/80 uppercase">
+                <p className="text-[10px] sm:text-xs tracking-[0.2em] text-omni-cream-deep/80 uppercase">
                   {t('compare.conventional').split(' ')[0]}
                 </p>
               </div>
               <div />
               <div className="text-center">
-                <p className="text-[10px] sm:text-xs tracking-[0.2em] text-[#c9a96e]/80 uppercase">
+                <p className="text-[10px] sm:text-xs tracking-[0.2em] text-omni-mint/80 uppercase">
                   {t('compare.modular').split(' ')[0]}
                 </p>
               </div>
@@ -594,10 +596,10 @@ export default function BeforeAfterSlider() {
                   {/* Conventional side */}
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <metric.icon className="w-3.5 h-3.5 text-[#6a7a9a]/60 shrink-0" />
+                      <metric.icon className="w-3.5 h-3.5 text-omni-cream-deep/60 shrink-0" />
                       <p className="text-[10px] sm:text-xs text-white/50 uppercase tracking-wider">{t(metric.labelKey)}</p>
                     </div>
-                    <p className="text-sm sm:text-base font-light text-[#8a9aaa]/80">{t(metric.conventionalKey)}</p>
+                    <p className="text-sm sm:text-base font-light text-omni-cream-deep/80">{t(metric.conventionalKey)}</p>
                     {/* Progress bar - conventional (red/gray) */}
                     <div className="h-1 sm:h-1.5 bg-[#1a1a24] rounded-full overflow-hidden">
                       <motion.div
@@ -612,16 +614,16 @@ export default function BeforeAfterSlider() {
 
                   {/* Center - metric label */}
                   <div className="flex flex-col items-center justify-center text-center">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/5 flex items-center justify-center bg-[#12121f]/40 group-hover:border-[#c9a96e]/20 transition-colors duration-300">
-                      <metric.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/30 group-hover:text-[#c9a96e]/60 transition-colors duration-300" />
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-white/5 flex items-center justify-center bg-omni-forest/40 group-hover:border-omni-mint/20 transition-colors duration-300">
+                      <metric.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/30 group-hover:text-omni-mint/60 transition-colors duration-300" />
                     </div>
                   </div>
 
                   {/* Modular side */}
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2 justify-end">
-                      <p className="text-[10px] sm:text-xs text-[#c9a96e]/50 uppercase tracking-wider">{t(metric.labelKey)}</p>
-                      <metric.icon className="w-3.5 h-3.5 text-[#c9a96e]/40 shrink-0" />
+                      <p className="text-[10px] sm:text-xs text-omni-mint/50 uppercase tracking-wider">{t(metric.labelKey)}</p>
+                      <metric.icon className="w-3.5 h-3.5 text-omni-mint/40 shrink-0" />
                     </div>
                     <p className="text-sm sm:text-base font-light text-gradient-gold text-right">{t(metric.modularKey)}</p>
                     {/* Progress bar - modular (gold/green) */}
@@ -631,7 +633,7 @@ export default function BeforeAfterSlider() {
                         whileInView={{ width: `${100 - metric.modularPercent}%` }}
                         viewport={{ once: true }}
                         transition={{ duration: 1, delay: 0.5 + index * 0.1, ease: 'easeOut' }}
-                        className="h-full rounded-full bg-gradient-to-r from-[#2d4a3e] to-[#c9a96e]"
+                        className="h-full rounded-full bg-gradient-to-r from-omni-forest to-omni-mint"
                       />
                     </div>
                   </div>
@@ -648,45 +650,45 @@ export default function BeforeAfterSlider() {
               className="mt-8 sm:mt-10 grid grid-cols-2 gap-4"
             >
               {/* Conventional summary */}
-              <div className="p-4 sm:p-6 rounded-lg bg-[#12121f]/40 border border-[#3a4a5a]/10 relative overflow-hidden">
+              <div className="p-4 sm:p-6 rounded-lg bg-omni-forest/40 border border-[#3a4a5a]/10 relative overflow-hidden">
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#6a4a3a] via-[#8a5a4a] to-[#6a4a3a] opacity-40" />
-                <p className="text-[10px] tracking-[0.2em] text-[#6a7a9a]/60 uppercase mb-3">
+                <p className="text-[10px] tracking-[0.2em] text-omni-cream-deep/60 uppercase mb-3">
                   {t('compare.conventional')}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#8a5a4a]" />
-                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">{t('compare.conventional.longBuild')}</p>
+                    <p className="text-xs sm:text-sm text-omni-cream-deep/70">{t('compare.conventional.longBuild')}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#8a5a4a]" />
-                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">{t('compare.conventional.unpredictableCosts')}</p>
+                    <p className="text-xs sm:text-sm text-omni-cream-deep/70">{t('compare.conventional.unpredictableCosts')}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#8a5a4a]" />
-                    <p className="text-xs sm:text-sm text-[#8a9aaa]/70">{t('compare.conventional.highEmission')}</p>
+                    <p className="text-xs sm:text-sm text-omni-cream-deep/70">{t('compare.conventional.highEmission')}</p>
                   </div>
                 </div>
               </div>
 
               {/* Modular summary */}
-              <div className="p-4 sm:p-6 rounded-lg bg-[#12121f]/40 border border-[#c9a96e]/10 relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#c9a96e] via-[#dbb980] to-[#c9a96e] opacity-40" />
-                <p className="text-[10px] tracking-[0.2em] text-[#c9a96e]/60 uppercase mb-3">
+              <div className="p-4 sm:p-6 rounded-lg bg-omni-forest/40 border border-omni-mint/10 relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-omni-mint via-omni-mint-soft to-omni-mint opacity-40" />
+                <p className="text-[10px] tracking-[0.2em] text-omni-mint/60 uppercase mb-3">
                   {t('compare.modular')}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
-                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">{t('compare.modular.fastCompletion')}</p>
+                    <div className="w-1.5 h-1.5 rounded-full bg-omni-mint" />
+                    <p className="text-xs sm:text-sm text-omni-mint/80">{t('compare.modular.fastCompletion')}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
-                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">{t('compare.modular.fixedPrice')}</p>
+                    <div className="w-1.5 h-1.5 rounded-full bg-omni-mint" />
+                    <p className="text-xs sm:text-sm text-omni-mint/80">{t('compare.modular.fixedPrice')}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#c9a96e]" />
-                    <p className="text-xs sm:text-sm text-[#c9a96e]/80">{t('compare.modular.sustainableLiving')}</p>
+                    <div className="w-1.5 h-1.5 rounded-full bg-omni-mint" />
+                    <p className="text-xs sm:text-sm text-omni-mint/80">{t('compare.modular.sustainableLiving')}</p>
                   </div>
                 </div>
               </div>

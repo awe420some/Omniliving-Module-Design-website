@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 export default function ImpressumPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a14] text-white">
+    <div className="min-h-screen bg-[#1E3429] text-white">
       {/* Header */}
-      <div className="border-b border-white/5 bg-[#0a0a14]/95 backdrop-blur-md sticky top-0 z-50">
+      <div className="border-b border-white/5 bg-[#1E3429]/95 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 group">
             <Image
@@ -20,28 +20,29 @@ export default function ImpressumPage() {
               width={28}
               height={28}
               className="object-contain"
+              priority
             />
-            <span className="text-sm tracking-[0.2em] text-[#c9a96e]/80 uppercase font-light group-hover:text-[#c9a96e] transition-colors">
+            <span className="text-sm tracking-[0.2em] text-[#C3F8BD]/80 uppercase font-light group-hover:text-[#C3F8BD] transition-colors">
               Omniliving
             </span>
           </Link>
           <span className="text-white/10">|</span>
-          <span className="text-sm text-[#8888a8] tracking-wider">Impressum</span>
+          <span className="text-sm text-[#D4C5A0] tracking-wider">Impressum</span>
         </div>
       </div>
 
       {/* Content */}
       <main className="max-w-4xl mx-auto px-6 py-16 sm:py-24">
         <div className="mb-12">
-          <p className="text-xs tracking-[0.3em] text-[#c9a96e] uppercase mb-4">Rechtliches</p>
+          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">Rechtliches</p>
           <h1 className="text-3xl sm:text-4xl font-light tracking-wider text-white mb-4">
             Impressum
           </h1>
-          <p className="text-sm text-[#8888a8]">Angaben gemäß § 5 TMG</p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mt-6" />
+          <p className="text-sm text-[#D4C5A0]">Angaben gemäß § 5 TMG</p>
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mt-6" />
         </div>
 
-        <div className="space-y-10 text-[#8888a8] text-sm leading-relaxed">
+        <div className="space-y-10 text-[#D4C5A0] text-sm leading-relaxed">
           <section>
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Unternehmensangaben</h2>
             <p>
@@ -55,8 +56,8 @@ export default function ImpressumPage() {
           <section>
             <h2 className="text-white font-medium tracking-wide mb-3 text-base">Kontakt</h2>
             <p>
-              Telefon: <a href="tel:+4915129530369" className="text-[#c9a96e] hover:underline">+49 151 29530369</a><br />
-              E-Mail: <a href="mailto:kontakt@omniliving-moduledesign-gmbh.com" className="text-[#c9a96e] hover:underline">kontakt@omniliving-moduledesign-gmbh.com</a>
+              Telefon: <a href="tel:+4915129530369" className="text-[#C3F8BD] hover:underline">+49 151 29530369</a><br />
+              E-Mail: <a href="mailto:kontakt@omniliving-moduledesign-gmbh.com" className="text-[#C3F8BD] hover:underline">kontakt@omniliving-moduledesign-gmbh.com</a>
             </p>
           </section>
 
@@ -102,7 +103,7 @@ export default function ImpressumPage() {
                 href="https://ec.europa.eu/consumers/odr/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#c9a96e] hover:underline"
+                className="text-[#C3F8BD] hover:underline"
               >
                 https://ec.europa.eu/consumers/odr/
               </a>
@@ -144,7 +145,7 @@ export default function ImpressumPage() {
         <div className="mt-16 pt-8 border-t border-white/5">
           <Link
             href="/"
-            className="text-sm text-[#c9a96e] hover:text-[#dbb980] transition-colors tracking-wide"
+            className="text-sm text-[#C3F8BD] hover:text-[#DFFCD9] transition-colors tracking-wide"
           >
             ← Zurück zur Startseite
           </Link>

@@ -9,7 +9,7 @@ interface SectionDividerProps {
 
 export default function SectionDivider({
   variant = 'line',
-  color = '#c9a96e',
+  color = '#C3F8BD',
 }: SectionDividerProps) {
   if (variant === 'dots') {
     return (
@@ -37,7 +37,7 @@ export default function SectionDivider({
                 width: i === 2 ? '8px' : '5px',
                 height: i === 2 ? '8px' : '5px',
                 backgroundColor:
-                  i === 2 ? color : `rgba(201, 169, 110, ${0.2 + i * 0.05})`,
+                  i === 2 ? color : `rgba(195, 248, 189, ${0.2 + i * 0.05})`,
                 boxShadow:
                   i === 2 ? `0 0 8px ${color}60` : 'none',
               }}

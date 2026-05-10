@@ -65,7 +65,7 @@ export default function LoadingScreen() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] bg-[#0a0a14] flex flex-col items-center justify-center"
+      className="fixed inset-0 z-[100] bg-omni-forest-deep flex flex-col items-center justify-center"
       initial={{ y: 0 }}
       animate={isSliding ? { y: '-100%' } : { y: 0 }}
       transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
@@ -75,8 +75,8 @@ export default function LoadingScreen() {
         className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(201, 169, 110, 0.4) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201, 169, 110, 0.4) 1px, transparent 1px)
+            linear-gradient(rgba(195, 248, 189, 0.4) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(195, 248, 189, 0.4) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
         }}
@@ -100,7 +100,7 @@ export default function LoadingScreen() {
           width: { duration: 0.8, delay: 0.8, ease: 'easeOut' },
           opacity: { duration: isFading ? 0.6 : 0.3, delay: isFading ? 0 : 0.8 },
         }}
-        className="h-[1px] bg-gradient-to-r from-transparent via-[#c9a96e] to-transparent mt-6"
+        className="h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mt-6"
       />
 
       {/* Subtitle text */}
@@ -108,7 +108,7 @@ export default function LoadingScreen() {
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: isFading ? 0 : 1, y: isFading ? -5 : 0 }}
         transition={{ duration: 0.6, delay: isFading ? 0 : 1.4, ease: 'easeOut' }}
-        className="tracking-[0.25em] text-[#c9a96e]/70 text-[10px] sm:text-xs mt-4 uppercase"
+        className="tracking-[0.25em] text-omni-mint/70 text-[10px] sm:text-xs mt-4 uppercase"
       >
         {(() => {
           const locale = (typeof window !== 'undefined' && localStorage.getItem('omniliving-locale')) || 'de';
@@ -126,7 +126,7 @@ export default function LoadingScreen() {
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="w-1 h-1 rounded-full bg-[#c9a96e]"
+            className="w-1 h-1 rounded-full bg-omni-mint"
             animate={{ opacity: [0.2, 0.8, 0.2] }}
             transition={{
               duration: 1.5,

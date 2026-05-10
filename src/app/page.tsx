@@ -1,9 +1,18 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import NavigationBar from '@/components/NavigationBar';
 import HeroSection from '@/components/HeroSection';
-import ConfiguratorSection from '@/components/ConfiguratorSection';
+
+const ConfiguratorSection = dynamic(() => import('@/components/ConfiguratorSection'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 bg-[#1E3429] flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-[#C3F8BD]/30 border-t-[#C3F8BD] rounded-full animate-spin" />
+    </div>
+  ),
+});
 import FeaturesSection from '@/components/FeaturesSection';
 import StatsSection from '@/components/StatsSection';
 import ProcessSection from '@/components/ProcessSection';
@@ -34,10 +43,10 @@ import { useTranslation } from '@/lib/i18n';
 const ScrollExperience = dynamic(() => import('@/components/ScrollExperience'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-screen bg-[#0a0a14] flex items-center justify-center">
+    <div className="w-full h-screen bg-[#1E3429] flex items-center justify-center">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-2 border-[#c9a96e]/30 border-t-[#c9a96e] rounded-full animate-spin" />
-        <span className="text-xs text-[#8888a8] tracking-wider">3D-Erfahrung wird geladen...</span>
+        <div className="w-8 h-8 border-2 border-[#C3F8BD]/30 border-t-[#C3F8BD] rounded-full animate-spin" />
+        <span className="text-xs text-[#D4C5A0] tracking-wider">3D-Erfahrung wird geladen...</span>
       </div>
     </div>
   ),
@@ -83,18 +92,37 @@ export default function Home() {
     <>
       <ScrollProgress />
       <LoadingScreen />
-      <div className="min-h-screen flex flex-col bg-[#0a0a14]">
+      {/* Site uses forest-deep as the dominant background — every section
+          paints itself with bg-[#1E3429] (forest-deep) explicitly. The outer
+          wrapper must therefore expose forest CSS variables so that shadcn
+          UI components (cards, borders, inputs, popovers, badges) inside
+          those sections pick the right foreground/border colors. Previously
+          this was data-surface="paper" → cards with light borders on a
+          dark background, causing the "everything looks broken" feel. */}
+      <div className="min-h-screen flex flex-col bg-omni-forest-deep" data-surface="forest">
         {/* Navigation Bar */}
         <NavigationBar />
 
         {/* Hero Section with 3D Canvas */}
-        <HeroSection />
+        <div data-surface="forest">
+          <HeroSection />
+        </div>
 
-        <SectionDivider variant="gradient" />
-
-        {/* Scroll-driven 3D Building Experience */}
-        <div id="scroll-experience">
-          <ScrollExperience />
+        {/* Scroll-driven 3D Building Experience — same forest surface as
+            Hero, no divider in between (the 3D canvas itself provides the
+            visual transition). Without data-surface="forest" the body's
+            cream "paper" background leaks through. */}
+        <div id="scroll-experience" data-surface="forest">
+          <Suspense fallback={
+            <div className="w-full h-screen bg-[#1E3429] flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-8 h-8 border-2 border-[#C3F8BD]/30 border-t-[#C3F8BD] rounded-full animate-spin" />
+                <span className="text-xs text-[#D4C5A0] tracking-wider">3D-Erfahrung wird geladen...</span>
+              </div>
+            </div>
+          }>
+            <ScrollExperience />
+          </Suspense>
         </div>
 
         <SectionDivider variant="line" />
@@ -125,7 +153,9 @@ export default function Home() {
         <SectionDivider variant="gradient" />
 
         {/* Stats with Real Data */}
-        <StatsSection />
+        <div data-surface="forest">
+          <StatsSection />
+        </div>
 
         <SectionDivider variant="line" />
 
@@ -178,7 +208,7 @@ export default function Home() {
         <ContactSection />
 
         {/* Footer with REAL Data and Enhanced Styling */}
-        <footer id="footer-section" className="relative bg-[#060610] mt-auto geometric-border-top">
+        <footer id="footer-section" data-surface="forest" className="relative bg-omni-forest-deep text-omni-paper mt-auto geometric-border-top">
           {/* Decorative SVG pattern at top - elaborate geometric */}
           <div className="absolute -top-[60px] left-0 right-0 overflow-hidden">
             <svg
@@ -190,7 +220,7 @@ export default function Home() {
             >
               <path
                 d="M0 60L48 54C96 48 192 36 288 30C384 24 480 24 576 28C672 32 768 40 864 42C960 44 1056 40 1152 36C1248 32 1344 28 1392 26L1440 24V60H1392C1344 60 1248 60 1152 60C1056 60 960 60 864 60C768 60 672 60 576 60C480 60 384 60 288 60C192 60 96 60 48 60H0Z"
-                fill="#060610"
+                fill="#1E3429"
               />
             </svg>
           </div>
@@ -200,8 +230,8 @@ export default function Home() {
             <svg width="100%" height="24" xmlns="http://www.w3.org/2000/svg" className="opacity-[0.08]">
               <defs>
                 <pattern id="geoBorder" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <rect x="0" y="0" width="12" height="12" fill="#c9a96e" />
-                  <rect x="12" y="12" width="12" height="12" fill="#c9a96e" />
+                  <rect x="0" y="0" width="12" height="12" fill="#C3F8BD" />
+                  <rect x="12" y="12" width="12" height="12" fill="#C3F8BD" />
                 </pattern>
               </defs>
               <rect width="100%" height="24" fill="url(#geoBorder)" />
@@ -226,12 +256,12 @@ export default function Home() {
                     <h3 className="text-lg font-light tracking-[0.15em] text-white">
                       OMNILIVING
                     </h3>
-                    <p className="text-[10px] tracking-[0.2em] text-[#c9a96e] uppercase">
+                    <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD] uppercase">
                       Module Design GmbH
                     </p>
                   </div>
                 </div>
-                <p className="text-sm text-[#8888a8] leading-relaxed mt-4">
+                <p className="text-sm text-[#D4C5A0] leading-relaxed mt-4">
                   {t('footer.companyDesc')}
                 </p>
 
@@ -247,11 +277,11 @@ export default function Home() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={t('footer.newsletterPlaceholder')}
                       required
-                      className="newsletter-input flex-1 px-3 py-2 rounded-md text-sm text-white placeholder:text-[#8888a8]"
+                      className="newsletter-input flex-1 px-3 py-2 rounded-md text-sm text-white placeholder:text-[#D4C5A0]"
                     />
                     <button
                       type="submit"
-                      className="shrink-0 px-4 py-2 bg-gradient-to-r from-[#c9a96e] to-[#b8944f] hover:from-[#dbb980] hover:to-[#c9a96e] text-[#0a0a14] rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-1.5"
+                      className="shrink-0 px-4 py-2 bg-gradient-to-r from-[#C3F8BD] to-[#8EDA88] hover:from-[#DFFCD9] hover:to-[#C3F8BD] text-[#1E3429] rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-1.5"
                     >
                       <Send size={14} />
                       <span className="hidden sm:inline">{t('footer.newsletterSubscribe')}</span>
@@ -268,20 +298,20 @@ export default function Home() {
                 <div className="flex flex-col gap-4">
                   <a
                     href="tel:+4915129530369"
-                    className="flex items-center gap-3 text-sm text-[#8888a8] hover:text-[#c9a96e] transition-colors duration-300 animated-underline w-fit"
+                    className="flex items-center gap-3 text-sm text-[#D4C5A0] hover:text-[#C3F8BD] transition-colors duration-300 animated-underline w-fit"
                   >
-                    <Phone size={16} className="text-[#c9a96e]" />
+                    <Phone size={16} className="text-[#C3F8BD]" />
                     +49 151 29530369
                   </a>
                   <a
                     href="mailto:kontakt@omniliving-moduledesign-gmbh.com"
-                    className="flex items-center gap-3 text-sm text-[#8888a8] hover:text-[#c9a96e] transition-colors duration-300 animated-underline w-fit"
+                    className="flex items-center gap-3 text-sm text-[#D4C5A0] hover:text-[#C3F8BD] transition-colors duration-300 animated-underline w-fit"
                   >
-                    <Mail size={16} className="text-[#c9a96e]" />
+                    <Mail size={16} className="text-[#C3F8BD]" />
                     kontakt@omniliving-moduledesign-gmbh.com
                   </a>
-                  <div className="flex items-start gap-3 text-sm text-[#8888a8]">
-                    <MapPin size={16} className="text-[#c9a96e] shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 text-sm text-[#D4C5A0]">
+                    <MapPin size={16} className="text-[#C3F8BD] shrink-0 mt-0.5" />
                     <span>
                       Teutoburger Straße 23 a
                       <br />
@@ -311,7 +341,7 @@ export default function Home() {
                     <a
                       key={link.label}
                       href={link.href}
-                      className="text-sm text-[#8888a8] hover:text-[#c9a96e] transition-colors duration-300 tracking-wide animated-underline w-fit"
+                      className="text-sm text-[#D4C5A0] hover:text-[#C3F8BD] transition-colors duration-300 tracking-wide animated-underline w-fit"
                     >
                       {link.label}
                     </a>
@@ -334,9 +364,9 @@ export default function Home() {
                         href={social.href}
                         title="Demnächst verfügbar – bitte kontaktieren Sie uns direkt"
                         aria-label={social.label}
-                        className="w-9 h-9 rounded-lg bg-[#12121f] border border-white/5 flex items-center justify-center social-icon-hover hover:border-[#c9a96e]/30 hover:bg-[#1a1a2e] hover:shadow-[0_0_15px_rgba(201,169,110,0.15)] group"
+                        className="w-9 h-9 rounded-lg bg-[#2D4A3E] border border-white/5 flex items-center justify-center social-icon-hover hover:border-[#C3F8BD]/30 hover:bg-[#3E6151] hover:shadow-[0_0_15px_rgba(195, 248, 189,0.15)] group"
                       >
-                        <SocialIcon size={16} className="text-[#8888a8] group-hover:text-[#c9a96e] transition-colors duration-300" />
+                        <SocialIcon size={16} className="text-[#D4C5A0] group-hover:text-[#C3F8BD] transition-colors duration-300" />
                       </a>
                     );
                   })}
@@ -346,7 +376,7 @@ export default function Home() {
 
             {/* Certifications Row */}
             <div className="mt-10 pt-8 border-t border-white/5">
-              <p className="text-[10px] tracking-[0.2em] text-[#c9a96e]/40 uppercase mb-4 text-center">
+              <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD]/40 uppercase mb-4 text-center">
                 {t('footer.certifications')}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
@@ -393,19 +423,19 @@ export default function Home() {
               <div className="absolute top-0 left-0 right-0 h-[1px] border-shimmer" />
 
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p className="text-xs text-[#8888a8] tracking-wide">
+                <p className="text-xs text-[#D4C5A0] tracking-wide">
                   © {new Date().getFullYear()} Omniliving Module Design GmbH. {t('footer.rights')}.
                 </p>
                 <div className="flex items-center gap-6">
                   <a
                     href="/impressum"
-                    className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
+                    className="text-xs text-[#D4C5A0] hover:text-[#C3F8BD] transition-colors tracking-wide animated-underline"
                   >
                     {t('footer.imprint')}
                   </a>
                   <a
                     href="/datenschutz"
-                    className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide animated-underline"
+                    className="text-xs text-[#D4C5A0] hover:text-[#C3F8BD] transition-colors tracking-wide animated-underline"
                   >
                     {t('footer.privacy')}
                   </a>
@@ -415,7 +445,7 @@ export default function Home() {
                     onClick={() => {
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="text-xs text-[#8888a8] hover:text-[#c9a96e] transition-colors tracking-wide flex items-center gap-1.5 group back-to-top-hover"
+                    className="text-xs text-[#D4C5A0] hover:text-[#C3F8BD] transition-colors tracking-wide flex items-center gap-1.5 group back-to-top-hover"
                   >
                     {t('footer.toTop')}
                     <ArrowUp size={12} className="group-hover:-translate-y-0.5 transition-transform duration-300" />
