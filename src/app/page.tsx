@@ -1,9 +1,18 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import NavigationBar from '@/components/NavigationBar';
 import HeroSection from '@/components/HeroSection';
-import ConfiguratorSection from '@/components/ConfiguratorSection';
+
+const ConfiguratorSection = dynamic(() => import('@/components/ConfiguratorSection'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-96 bg-[#1E3429] flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-[#C3F8BD]/30 border-t-[#C3F8BD] rounded-full animate-spin" />
+    </div>
+  ),
+});
 import FeaturesSection from '@/components/FeaturesSection';
 import StatsSection from '@/components/StatsSection';
 import ProcessSection from '@/components/ProcessSection';
@@ -104,7 +113,16 @@ export default function Home() {
             visual transition). Without data-surface="forest" the body's
             cream "paper" background leaks through. */}
         <div id="scroll-experience" data-surface="forest">
-          <ScrollExperience />
+          <Suspense fallback={
+            <div className="w-full h-screen bg-[#1E3429] flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-8 h-8 border-2 border-[#C3F8BD]/30 border-t-[#C3F8BD] rounded-full animate-spin" />
+                <span className="text-xs text-[#D4C5A0] tracking-wider">3D-Erfahrung wird geladen...</span>
+              </div>
+            </div>
+          }>
+            <ScrollExperience />
+          </Suspense>
         </div>
 
         <SectionDivider variant="line" />

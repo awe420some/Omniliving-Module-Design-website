@@ -20,6 +20,7 @@ export default function DatenschutzPage() {
               width={28}
               height={28}
               className="object-contain"
+              priority
             />
             <span className="text-sm tracking-[0.2em] text-[#C3F8BD]/80 uppercase font-light group-hover:text-[#C3F8BD] transition-colors">
               Omniliving
