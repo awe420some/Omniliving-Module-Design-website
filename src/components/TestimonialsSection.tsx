@@ -24,7 +24,7 @@ function AnimatedStars({ count, delay }: { count: number; delay: number }) {
         <Star
           key={i}
           size={16}
-          className={`fill-[#C3F8BD] text-[#C3F8BD] ${isInView ? 'star-animated' : 'opacity-0'} star-hover-animate cursor-pointer`}
+          className={`fill-omni-mint text-omni-mint ${isInView ? 'star-animated' : 'opacity-0'} star-hover-animate cursor-pointer`}
           style={{ animationDelay: `${delay + i * 0.08}s` }}
           onMouseEnter={() => setHoveredStar(i)}
           onMouseLeave={() => setHoveredStar(null)}
@@ -92,7 +92,7 @@ export default function TestimonialsSection() {
   const currentTestimonial = testimonials[currentIndex];
 
   return (
-    <section id="testimonials" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
+    <section id="testimonials" className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-omni-forest-deep">
       <div className="max-w-4xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -102,33 +102,33 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-omni-mint uppercase mb-4">
             {t('testimonials.label').toUpperCase()}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('testimonials.title').split(t('testimonials.titleAccent'))[0]}<span className="text-gradient-gold">{t('testimonials.titleAccent')}</span>{t('testimonials.title').split(t('testimonials.titleAccent'))[1]}
           </h2>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Carousel */}
         <div className="relative">
           {/* Large decorative opening quote */}
           <div className="absolute -top-6 left-4 sm:left-8 pointer-events-none select-none z-10">
-            <span className="text-[120px] sm:text-[160px] md:text-[200px] font-serif text-[#C3F8BD] opacity-[0.06] leading-none">
+            <span className="text-[120px] sm:text-[160px] md:text-[200px] font-serif text-omni-mint opacity-[0.06] leading-none">
               &ldquo;
             </span>
           </div>
 
           {/* Large decorative closing quote */}
           <div className="absolute -bottom-12 right-4 sm:right-8 pointer-events-none select-none z-10">
-            <span className="text-[120px] sm:text-[160px] md:text-[200px] font-serif text-[#C3F8BD] opacity-[0.06] leading-none">
+            <span className="text-[120px] sm:text-[160px] md:text-[200px] font-serif text-omni-mint opacity-[0.06] leading-none">
               &rdquo;
             </span>
           </div>
 
           {/* Testimonial card */}
-          <div className="relative bg-[#2D4A3E]/60 border border-white/5 rounded-xl p-8 sm:p-12 hover:border-[#C3F8BD]/20 hover:shadow-[0_0_30px_rgba(195, 248, 189,0.05)] transition-all duration-500 overflow-hidden shimmer-sweep">
+          <div className="relative bg-omni-forest/60 border border-white/5 rounded-xl p-8 sm:p-12 hover:border-omni-mint/20 hover:shadow-[0_0_30px_rgba(195, 248, 189,0.05)] transition-all duration-500 overflow-hidden shimmer-sweep">
             {/* Gold shimmer on hover */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
               <div
@@ -150,7 +150,7 @@ export default function TestimonialsSection() {
               >
                 {/* Star rating */}
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[10px] tracking-[0.15em] text-[#C3F8BD]/60 uppercase font-medium">
+                  <span className="text-[10px] tracking-[0.15em] text-omni-mint/60 uppercase font-medium">
                     {t('testimonials.stars')}
                   </span>
                 </div>
@@ -165,7 +165,7 @@ export default function TestimonialsSection() {
                 <div className="flex items-center gap-4">
                   <div className="avatar-gold-border rounded-full">
                     <Avatar className="w-12 h-12">
-                      <AvatarFallback className="bg-[#3E6151] text-[#C3F8BD] text-sm font-medium">
+                      <AvatarFallback className="bg-omni-forest-soft text-omni-mint text-sm font-medium">
                         {currentTestimonial.initials}
                       </AvatarFallback>
                     </Avatar>
@@ -174,7 +174,7 @@ export default function TestimonialsSection() {
                     <p className="text-base text-white font-medium tracking-wide">
                       {currentTestimonial.name}
                     </p>
-                    <p className="text-sm text-[#D4C5A0]">
+                    <p className="text-sm text-omni-cream">
                       {currentTestimonial.location}
                     </p>
                   </div>
@@ -186,14 +186,14 @@ export default function TestimonialsSection() {
           {/* Navigation arrows */}
           <button
             onClick={goToPrev}
-            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#2D4A3E]/80 border border-white/10 flex items-center justify-center text-[#D4C5A0] hover:text-[#C3F8BD] hover:border-[#C3F8BD]/30 transition-all duration-300 z-20"
+            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-omni-forest/80 border border-white/10 flex items-center justify-center text-omni-cream hover:text-omni-mint hover:border-omni-mint/30 transition-all duration-300 z-20"
             aria-label={t('testimonials.prevReview')}
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#2D4A3E]/80 border border-white/10 flex items-center justify-center text-[#D4C5A0] hover:text-[#C3F8BD] hover:border-[#C3F8BD]/30 transition-all duration-300 z-20"
+            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-omni-forest/80 border border-white/10 flex items-center justify-center text-omni-cream hover:text-omni-mint hover:border-omni-mint/30 transition-all duration-300 z-20"
             aria-label={t('testimonials.nextReview')}
           >
             <ChevronRight size={18} />
@@ -207,8 +207,8 @@ export default function TestimonialsSection() {
                 onClick={() => goToSlide(i)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   i === currentIndex
-                    ? 'bg-[#C3F8BD] w-6'
-                    : 'bg-[#D4C5A0]/30 hover:bg-[#D4C5A0]/50'
+                    ? 'bg-omni-mint w-6'
+                    : 'bg-omni-cream/30 hover:bg-omni-cream/50'
                 }`}
                 aria-label={`${t('testimonials.review')} ${i + 1}`}
               />

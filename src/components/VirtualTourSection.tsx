@@ -630,7 +630,7 @@ export default function VirtualTourSection() {
   const selectedHotspotData = selectedHotspot ? currentModule.hotspots.find((h) => h.id === selectedHotspot) : null;
 
   return (
-    <section id="virtual-tour" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
+    <section id="virtual-tour" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-omni-forest-deep">
       {/* Subtle grid pattern background */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage: 'linear-gradient(rgba(195, 248, 189,1) 1px, transparent 1px), linear-gradient(90deg, rgba(195, 248, 189,1) 1px, transparent 1px)',
@@ -646,16 +646,16 @@ export default function VirtualTourSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-omni-mint uppercase mb-4">
             {t('tour.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('tour.title').split(' ')[0]} <span className="text-gradient-gold">{t('tour.titleAccent')}</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-omni-cream max-w-2xl mx-auto mt-4">
             {t('tour.desc')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mx-auto mt-6" />
         </motion.div>
 
         <motion.div
@@ -671,14 +671,14 @@ export default function VirtualTourSection() {
           >
             {/* Tab bar + controls */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-              <TabsList className="bg-[#2D4A3E] border border-white/5 h-auto p-1 flex-wrap gap-1">
+              <TabsList className="bg-omni-forest border border-white/5 h-auto p-1 flex-wrap gap-1">
                 {MODULE_INTERIORS.map((mod) => {
                   const Icon = mod.icon;
                   return (
                     <TabsTrigger
                       key={mod.id}
                       value={mod.id}
-                      className="data-[state=active]:bg-[#C3F8BD]/10 data-[state=active]:text-[#C3F8BD] data-[state=active]:border-[#C3F8BD]/30 text-[#D4C5A0] px-4 py-2.5 text-xs tracking-[0.1em] uppercase border border-transparent transition-all duration-300 flex items-center gap-2"
+                      className="data-[state=active]:bg-omni-mint/10 data-[state=active]:text-omni-mint data-[state=active]:border-omni-mint/30 text-omni-cream px-4 py-2.5 text-xs tracking-[0.1em] uppercase border border-transparent transition-all duration-300 flex items-center gap-2"
                     >
                       <Icon size={16} />
                       {t(mod.labelKey)}
@@ -690,10 +690,10 @@ export default function VirtualTourSection() {
               <div className="flex items-center gap-3">
                 {/* Module spec badges */}
                 <div className="hidden md:flex items-center gap-2">
-                  <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#2D4A3E]/60 border border-white/5 rounded text-[#D4C5A0]">
+                  <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-omni-forest/60 border border-white/5 rounded text-omni-cream">
                     {t('tour.area')}: {currentModule.specs.flaeche}
                   </span>
-                  <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#2D4A3E]/60 border border-white/5 rounded text-[#D4C5A0]">
+                  <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-omni-forest/60 border border-white/5 rounded text-omni-cream">
                     {t('tour.height')}: {currentModule.specs.hoehe}
                   </span>
                 </div>
@@ -727,29 +727,29 @@ export default function VirtualTourSection() {
             </div>
 
             {/* Interior view */}
-            <div className="relative bg-[#2D4A3E]/40 border border-white/5 rounded-lg overflow-hidden">
+            <div className="relative bg-omni-forest/40 border border-white/5 rounded-lg overflow-hidden">
               {/* Corner decorative elements - architectural style */}
-              <div className="absolute top-2 left-2 w-6 h-6 border-t border-l border-[#C3F8BD]/20 z-10 pointer-events-none" />
-              <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-[#C3F8BD]/20 z-10 pointer-events-none" />
-              <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-[#C3F8BD]/20 z-10 pointer-events-none" />
-              <div className="absolute bottom-2 right-2 w-6 h-6 border-b border-r border-[#C3F8BD]/20 z-10 pointer-events-none" />
+              <div className="absolute top-2 left-2 w-6 h-6 border-t border-l border-omni-mint/20 z-10 pointer-events-none" />
+              <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-omni-mint/20 z-10 pointer-events-none" />
+              <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-omni-mint/20 z-10 pointer-events-none" />
+              <div className="absolute bottom-2 right-2 w-6 h-6 border-b border-r border-omni-mint/20 z-10 pointer-events-none" />
 
               {/* Compass indicator */}
               <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 opacity-40 pointer-events-none">
                 <div className="relative w-6 h-6">
-                  <Compass size={24} className="text-[#C3F8BD]" style={{ transform: `rotate(${compassAngle}deg)`, transition: 'transform 0.2s ease-out' }} />
+                  <Compass size={24} className="text-omni-mint" style={{ transform: `rotate(${compassAngle}deg)`, transition: 'transform 0.2s ease-out' }} />
                 </div>
               </div>
 
               {/* Zoom indicator */}
               <div className="absolute top-4 left-4 z-10 opacity-30 pointer-events-none">
-                <Maximize2 size={14} className="text-[#C3F8BD]" />
+                <Maximize2 size={14} className="text-omni-mint" />
               </div>
 
               {/* Measurement annotations */}
               <div className="absolute bottom-2 left-3 z-10 flex items-center gap-1 pointer-events-none">
-                <Ruler size={10} className="text-[#C3F8BD]/30" />
-                <span className="text-[8px] tracking-wider text-[#C3F8BD]/30 font-mono">
+                <Ruler size={10} className="text-omni-mint/30" />
+                <span className="text-[8px] tracking-wider text-omni-mint/30 font-mono">
                   {currentModule.specs.laenge} × {currentModule.specs.breite} × {currentModule.specs.hoehe}
                 </span>
               </div>
@@ -768,9 +768,9 @@ export default function VirtualTourSection() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
-                      className="absolute inset-0 bg-[#2D4A3E] z-20 flex items-center justify-center"
+                      className="absolute inset-0 bg-omni-forest z-20 flex items-center justify-center"
                     >
-                      <div className="w-12 h-1 rounded-full bg-gradient-to-r from-transparent via-[#C3F8BD]/40 to-transparent shimmer" />
+                      <div className="w-12 h-1 rounded-full bg-gradient-to-r from-transparent via-omni-mint/40 to-transparent shimmer" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -979,7 +979,7 @@ export default function VirtualTourSection() {
                       animate={{ width: 60, height: 60, opacity: 0, x: ripple.x - 30, y: ripple.y - 30 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.6, ease: 'easeOut' }}
-                      className="absolute rounded-full border border-[#C3F8BD]/30 pointer-events-none z-30"
+                      className="absolute rounded-full border border-omni-mint/30 pointer-events-none z-30"
                     />
                   ))}
                 </AnimatePresence>
@@ -989,7 +989,7 @@ export default function VirtualTourSection() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1, duration: 0.5 }}
-                  className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[#D4C5A0]/30 pointer-events-none"
+                  className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 text-omni-cream/30 pointer-events-none"
                 >
                   <motion.div
                     animate={{ x: [0, 8, -8, 0] }}
@@ -1005,7 +1005,7 @@ export default function VirtualTourSection() {
                 </motion.div>
 
                 {/* Info hint */}
-                <div className="absolute bottom-3 right-4 flex items-center gap-1.5 text-[#D4C5A0]/30 pointer-events-none">
+                <div className="absolute bottom-3 right-4 flex items-center gap-1.5 text-omni-cream/30 pointer-events-none">
                   <Info size={10} />
                   <span className="text-[8px] tracking-wider uppercase">{t('tour.clickDetails')}</span>
                 </div>
@@ -1019,28 +1019,28 @@ export default function VirtualTourSection() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 20, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-[#1E3429] via-[#1E3429]/98 to-transparent pt-12 pb-6 px-6"
+                    className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-omni-forest-deep via-omni-forest-deep/98 to-transparent pt-12 pb-6 px-6"
                   >
                     <div className="max-w-lg mx-auto">
                       <div className="flex items-start justify-between gap-4">
                         <div>
                           <h4 className="text-lg font-light tracking-wider text-white">{t(selectedHotspotData.labelKey)}</h4>
-                          <p className="text-sm text-[#D4C5A0] mt-1">{t(selectedHotspotData.detailKey)}</p>
+                          <p className="text-sm text-omni-cream mt-1">{t(selectedHotspotData.detailKey)}</p>
                         </div>
                         <button
                           onClick={() => setSelectedHotspot(null)}
-                          className="shrink-0 w-8 h-8 rounded-full bg-[#2D4A3E] border border-white/10 flex items-center justify-center text-[#D4C5A0] hover:text-white hover:border-[#C3F8BD]/30 transition-all duration-300"
+                          className="shrink-0 w-8 h-8 rounded-full bg-omni-forest border border-white/10 flex items-center justify-center text-omni-cream hover:text-white hover:border-omni-mint/30 transition-all duration-300"
                         >
                           <X size={14} />
                         </button>
                       </div>
                       <div className="mt-4 grid grid-cols-2 gap-3">
-                        <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-md p-3">
-                          <p className="text-[9px] tracking-[0.15em] uppercase text-[#C3F8BD]/60 mb-1">{t('tour.dimensions')}</p>
+                        <div className="bg-omni-forest/60 border border-white/5 rounded-md p-3">
+                          <p className="text-[9px] tracking-[0.15em] uppercase text-omni-mint/60 mb-1">{t('tour.dimensions')}</p>
                           <p className="text-sm text-white font-mono">{t(selectedHotspotData.dimsKey)}</p>
                         </div>
-                        <div className="bg-[#2D4A3E]/60 border border-white/5 rounded-md p-3">
-                          <p className="text-[9px] tracking-[0.15em] uppercase text-[#C3F8BD]/60 mb-1">{t('tour.material')}</p>
+                        <div className="bg-omni-forest/60 border border-white/5 rounded-md p-3">
+                          <p className="text-[9px] tracking-[0.15em] uppercase text-omni-mint/60 mb-1">{t('tour.material')}</p>
                           <p className="text-sm text-white">{t(selectedHotspotData.matKey)}</p>
                         </div>
                       </div>
@@ -1052,13 +1052,13 @@ export default function VirtualTourSection() {
 
             {/* Mobile spec badges */}
             <div className="flex md:hidden items-center justify-center gap-2 mt-4">
-              <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#2D4A3E]/60 border border-white/5 rounded text-[#D4C5A0]">
+              <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-omni-forest/60 border border-white/5 rounded text-omni-cream">
                 {t('tour.area')}: {currentModule.specs.flaeche}
               </span>
-              <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#2D4A3E]/60 border border-white/5 rounded text-[#D4C5A0]">
+              <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-omni-forest/60 border border-white/5 rounded text-omni-cream">
                 {t('tour.height')}: {currentModule.specs.hoehe}
               </span>
-              <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-[#2D4A3E]/60 border border-white/5 rounded text-[#D4C5A0]">
+              <span className="px-2 py-1 text-[9px] tracking-wider uppercase bg-omni-forest/60 border border-white/5 rounded text-omni-cream">
                 {currentModule.specs.laenge} × {currentModule.specs.breite}
               </span>
             </div>

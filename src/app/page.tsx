@@ -83,7 +83,14 @@ export default function Home() {
     <>
       <ScrollProgress />
       <LoadingScreen />
-      <div className="min-h-screen flex flex-col bg-omni-paper" data-surface="paper">
+      {/* Site uses forest-deep as the dominant background — every section
+          paints itself with bg-[#1E3429] (forest-deep) explicitly. The outer
+          wrapper must therefore expose forest CSS variables so that shadcn
+          UI components (cards, borders, inputs, popovers, badges) inside
+          those sections pick the right foreground/border colors. Previously
+          this was data-surface="paper" → cards with light borders on a
+          dark background, causing the "everything looks broken" feel. */}
+      <div className="min-h-screen flex flex-col bg-omni-forest-deep" data-surface="forest">
         {/* Navigation Bar */}
         <NavigationBar />
 
@@ -92,10 +99,11 @@ export default function Home() {
           <HeroSection />
         </div>
 
-        <SectionDivider variant="gradient" />
-
-        {/* Scroll-driven 3D Building Experience */}
-        <div id="scroll-experience">
+        {/* Scroll-driven 3D Building Experience — same forest surface as
+            Hero, no divider in between (the 3D canvas itself provides the
+            visual transition). Without data-surface="forest" the body's
+            cream "paper" background leaks through. */}
+        <div id="scroll-experience" data-surface="forest">
           <ScrollExperience />
         </div>
 

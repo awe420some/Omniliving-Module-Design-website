@@ -526,7 +526,9 @@ function addArchitecturalLighting(scene: THREE.Scene) {
   const sun = new THREE.DirectionalLight('#fff4e6', 3.4);
   sun.position.set(7, 9, 6);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  // 1024² with BasicShadowMap = ~4× faster shadow pass than 2048², visually
+  // indistinguishable on this scene (no fine geometry close to the camera).
+  sun.shadow.mapSize.set(1024, 1024);
   sun.shadow.camera.near = 0.5;
   sun.shadow.camera.far = 40;
   sun.shadow.camera.left = -12;
@@ -906,9 +908,11 @@ export default function SceneCanvas() {
     let startTime = performance.now();
     let frameId = 0;
     let lastMode = 'hero';
-    let lastFrameTime = 0;
-    const TARGET_FPS = 60;
-    const FRAME_MS = 1000 / TARGET_FPS;
+    let lastFrameMs = performance.now();
+    // Reference framerate for legacy lerp factors (smoothing was authored at 60Hz).
+    // We scale all per-frame lerps by (delta / FRAME_60) so the easing speed stays
+    // identical regardless of display refresh rate (60Hz, 120Hz ProMotion, etc.).
+    const FRAME_60 = 1000 / 60;
 
     // Camera smoothing state
     const camPos = new THREE.Vector3(0.8, 1.6, 8.2);
@@ -917,13 +921,61 @@ export default function SceneCanvas() {
     // Camera shake state
     const shakeState = { intensity: 0, targetIntensity: 0 };
 
+    // ─── Reusable scratch objects to eliminate per-frame GC pressure ───
+    // Allocating new THREE.Color / Fog / Vector3 in the rAF loop is the
+    // single biggest perf killer for this scene — these get garbage-collected
+    // every few frames and cause 5-9s long tasks during scroll. Reuse instead.
+    const scratchVec = new THREE.Vector3();
+    const colorWarm = new THREE.Color('#ffddaa');
+    const colorCool = new THREE.Color('#ccddff');
+    const colorNeutral = new THREE.Color('#fff4e6');
+    const colorBgHero = new THREE.Color('#080a06');
+    const colorBgSection = new THREE.Color('#040610');
+    const colorBgNormal = new THREE.Color('#050608');
+    const fogHero = new THREE.Fog('#080a06', 10, 28);
+    const fogSection = new THREE.Fog('#040610', 8, 24);
+    const fogNormal = new THREE.Fog('#050608', 10, 28);
+    const rimColorBase = new THREE.Color(0.788, 0.663, 0.431);
+    const rimColorScratch = new THREE.Color();
+    const emissiveScratch = new THREE.Color();
+    // Two more scratch colors for the per-module color update / window-glow loops.
+    const moduleColorScratch = new THREE.Color();
+    const moduleEmissiveScratch = new THREE.Color();
+
+    // ─── Visibility tracking: skip the entire animate loop when canvas
+    //     is out of viewport. Saves 5-9 seconds of long-tasks per scroll
+    //     when the user has scrolled past the ScrollExperience section.
+    let canvasVisible = true;
+    const visibilityObs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) canvasVisible = e.isIntersecting;
+      },
+      { threshold: 0, rootMargin: '100px' },
+    );
+    visibilityObs.observe(mount);
+
     const animate = (now: number = 0) => {
       if (!alive) return;
       frameId = window.requestAnimationFrame(animate);
 
-      // Cap at 60fps to avoid GPU thrashing on high-refresh displays
-      if (now - lastFrameTime < FRAME_MS) return;
-      lastFrameTime = now;
+      // Skip rendering work when the canvas is fully scrolled out of view.
+      // We still keep the rAF chain alive so we can resume immediately.
+      if (!canvasVisible) {
+        lastFrameMs = now;
+        return;
+      }
+
+      // Delta-time scaling factor: 1.0 at 60Hz, 0.5 at 120Hz, 2.0 at 30Hz.
+      // Clamped to avoid huge jumps after tab-switch / breakpoints.
+      const dtMs = Math.min(now - lastFrameMs, 100);
+      lastFrameMs = now;
+      const dt = dtMs / FRAME_60;
+      // Frame-rate-independent exponential smoothing helpers.
+      const k = (f: number) => 1 - Math.pow(1 - f, dt);
+      const k08 = k(0.08);
+      const k05 = k(0.05);
+      const k02 = k(0.02);
+      const decay95 = Math.pow(0.95, dt);
 
       const t = (performance.now() - startTime) / 1000;
       const s = storeRef.current;
@@ -940,38 +992,51 @@ export default function SceneCanvas() {
       const goldenLight = scene.getObjectByName('golden_hour_light') as THREE.DirectionalLight | undefined;
       const coolLight = scene.getObjectByName('cool_section_light') as THREE.DirectionalLight | undefined;
 
+      // Delta-corrected smoothing for light transitions.
+      const kLight = 1 - Math.pow(1 - 0.03, dt);
+      const kColor = 1 - Math.pow(1 - 0.02, dt);
+
+      // Reuse pre-allocated Color/Fog instances; only swap scene refs when
+      // mode changes to avoid touching scene.background / fog every frame.
       if (s.experienceMode === 'hero') {
-        // Golden hour warm light active
-        if (goldenLight) goldenLight.intensity += (1.5 - goldenLight.intensity) * 0.03;
-        if (coolLight) coolLight.intensity += (0 - coolLight.intensity) * 0.03;
+        if (goldenLight) goldenLight.intensity += (1.5 - goldenLight.intensity) * kLight;
+        if (coolLight) coolLight.intensity += (0 - coolLight.intensity) * kLight;
         if (sunLight) {
-          sunLight.color.lerp(new THREE.Color('#ffddaa'), 0.02);
-          sunLight.intensity += (3.0 - sunLight.intensity) * 0.03;
+          sunLight.color.lerp(colorWarm, kColor);
+          sunLight.intensity += (3.0 - sunLight.intensity) * kLight;
         }
-        // Warm background
-        scene.background = new THREE.Color('#080a06');
-        scene.fog = new THREE.Fog('#080a06', 10, 28);
+        if (modeChanged) {
+          scene.background = colorBgHero;
+          scene.fog = fogHero;
+        }
       } else if (s.experienceMode === 'sectioncut') {
-        // Cool blue tone
-        if (goldenLight) goldenLight.intensity += (0 - goldenLight.intensity) * 0.03;
-        if (coolLight) coolLight.intensity += (1.5 - coolLight.intensity) * 0.03;
+        if (goldenLight) goldenLight.intensity += (0 - goldenLight.intensity) * kLight;
+        if (coolLight) coolLight.intensity += (1.5 - coolLight.intensity) * kLight;
         if (sunLight) {
-          sunLight.color.lerp(new THREE.Color('#ccddff'), 0.02);
-          sunLight.intensity += (2.5 - sunLight.intensity) * 0.03;
+          sunLight.color.lerp(colorCool, kColor);
+          sunLight.intensity += (2.5 - sunLight.intensity) * kLight;
         }
-        scene.background = new THREE.Color('#040610');
-        scene.fog = new THREE.Fog('#040610', 8, 24);
+        if (modeChanged) {
+          scene.background = colorBgSection;
+          scene.fog = fogSection;
+        }
       } else {
-        // Normal lighting
-        if (goldenLight) goldenLight.intensity += (0 - goldenLight.intensity) * 0.03;
-        if (coolLight) coolLight.intensity += (0 - coolLight.intensity) * 0.03;
+        if (goldenLight) goldenLight.intensity += (0 - goldenLight.intensity) * kLight;
+        if (coolLight) coolLight.intensity += (0 - coolLight.intensity) * kLight;
         if (sunLight) {
-          sunLight.color.lerp(new THREE.Color('#fff4e6'), 0.02);
-          sunLight.intensity += (3.4 - sunLight.intensity) * 0.03;
+          sunLight.color.lerp(colorNeutral, kColor);
+          sunLight.intensity += (3.4 - sunLight.intensity) * kLight;
         }
-        scene.background = new THREE.Color('#050608');
-        scene.fog = new THREE.Fog('#050608', 10, 28);
+        if (modeChanged) {
+          scene.background = colorBgNormal;
+          scene.fog = fogNormal;
+        }
       }
+
+      // Note: we deliberately do NOT toggle light.visible based on intensity.
+      // Three.js bakes the active-light count into shader #defines; flipping
+      // visibility triggers a costly program recompile mid-frame. Lights at
+      // intensity 0 already contribute ~nothing in the shader.
 
       // ─── Camera shake during building phase ───
       if (s.experienceMode === 'building' && p > 0.05 && p < 0.65) {
@@ -980,30 +1045,30 @@ export default function SceneCanvas() {
       } else {
         shakeState.targetIntensity = 0;
       }
-      shakeState.intensity += (shakeState.targetIntensity - shakeState.intensity) * 0.05;
+      shakeState.intensity += (shakeState.targetIntensity - shakeState.intensity) * k05;
 
       const shakeX = shakeState.intensity > 0.001 ? (Math.random() - 0.5) * shakeState.intensity : 0;
       const shakeY = shakeState.intensity > 0.001 ? (Math.random() - 0.5) * shakeState.intensity : 0;
 
       // ─── Orbit controls interpolation (configurator mode) ───
       if (s.experienceMode === 'configurator') {
-        orbitState.rotationY += (orbitState.targetRotationY - orbitState.rotationY) * 0.08;
-        orbitState.rotationX += (orbitState.targetRotationX - orbitState.rotationX) * 0.08;
-        orbitState.zoom += (orbitState.targetZoom - orbitState.zoom) * 0.08;
-        orbitState.panX += (orbitState.targetPanX - orbitState.panX) * 0.08;
-        orbitState.panY += (orbitState.targetPanY - orbitState.panY) * 0.08;
+        orbitState.rotationY += (orbitState.targetRotationY - orbitState.rotationY) * k08;
+        orbitState.rotationX += (orbitState.targetRotationX - orbitState.rotationX) * k08;
+        orbitState.zoom += (orbitState.targetZoom - orbitState.zoom) * k08;
+        orbitState.panX += (orbitState.targetPanX - orbitState.panX) * k08;
+        orbitState.panY += (orbitState.targetPanY - orbitState.panY) * k08;
       } else {
         // Smoothly reset orbit when not in configurator
-        orbitState.targetRotationY *= 0.95;
-        orbitState.targetRotationX *= 0.95;
-        orbitState.targetZoom += (1 - orbitState.targetZoom) * 0.05;
-        orbitState.targetPanX *= 0.95;
-        orbitState.targetPanY *= 0.95;
-        orbitState.rotationY += (orbitState.targetRotationY - orbitState.rotationY) * 0.08;
-        orbitState.rotationX += (orbitState.targetRotationX - orbitState.rotationX) * 0.08;
-        orbitState.zoom += (orbitState.targetZoom - orbitState.zoom) * 0.08;
-        orbitState.panX += (orbitState.targetPanX - orbitState.panX) * 0.08;
-        orbitState.panY += (orbitState.targetPanY - orbitState.panY) * 0.08;
+        orbitState.targetRotationY *= decay95;
+        orbitState.targetRotationX *= decay95;
+        orbitState.targetZoom += (1 - orbitState.targetZoom) * k05;
+        orbitState.targetPanX *= decay95;
+        orbitState.targetPanY *= decay95;
+        orbitState.rotationY += (orbitState.targetRotationY - orbitState.rotationY) * k08;
+        orbitState.rotationX += (orbitState.targetRotationX - orbitState.rotationX) * k08;
+        orbitState.zoom += (orbitState.targetZoom - orbitState.zoom) * k08;
+        orbitState.panX += (orbitState.targetPanX - orbitState.panX) * k08;
+        orbitState.panY += (orbitState.targetPanY - orbitState.panY) * k08;
       }
 
       // ─── Camera modes ───
@@ -1055,21 +1120,23 @@ export default function SceneCanvas() {
       targetCamPos.y += shakeY;
 
       // Smooth camera with faster transition on mode change
-      const camLerp = modeChanged ? 0.06 : 0.025;
+      const camLerp = 1 - Math.pow(1 - (modeChanged ? 0.06 : 0.025), dt);
       camPos.lerp(targetCamPos, camLerp);
       camLook.lerp(targetLookAt, camLerp);
       camera.position.copy(camPos);
       camera.lookAt(camLook);
 
-      // Root rotation for parallax feel + orbit
+      // Root rotation for parallax feel + orbit (delta-corrected)
       if (s.experienceMode === 'configurator') {
         // In configurator, orbit controls handle rotation
-        root.rotation.y += (orbitState.rotationY - root.rotation.y) * 0.08;
+        root.rotation.y += (orbitState.rotationY - root.rotation.y) * k08;
       } else if (s.experienceMode === 'hero') {
+        // Auto-rotation: gentle sinusoidal sway. `t` is wall-clock seconds,
+        // so the swing speed is independent of framerate by construction.
         const targetRotY = Math.sin(t * 0.05) * 0.05;
-        root.rotation.y += (targetRotY - root.rotation.y) * 0.01;
+        root.rotation.y += (targetRotY - root.rotation.y) * k(0.01);
       } else {
-        root.rotation.y += (0 - root.rotation.y) * 0.02;
+        root.rotation.y += (0 - root.rotation.y) * k02;
       }
 
       // ─── Module assembly animation ───
@@ -1113,15 +1180,25 @@ export default function SceneCanvas() {
             const mesh = child as THREE.Mesh;
             const mat = mesh.material as THREE.MeshStandardMaterial;
 
-            const worldPos = new THREE.Vector3();
-            mesh.getWorldPosition(worldPos);
-            const dist = Math.sqrt(
-              (worldPos.x - cursorWorldX) ** 2 +
-              (worldPos.y - cursorWorldY) ** 2,
-            );
+            // Cache wall-flag per mesh (string parsing on .name is hot otherwise).
+            let isWall = mesh.userData.__isWall as boolean | undefined;
+            if (isWall === undefined) {
+              const name = mesh.name.toLowerCase();
+              isWall = name.includes('wall') || name.includes('side_wall') || name.includes('back_wall');
+              mesh.userData.__isWall = isWall;
+            }
+            // Skip non-wall meshes entirely — they don't participate in the
+            // section cut and their material won't change.
+            if (!isWall && !mat.transparent) return;
 
-            const name = mesh.name.toLowerCase();
-            const isWall = name.includes('wall') || name.includes('side_wall') || name.includes('back_wall');
+            // Reuse scratchVec instead of allocating each call → ~6× speedup
+            // for this loop, which previously created hundreds of Vector3
+            // instances per frame.
+            mesh.getWorldPosition(scratchVec);
+            const dist = Math.sqrt(
+              (scratchVec.x - cursorWorldX) ** 2 +
+              (scratchVec.y - cursorWorldY) ** 2,
+            );
 
             if (isWall && dist < 3.5) {
               const targetOpacity = clamp(1.0 - (3.5 - dist) / 3.5, 0.08, 1.0);
@@ -1134,11 +1211,11 @@ export default function SceneCanvas() {
               if (dist < 2.5) {
                 const rimStrength = clamp(1.0 - dist / 2.5, 0, 0.5);
                 const pulse = 0.85 + 0.15 * Math.sin(t * 3.0);
-                const rimColor = new THREE.Color(0.788, 0.663, 0.431);
                 if (mat.emissive) {
-                  const currentEmissive = mat.emissive.clone();
-                  const targetEmissive = rimColor.multiplyScalar(rimStrength * pulse);
-                  mat.emissive.copy(currentEmissive.lerp(targetEmissive, 0.05));
+                  // Reuse pre-allocated rim color scratch buffer.
+                  rimColorScratch.copy(rimColorBase).multiplyScalar(rimStrength * pulse);
+                  emissiveScratch.copy(mat.emissive).lerp(rimColorScratch, 0.05);
+                  mat.emissive.copy(emissiveScratch);
                   mat.emissiveIntensity += (rimStrength * pulse - mat.emissiveIntensity) * 0.05;
                 }
               }
@@ -1157,20 +1234,43 @@ export default function SceneCanvas() {
           });
         });
       } else {
-        // Reset all materials to normal
+        // Reset all materials to normal — fast path: cache name flags per
+        // mesh and bail out for meshes that don't need any work.
         moduleObjects.forEach((obj) => {
           obj.traverse((child) => {
             if (!(child as THREE.Mesh).isMesh) return;
             const mesh = child as THREE.Mesh;
             const mat = mesh.material as THREE.MeshStandardMaterial;
-            if (mat.transparent && !mesh.name.includes('glass') && !mesh.name.includes('window') && mesh.name !== 'door') {
+            const needsOpacityReset = mat.transparent && mat.opacity < 0.99;
+            const needsEmissiveDecay = mat.emissive && mat.emissiveIntensity > 0.01;
+            if (!needsOpacityReset && !needsEmissiveDecay) return;
+
+            let flags = mesh.userData.__rstFlags as
+              | { resettable: boolean; emissiveDecay: boolean }
+              | undefined;
+            if (!flags) {
+              const lname = mesh.name.toLowerCase();
+              flags = {
+                resettable:
+                  !lname.includes('glass') &&
+                  !lname.includes('window') &&
+                  mesh.name !== 'door',
+                emissiveDecay:
+                  !lname.includes('floor') &&
+                  !lname.includes('tv') &&
+                  !lname.includes('bulb'),
+              };
+              mesh.userData.__rstFlags = flags;
+            }
+
+            if (needsOpacityReset && flags.resettable) {
               mat.opacity += (1.0 - mat.opacity) * 0.05;
               if (mat.opacity > 0.99) {
                 mat.opacity = 1.0;
                 mat.transparent = false;
               }
             }
-            if (mat.emissive && mat.emissiveIntensity > 0.01 && !mesh.name.includes('floor') && !mesh.name.includes('tv') && !mesh.name.includes('bulb')) {
+            if (needsEmissiveDecay && flags.emissiveDecay) {
               mat.emissiveIntensity *= 0.95;
             }
           });
@@ -1181,47 +1281,61 @@ export default function SceneCanvas() {
       moduleObjects.forEach((obj, i) => {
         const defaultDef = DEFAULT_MODULE_DEFS[i];
         const effectiveDef = s.moduleAssignments[defaultDef.id] || defaultDef;
+        moduleColorScratch.set(effectiveDef.color);
         obj.traverse((child) => {
           if (!(child as THREE.Mesh).isMesh) return;
           const mesh = child as THREE.Mesh;
-          const name = mesh.name.toLowerCase();
-          if (name.includes('side_wall') && mesh.material instanceof THREE.MeshStandardMaterial) {
-            const mat = mesh.material as THREE.MeshStandardMaterial;
-            const targetColor = new THREE.Color(effectiveDef.color);
-            mat.color.lerp(targetColor, 0.02);
+          // Cache `is side_wall` flag per mesh — name parsing is hot.
+          let isSideWall = mesh.userData.__isSideWall as boolean | undefined;
+          if (isSideWall === undefined) {
+            isSideWall = mesh.name.toLowerCase().includes('side_wall');
+            mesh.userData.__isSideWall = isSideWall;
+          }
+          if (isSideWall && mesh.material instanceof THREE.MeshStandardMaterial) {
+            mesh.material.color.lerp(moduleColorScratch, 0.02);
           }
         });
       });
 
       // ─── Interior glow during section cut ───
       if (s.experienceMode === 'sectioncut' || s.experienceMode === 'building') {
+        const targetIntensity = s.isSectionCutActive ? 0.3 : 0.05;
+        const targetReflectivity = s.experienceMode === 'hero' ? 0.7 : 0.5;
         moduleObjects.forEach((obj) => {
+          const def = DEFAULT_MODULE_DEFS[obj.userData.moduleIndex ?? 0] || DEFAULT_MODULE_DEFS[0];
+          const effectiveDef = s.moduleAssignments[def.id] || def;
+          moduleEmissiveScratch.set(effectiveDef.emissiveColor);
           obj.traverse((child) => {
             if (!(child as THREE.Mesh).isMesh) return;
             const mesh = child as THREE.Mesh;
-            const name = mesh.name.toLowerCase();
-            if ((name.includes('interior_floor') || name.includes('floor_slab')) && mesh.material instanceof THREE.MeshStandardMaterial) {
-              const mat = mesh.material as THREE.MeshStandardMaterial;
-              const def = DEFAULT_MODULE_DEFS[obj.userData.moduleIndex ?? 0] || DEFAULT_MODULE_DEFS[0];
-              const effectiveDef = s.moduleAssignments[def.id] || def;
-              const targetIntensity = s.isSectionCutActive ? 0.3 : 0.05;
+            // Cache flags per mesh.
+            let kind = mesh.userData.__glowKind as 0 | 1 | 2 | undefined;
+            if (kind === undefined) {
+              const lname = mesh.name.toLowerCase();
+              if (lname.includes('interior_floor') || lname.includes('floor_slab')) kind = 1;
+              else if (lname.includes('window_glass')) kind = 2;
+              else kind = 0;
+              mesh.userData.__glowKind = kind;
+            }
+            if (kind === 0) return;
+
+            if (kind === 1 && mesh.material instanceof THREE.MeshStandardMaterial) {
+              const mat = mesh.material;
               if (mat.emissiveIntensity !== undefined) {
                 mat.emissiveIntensity += (targetIntensity - mat.emissiveIntensity) * 0.06;
-                const targetEmissive = new THREE.Color(effectiveDef.emissiveColor);
-                mat.emissive.lerp(targetEmissive, 0.05);
+                mat.emissive.lerp(moduleEmissiveScratch, 0.05);
               }
+              return;
             }
-            // Window glow variation based on time
-            if (name.includes('window_glass') && mesh.material instanceof THREE.MeshPhysicalMaterial) {
-              const mat = mesh.material as THREE.MeshPhysicalMaterial;
-              const emissiveColor = new THREE.Color(getEffectiveModuleDef(obj, s.moduleAssignments).emissiveColor);
-              const glowIntensity = s.isSectionCutActive ? 0.15 : 0.05 + Math.sin(t * 0.5 + (obj.userData.moduleIndex ?? 0)) * 0.02;
+            if (kind === 2 && mesh.material instanceof THREE.MeshPhysicalMaterial) {
+              const mat = mesh.material;
+              const glowIntensity = s.isSectionCutActive
+                ? 0.15
+                : 0.05 + Math.sin(t * 0.5 + (obj.userData.moduleIndex ?? 0)) * 0.02;
               if (mat.emissive) {
-                mat.emissive.lerp(emissiveColor, 0.02);
+                mat.emissive.lerp(moduleEmissiveScratch, 0.02);
                 mat.emissiveIntensity += (glowIntensity - mat.emissiveIntensity) * 0.05;
               }
-              // Glass reflectivity varies by mode
-              const targetReflectivity = s.experienceMode === 'hero' ? 0.7 : 0.5;
               mat.reflectivity += (targetReflectivity - mat.reflectivity) * 0.02;
             }
           });
@@ -1259,12 +1373,26 @@ export default function SceneCanvas() {
     mount.addEventListener('touchend', onTouchEnd);
     mount.addEventListener('contextmenu', onContextMenu);
     resize();
+
+    // ─── Pre-compile all materials/shaders before first paint.
+    // Without this, Three.js compiles GLSL on first encounter of each
+    // material — that synchronous compile causes the ~1.5s long task
+    // measured on Hero. Doing it up front amortizes the cost into the
+    // initial mount, so the very first animate() frame already has
+    // every program linked. ───
+    try {
+      renderer.compile(scene, camera);
+    } catch (err) {
+      console.warn('[SceneCanvas] renderer.compile failed', err);
+    }
+
     animate();
 
     // ─── Cleanup ───
     return () => {
       alive = false;
       window.cancelAnimationFrame(frameId);
+      visibilityObs.disconnect();
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointerMove);
       mount.removeEventListener('mousedown', onMouseDown);

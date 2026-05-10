@@ -283,7 +283,7 @@ export default function FloorPlanSection() {
   const currentRoom = currentPlan.rooms.find((r) => r.id === hoveredRoom);
 
   return (
-    <section id="floorplan" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
+    <section id="floorplan" className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-omni-forest-deep">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -293,16 +293,16 @@ export default function FloorPlanSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-omni-mint uppercase mb-4">
             {t('floorplan.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('floorplan.title').split(' ').slice(0, -1).join(' ')} <span className="text-gradient-gold">{t('floorplan.titleAccent')}</span>
           </h2>
-          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-omni-cream max-w-2xl mx-auto mt-4">
             {t('floorplan.fullDesc')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Tabs for module types */}
@@ -320,14 +320,14 @@ export default function FloorPlanSection() {
             }}
             className="w-full"
           >
-            <TabsList className="mx-auto mb-8 bg-[#2D4A3E] border border-white/5 h-auto p-1 flex-wrap gap-1">
+            <TabsList className="mx-auto mb-8 bg-omni-forest border border-white/5 h-auto p-1 flex-wrap gap-1">
               {MODULE_PLANS.map((plan) => {
                 const Icon = plan.icon;
                 return (
                   <TabsTrigger
                     key={plan.id}
                     value={plan.id}
-                    className="data-[state=active]:bg-[#C3F8BD]/10 data-[state=active]:text-[#C3F8BD] data-[state=active]:border-[#C3F8BD]/30 text-[#D4C5A0] px-4 py-2.5 text-xs tracking-[0.1em] uppercase border border-transparent transition-all duration-300 flex items-center gap-2"
+                    className="data-[state=active]:bg-omni-mint/10 data-[state=active]:text-omni-mint data-[state=active]:border-omni-mint/30 text-omni-cream px-4 py-2.5 text-xs tracking-[0.1em] uppercase border border-transparent transition-all duration-300 flex items-center gap-2"
                   >
                     <Icon size={16} />
                     {t(plan.labelKey)}
@@ -340,18 +340,18 @@ export default function FloorPlanSection() {
               <TabsContent key={plan.id} value={plan.id}>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                   {/* Floor plan SVG */}
-                  <div className="lg:col-span-2 bg-[#2D4A3E]/40 border border-white/5 rounded-lg p-4 sm:p-6">
+                  <div className="lg:col-span-2 bg-omni-forest/40 border border-white/5 rounded-lg p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         {(() => {
                           const Icon = plan.icon;
-                          return <Icon size={18} className="text-[#C3F8BD]" />;
+                          return <Icon size={18} className="text-omni-mint" />;
                         })()}
                         <h3 className="text-sm tracking-[0.15em] text-white uppercase">
                           {t(plan.labelKey)}
                         </h3>
                       </div>
-                      <span className="text-[10px] text-[#D4C5A0] tracking-wider">
+                      <span className="text-[10px] text-omni-cream tracking-wider">
                         6,0 m × 2,5 m = 15 m²
                       </span>
                     </div>
@@ -360,7 +360,7 @@ export default function FloorPlanSection() {
                       hoveredRoom={hoveredRoom}
                       onRoomHover={setHoveredRoom}
                     />
-                    <p className="text-[10px] text-[#D4C5A0]/50 mt-3 text-center">
+                    <p className="text-[10px] text-omni-cream/50 mt-3 text-center">
                       {t('floorplan.hoverHint')}
                     </p>
                   </div>
@@ -379,20 +379,20 @@ export default function FloorPlanSection() {
                           onMouseLeave={() => setHoveredRoom(null)}
                           className={`p-4 rounded-lg border transition-all duration-300 cursor-pointer ${
                             isHovered
-                              ? 'border-[#C3F8BD]/30 bg-[#C3F8BD]/5'
-                              : 'border-white/5 bg-[#2D4A3E]/40 hover:border-white/10'
+                              ? 'border-omni-mint/30 bg-omni-mint/5'
+                              : 'border-white/5 bg-omni-forest/40 hover:border-white/10'
                           }`}
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className={`text-sm font-medium transition-colors duration-300 ${isHovered ? 'text-[#C3F8BD]' : 'text-white'}`}>
+                            <h4 className={`text-sm font-medium transition-colors duration-300 ${isHovered ? 'text-omni-mint' : 'text-white'}`}>
                               {t(room.labelKey)}
                             </h4>
-                            <span className="text-xs text-[#C3F8BD]/60">{room.area}</span>
+                            <span className="text-xs text-omni-mint/60">{room.area}</span>
                           </div>
                           <ul className="space-y-1">
                             {room.featureKeys.map((featureKey, idx) => (
-                              <li key={idx} className="text-[11px] text-[#D4C5A0] flex items-start gap-1.5">
-                                <span className="text-[#C3F8BD] mt-0.5">·</span>
+                              <li key={idx} className="text-[11px] text-omni-cream flex items-start gap-1.5">
+                                <span className="text-omni-mint mt-0.5">·</span>
                                 {t(featureKey)}
                               </li>
                             ))}
@@ -402,22 +402,22 @@ export default function FloorPlanSection() {
                     })}
 
                     {/* Module dimensions box */}
-                    <div className="p-4 rounded-lg bg-[#2D4A3E]/20 border border-dashed border-white/10">
-                      <p className="text-[10px] tracking-[0.2em] text-[#C3F8BD]/50 uppercase mb-2">
+                    <div className="p-4 rounded-lg bg-omni-forest/20 border border-dashed border-white/10">
+                      <p className="text-[10px] tracking-[0.2em] text-omni-mint/50 uppercase mb-2">
                         {t('floorplan.moduleDimensions')}
                       </p>
                       <div className="grid grid-cols-3 gap-2 text-center">
                         <div>
                           <p className="text-sm text-white font-light">6,0 m</p>
-                          <p className="text-[9px] text-[#D4C5A0]">{t('floorplan.length')}</p>
+                          <p className="text-[9px] text-omni-cream">{t('floorplan.length')}</p>
                         </div>
                         <div>
                           <p className="text-sm text-white font-light">2,5 m</p>
-                          <p className="text-[9px] text-[#D4C5A0]">{t('floorplan.width')}</p>
+                          <p className="text-[9px] text-omni-cream">{t('floorplan.width')}</p>
                         </div>
                         <div>
                           <p className="text-sm text-white font-light">3,0 m</p>
-                          <p className="text-[9px] text-[#D4C5A0]">{t('floorplan.height')}</p>
+                          <p className="text-[9px] text-omni-cream">{t('floorplan.height')}</p>
                         </div>
                       </div>
                     </div>

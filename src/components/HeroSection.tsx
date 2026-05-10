@@ -86,8 +86,8 @@ function FloatingModuleIcons() {
           style={{ opacity: 0.15 }}
         >
           <div className="flex flex-col items-center gap-1">
-            <item.Icon size={20} className="text-[#C3F8BD]" />
-            <span className="text-[8px] text-[#C3F8BD]/60 tracking-widest uppercase">{item.label}</span>
+            <item.Icon size={20} className="text-omni-mint" />
+            <span className="text-[8px] text-omni-mint/60 tracking-widest uppercase">{item.label}</span>
           </div>
         </motion.div>
       ))}
@@ -123,7 +123,7 @@ function TypewriterText({ text, delay = 0 }: { text: string; delay: number }) {
     <span>
       {displayedText}
       {started && displayedText.length < text.length && (
-        <span className="inline-block w-[2px] h-[1em] bg-[#C3F8BD] ml-0.5 animate-pulse align-middle" />
+        <span className="inline-block w-[2px] h-[1em] bg-omni-mint ml-0.5 animate-pulse align-middle" />
       )}
     </span>
   );
@@ -364,8 +364,8 @@ export default function HeroSection() {
       />
 
       {/* Dark gradient overlays for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#1E3429]/60 via-transparent to-[#1E3429]/60 pointer-events-none z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1E3429] via-transparent to-[#1E3429]/40 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-omni-forest-deep/60 via-transparent to-omni-forest-deep/60 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-omni-forest-deep via-transparent to-omni-forest-deep/40 pointer-events-none z-[1]" />
 
       {/* Cinematic letterbox bars */}
       <div
@@ -439,7 +439,7 @@ export default function HeroSection() {
         {[1, 2, 3, 4, 5].map((i) => (
           <motion.div
             key={i}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#C3F8BD]/10"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-omni-mint/10"
             animate={{
               scale: [1, 1.5 + i * 0.3],
               opacity: [0.12 / i, 0],
@@ -471,7 +471,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
         >
-          <p className="eyebrow text-[#C3F8BD] mb-6">
+          <p className="eyebrow text-omni-mint mb-6">
             {t('hero.sublabel')}
           </p>
         </motion.div>
@@ -512,7 +512,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.6 }}
         >
-          <p className="text-[10px] sm:text-xs tracking-[0.3em] text-[#C3F8BD]/50 font-light">
+          <p className="text-[10px] sm:text-xs tracking-[0.3em] text-omni-mint/50 font-light">
             {t('hero.company')}
           </p>
         </motion.div>
@@ -522,7 +522,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, scaleX: 1 }}
           transition={{ duration: 1.2, delay: 0.8 }}
         >
-          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/60 to-transparent mx-auto mb-10 mt-6" />
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-omni-mint/60 to-transparent mx-auto mb-10 mt-6" />
         </motion.div>
 
         <motion.div
@@ -533,13 +533,13 @@ export default function HeroSection() {
           <div className="inline-block gold-border-animate rounded-sm">
             <Button
               size="lg"
-              className="group relative bg-[#1E3429] border-0 text-[#C3F8BD] hover:bg-[#C3F8BD] hover:text-[#1E3429] px-10 py-7 text-xs tracking-[0.2em] uppercase transition-all duration-500 rounded-sm overflow-hidden"
+              className="group relative bg-omni-forest-deep border-0 text-omni-mint hover:bg-omni-mint hover:text-omni-forest-deep px-10 py-7 text-xs tracking-[0.2em] uppercase transition-all duration-500 rounded-sm overflow-hidden"
               onClick={() => {
                 document.getElementById('scroll-experience')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
               <span className="relative z-10">{t('hero.cta')}</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#C3F8BD] to-[#DFFCD9] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-omni-mint to-omni-mint-soft translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
             </Button>
           </div>
         </motion.div>
@@ -552,7 +552,7 @@ export default function HeroSection() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
       >
-        <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-[#C3F8BD]/50 uppercase">
+        <span className="text-[9px] sm:text-[10px] tracking-[0.3em] text-omni-mint/50 uppercase">
           {t('hero.scroll')}
         </span>
         <div className="relative">
@@ -581,12 +581,12 @@ export default function HeroSection() {
               style={{ transition: 'stroke-dashoffset 0.15s ease-out' }}
             />
           </svg>
-          <div className="bounce-down flex items-center justify-center w-10 h-10">
-            <ChevronDown size={16} className="text-[#C3F8BD]/60" />
+          <div className="bounce-down flex items-center justify-center w-11 h-11">
+            <ChevronDown size={16} className="text-omni-mint/60" aria-hidden="true" />
           </div>
         </div>
         <motion.div
-          className="w-[1px] h-10 bg-gradient-to-b from-[#C3F8BD]/60 to-transparent"
+          className="w-[1px] h-10 bg-gradient-to-b from-omni-mint/60 to-transparent"
           animate={{ scaleY: [0, 1, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           style={{ transformOrigin: 'top' }}
@@ -608,18 +608,18 @@ export default function HeroSection() {
         }} />
         {/* Decorative gold accent lines at the transition */}
         <div className="absolute bottom-24 left-0 right-0">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/15 to-transparent" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-omni-mint/15 to-transparent" />
         </div>
         <div className="absolute bottom-28 left-0 right-0">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/8 to-transparent" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-omni-mint/8 to-transparent" />
         </div>
         <div className="absolute bottom-20 left-0 right-0">
-          <div className="h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/5 to-transparent" />
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-omni-mint/5 to-transparent" />
         </div>
       </div>
 
       {/* Bottom decorative accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/20 to-transparent z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-omni-mint/20 to-transparent z-10" />
     </section>
   );
 }

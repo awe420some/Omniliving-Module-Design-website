@@ -29,10 +29,10 @@ export default function BackToTopButton() {
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-[#C3F8BD] flex items-center justify-center hover:scale-110 hover:shadow-lg hover:shadow-[#C3F8BD]/20 transition-all duration-300 animate-pulse"
+          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-omni-mint flex items-center justify-center hover:scale-110 hover:shadow-lg hover:shadow-[#C3F8BD]/20 transition-all duration-300 animate-pulse"
           aria-label="Zurück nach oben scrollen"
         >
-          <ArrowUp size={20} className="text-[#1E3429]" />
+          <ArrowUp size={20} className="text-omni-forest-deep" />
         </motion.button>
       )}
     </AnimatePresence>

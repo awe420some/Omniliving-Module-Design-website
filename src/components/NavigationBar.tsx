@@ -67,8 +67,8 @@ function MagneticNavLink({
       onMouseLeave={handleMouseLeave}
       className={`relative px-4 py-2 text-xs tracking-[0.15em] uppercase transition-colors duration-300 ${
         isActive
-          ? 'active text-[#C3F8BD]'
-          : 'text-[#D4C5A0] hover:text-white'
+          ? 'active text-omni-mint'
+          : 'text-omni-cream hover:text-white'
       }`}
       style={{
         transform: `translate(${offset.x}px, ${offset.y}px)`,
@@ -214,10 +214,10 @@ export default function NavigationBar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-[#C3F8BD] transition-colors duration-300 ${scrolled ? 'text-[#C3F8BD]/80' : ''}`}>
+              <span className={`text-sm tracking-[0.3em] text-white font-light uppercase group-hover:text-omni-mint transition-colors duration-300 ${scrolled ? 'text-omni-mint/80' : ''}`}>
                 OMNILIVING
               </span>
-              <span className="text-[7px] tracking-[0.2em] text-[#D4C5A0]/50 uppercase leading-none">
+              <span className="text-[7px] tracking-[0.2em] text-omni-cream/50 uppercase leading-none">
                 {t('hero.sublabel')}
               </span>
             </div>
@@ -240,7 +240,7 @@ export default function NavigationBar() {
             {/* Language Toggle */}
             <button
               onClick={toggleLocale}
-              className="ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-white/10 hover:border-[#C3F8BD]/30 bg-transparent hover:bg-[#C3F8BD]/5 transition-all duration-300 text-[#D4C5A0] hover:text-[#C3F8BD]"
+              className="ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-white/10 hover:border-omni-mint/30 bg-transparent hover:bg-omni-mint/5 transition-all duration-300 text-omni-cream hover:text-omni-mint"
               aria-label={t('lang.switchLabel')}
             >
               <Globe size={14} />
@@ -254,7 +254,7 @@ export default function NavigationBar() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-[#D4C5A0] hover:text-[#C3F8BD] hover:bg-transparent transition-colors duration-300"
+                  className="text-omni-cream hover:text-omni-mint hover:bg-transparent transition-colors duration-300"
                 >
                   <Menu size={22} />
                   <span className="sr-only">{t('nav.openMenu')}</span>
@@ -262,19 +262,19 @@ export default function NavigationBar() {
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="bg-[#1E3429]/95 border-l border-[#C3F8BD]/15 w-[280px]"
+                className="bg-omni-forest-deep/95 border-l border-omni-mint/15 w-[280px]"
                 style={{
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                 }}
               >
-                <div className="absolute inset-0 bg-[#1E3429]/80 -z-10" />
+                <div className="absolute inset-0 bg-omni-forest-deep/80 -z-10" />
 
                 <SheetHeader className="mb-8">
                   <SheetTitle className="text-left text-sm tracking-[0.3em] text-white font-light uppercase">
                     OMNILIVING
                   </SheetTitle>
-                  <p className="text-left text-[9px] tracking-[0.2em] text-[#C3F8BD]/40 uppercase">
+                  <p className="text-left text-[9px] tracking-[0.2em] text-omni-mint/40 uppercase">
                     {t('hero.sublabel')}
                   </p>
                 </SheetHeader>
@@ -304,14 +304,9 @@ export default function NavigationBar() {
                               }}
                               className="flex items-center gap-3 px-4 py-3 rounded-md text-sm tracking-[0.1em] uppercase transition-all duration-300 animated-underline"
                               style={{
-                                color: isActive ? '#C3F8BD' : '#D4C5A0',
-                                backgroundColor: isActive
-                                  ? 'rgba(195, 248, 189, 0.08)'
-                                  : 'transparent',
-                                borderLeft: isActive
-                                  ? '2px solid #C3F8BD'
-                                  : '2px solid transparent',
-                                textShadow: isActive ? '0 0 10px rgba(195, 248, 189, 0.3)' : 'none',
+                                color: isActive ? 'var(--omni-mint)' : 'var(--omni-cream)',
+                                backgroundColor: isActive ? 'rgba(195,248,189,0.08)' : 'transparent',
+                                borderLeft: isActive ? '2px solid var(--omni-mint)' : '2px solid transparent',
                               }}
                             >
                               {link.label}
@@ -323,14 +318,15 @@ export default function NavigationBar() {
                   </AnimatePresence>
                 </nav>
                 <div className="absolute bottom-8 left-6 right-6">
-                  <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD]/30 to-transparent mb-4" />
-                  <p className="text-[10px] text-[#D4C5A0] tracking-wider text-center">
+                  <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-omni-mint/30 to-transparent mb-4" />
+                  <p className="text-[10px] text-omni-cream tracking-wider text-center">
                     Module Design GmbH
                   </p>
                   {/* Language Toggle Mobile */}
                   <button
                     onClick={() => { toggleLocale(); }}
-                    className="mt-3 mx-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/10 hover:border-[#C3F8BD]/30 bg-transparent hover:bg-[#C3F8BD]/5 transition-all duration-300 text-[#D4C5A0] hover:text-[#C3F8BD]"
+                    aria-label={t('lang.switchLabel')}
+                    className="mt-3 mx-auto flex items-center gap-1.5 px-4 py-2 rounded-md border border-white/10 hover:border-omni-mint/30 bg-transparent hover:bg-omni-mint/5 transition-all duration-300 text-omni-cream hover:text-omni-mint"
                   >
                     <Globe size={14} />
                     <span className="text-[10px] tracking-[0.1em] uppercase font-medium">{locale === 'de' ? 'English' : 'Deutsch'}</span>

@@ -71,8 +71,8 @@ export default function ProjectTimelineSection() {
   const selectedPhase = phases.find((p) => p.id === activePhase);
 
   return (
-    <section id="project-timeline" ref={sectionRef} className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1E3429] via-[#1E3429] to-[#1E3429]" />
+    <section id="project-timeline" ref={sectionRef} className="relative py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-omni-forest-deep">
+      <div className="absolute inset-0 bg-gradient-to-b from-omni-forest-deep via-omni-forest-deep to-omni-forest-deep" />
 
       <div className="relative max-w-6xl mx-auto">
         {/* Section header */}
@@ -83,25 +83,25 @@ export default function ProjectTimelineSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-omni-mint uppercase mb-4">
             {t('timeline.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('timeline.title').split(t('timeline.titleAccent'))[0]}<span className="text-gradient-gold">{t('timeline.titleAccent')}</span>{t('timeline.title').split(t('timeline.titleAccent'))[1]}
           </h2>
-          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-omni-cream max-w-xl mx-auto mt-4">
             {t('timeline.subtitle')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mx-auto mt-6" />
         </motion.div>
 
         {/* Horizontal timeline - desktop */}
         <div className="hidden lg:block">
           {/* Connecting line */}
           <div className="relative mb-8">
-            <div className="absolute top-[28px] left-[8%] right-[8%] h-[2px] bg-[#3E6151]" />
+            <div className="absolute top-[28px] left-[8%] right-[8%] h-[2px] bg-omni-forest-soft" />
             <motion.div
-              className="absolute top-[28px] left-[8%] h-[2px] bg-gradient-to-r from-[#C3F8BD]/40 via-[#C3F8BD]/60 to-[#C3F8BD]/40"
+              className="absolute top-[28px] left-[8%] h-[2px] bg-gradient-to-r from-omni-mint/40 via-omni-mint/60 to-omni-mint/40"
               initial={{ width: '0%' }}
               whileInView={{ width: '84%' }}
               viewport={{ once: true }}
@@ -128,25 +128,25 @@ export default function ProjectTimelineSection() {
                   <div
                     className={`relative w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
                       isActive
-                        ? 'border-[#C3F8BD] bg-[#C3F8BD]/10 shadow-[0_0_20px_rgba(195, 248, 189,0.3)] phase-glow-active'
-                        : 'border-[#C3F8BD]/20 bg-[#1E3429] group-hover:border-[#C3F8BD]/50 group-hover:bg-[#C3F8BD]/5'
+                        ? 'border-omni-mint bg-omni-mint/10 shadow-[0_0_20px_rgba(195, 248, 189,0.3)] phase-glow-active'
+                        : 'border-omni-mint/20 bg-omni-forest-deep group-hover:border-omni-mint/50 group-hover:bg-omni-mint/5'
                     }`}
                   >
                     <Icon
                       size={22}
                       className={`transition-colors duration-300 ${
-                        isActive ? 'text-[#C3F8BD]' : 'text-[#D4C5A0] group-hover:text-[#C3F8BD]'
+                        isActive ? 'text-omni-mint' : 'text-omni-cream group-hover:text-omni-mint'
                       }`}
                     />
                   </div>
                   <span
                     className={`text-xs tracking-[0.1em] uppercase transition-colors duration-300 text-center ${
-                      isActive ? 'text-[#C3F8BD]' : 'text-[#D4C5A0] group-hover:text-white'
+                      isActive ? 'text-omni-mint' : 'text-omni-cream group-hover:text-white'
                     }`}
                   >
                     {phase.title}
                   </span>
-                  <span className="text-[10px] text-[#C3F8BD]/40 tracking-wider">
+                  <span className="text-[10px] text-omni-mint/40 tracking-wider">
                     {phase.timeEstimate}
                   </span>
                 </motion.button>
@@ -165,13 +165,13 @@ export default function ProjectTimelineSection() {
             className={`min-h-[120px] ${selectedPhase ? '' : 'pointer-events-none'}`}
           >
             {selectedPhase && (
-              <div className="bg-[#2D4A3E]/60 border border-[#C3F8BD]/20 rounded-xl p-6 sm:p-8">
+              <div className="bg-omni-forest/60 border border-omni-mint/20 rounded-xl p-6 sm:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                   <div className="shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-[#C3F8BD]/10 border border-[#C3F8BD]/30 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-omni-mint/10 border border-omni-mint/30 flex items-center justify-center">
                       {(() => {
                         const PhaseIcon = selectedPhase.icon;
-                        return <PhaseIcon size={20} className="text-[#C3F8BD]" />;
+                        return <PhaseIcon size={20} className="text-omni-mint" />;
                       })()}
                     </div>
                   </div>
@@ -180,27 +180,27 @@ export default function ProjectTimelineSection() {
                       <h3 className="text-lg font-medium text-white tracking-wide">
                         {selectedPhase.title}
                       </h3>
-                      <span className="text-xs text-[#C3F8BD]/60 tracking-wider px-3 py-1 rounded-full bg-[#C3F8BD]/5 border border-[#C3F8BD]/10">
+                      <span className="text-xs text-omni-mint/60 tracking-wider px-3 py-1 rounded-full bg-omni-mint/5 border border-omni-mint/10">
                         {selectedPhase.timeEstimate}
                       </span>
                     </div>
-                    <p className="text-sm text-[#D4C5A0] leading-relaxed mb-4">
+                    <p className="text-sm text-omni-cream leading-relaxed mb-4">
                       {selectedPhase.description}
                     </p>
                     {/* Progress bar — shows cumulative project progress */}
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] text-[#D4C5A0]/50 uppercase tracking-wider shrink-0">
+                      <span className="text-[10px] text-omni-cream/50 uppercase tracking-wider shrink-0">
                         {t('timeline.progress')}
                       </span>
-                      <div className="flex-1 h-1.5 bg-[#3E6151] rounded-full overflow-hidden">
+                      <div className="flex-1 h-1.5 bg-omni-forest-soft rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${cumulativePercent[selectedPhase.id - 1]}%` }}
                           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
-                          className="h-full bg-gradient-to-r from-[#C3F8BD] to-[#DFFCD9] rounded-full"
+                          className="h-full bg-gradient-to-r from-omni-mint to-omni-mint-soft rounded-full"
                         />
                       </div>
-                      <span className="text-xs text-[#C3F8BD] font-medium shrink-0">
+                      <span className="text-xs text-omni-mint font-medium shrink-0">
                         {cumulativePercent[selectedPhase.id - 1]}%
                       </span>
                     </div>
@@ -215,9 +215,9 @@ export default function ProjectTimelineSection() {
         <div className="lg:hidden">
           <div className="relative">
             {/* Vertical connecting line */}
-            <div className="absolute left-[27px] top-0 bottom-0 w-[2px] bg-[#3E6151]" />
+            <div className="absolute left-[27px] top-0 bottom-0 w-[2px] bg-omni-forest-soft" />
             <motion.div
-              className="absolute left-[27px] top-0 w-[2px] bg-gradient-to-b from-[#C3F8BD]/40 via-[#C3F8BD]/60 to-[#C3F8BD]/40 origin-top"
+              className="absolute left-[27px] top-0 w-[2px] bg-gradient-to-b from-omni-mint/40 via-omni-mint/60 to-omni-mint/40 origin-top"
               initial={{ height: 0 }}
               whileInView={{ height: '100%' }}
               viewport={{ once: true }}
@@ -245,21 +245,21 @@ export default function ProjectTimelineSection() {
                         <div
                           className={`w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-500 ${
                             isActive
-                              ? 'border-[#C3F8BD] bg-[#C3F8BD]/10 shadow-[0_0_20px_rgba(195, 248, 189,0.3)] phase-glow-active'
-                              : 'border-[#C3F8BD]/20 bg-[#1E3429] group-hover:border-[#C3F8BD]/50'
+                              ? 'border-omni-mint bg-omni-mint/10 shadow-[0_0_20px_rgba(195, 248, 189,0.3)] phase-glow-active'
+                              : 'border-omni-mint/20 bg-omni-forest-deep group-hover:border-omni-mint/50'
                           }`}
                         >
-                          <Icon size={20} className={isActive ? 'text-[#C3F8BD]' : 'text-[#D4C5A0] group-hover:text-[#C3F8BD] transition-colors duration-300'} />
+                          <Icon size={20} className={isActive ? 'text-omni-mint' : 'text-omni-cream group-hover:text-omni-mint transition-colors duration-300'} />
                         </div>
                       </div>
                       <div className="flex-1 pt-1">
                         <div className="flex items-center gap-3 mb-1">
                           <h3 className={`text-base font-medium tracking-wide transition-colors duration-300 ${
-                            isActive ? 'text-[#C3F8BD]' : 'text-white group-hover:text-[#C3F8BD]'
+                            isActive ? 'text-omni-mint' : 'text-white group-hover:text-omni-mint'
                           }`}>
                             {phase.title}
                           </h3>
-                          <span className="text-[10px] text-[#C3F8BD]/40 tracking-wider">
+                          <span className="text-[10px] text-omni-mint/40 tracking-wider">
                             {phase.timeEstimate}
                           </span>
                         </div>
@@ -270,23 +270,23 @@ export default function ProjectTimelineSection() {
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <p className="text-sm text-[#D4C5A0] leading-relaxed mb-3">
+                            <p className="text-sm text-omni-cream leading-relaxed mb-3">
                               {phase.description}
                             </p>
                             {/* Progress bar — shows cumulative project progress */}
                             <div className="flex items-center gap-3">
-                              <span className="text-[9px] text-[#D4C5A0]/40 uppercase tracking-wider shrink-0">
+                              <span className="text-[9px] text-omni-cream/40 uppercase tracking-wider shrink-0">
                                 {t('timeline.progress')}
                               </span>
-                              <div className="flex-1 h-1.5 bg-[#3E6151] rounded-full overflow-hidden">
+                              <div className="flex-1 h-1.5 bg-omni-forest-soft rounded-full overflow-hidden">
                                 <motion.div
                                   initial={{ width: 0 }}
                                   animate={{ width: `${cumulativePercent[phase.id - 1]}%` }}
                                   transition={{ duration: 0.6, ease: 'easeOut' }}
-                                  className="h-full bg-gradient-to-r from-[#C3F8BD] to-[#DFFCD9] rounded-full"
+                                  className="h-full bg-gradient-to-r from-omni-mint to-omni-mint-soft rounded-full"
                                 />
                               </div>
-                              <span className="text-[10px] text-[#C3F8BD] font-medium shrink-0">
+                              <span className="text-[10px] text-omni-mint font-medium shrink-0">
                                 {cumulativePercent[phase.id - 1]}%
                               </span>
                             </div>

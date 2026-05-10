@@ -49,7 +49,7 @@ export default function TargetAudienceSection() {
   const { t } = useTranslation();
 
   return (
-    <section id="target-audience" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#1E3429]">
+    <section id="target-audience" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-omni-forest-deep">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,16 +58,16 @@ export default function TargetAudienceSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <p className="text-xs tracking-[0.3em] text-[#C3F8BD] uppercase mb-4">
+          <p className="text-xs tracking-[0.3em] text-omni-mint uppercase mb-4">
             {t('target.label')}
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-light tracking-wider text-white mb-4">
             {t('target.title').split(t('target.titleAccent'))[0]}<span className="text-gradient-gold">{t('target.titleAccent')}</span>{t('target.title').split(t('target.titleAccent'))[1]}
           </h2>
-          <p className="text-sm sm:text-base text-[#D4C5A0] max-w-2xl mx-auto mt-4">
+          <p className="text-sm sm:text-base text-omni-cream max-w-2xl mx-auto mt-4">
             {t('target.subtitle')}
           </p>
-          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#C3F8BD] to-transparent mx-auto mt-6" />
+          <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-omni-mint to-transparent mx-auto mt-6" />
         </motion.div>
 
         <motion.div
@@ -81,7 +81,7 @@ export default function TargetAudienceSection() {
             const Icon = audience.icon;
             return (
               <motion.div key={audience.titleKey} variants={cardVariants}>
-                <Card className="group hover-lift bg-[#2D4A3E]/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full">
+                <Card className="group hover-lift bg-omni-forest/60 border border-white/5 hover:border-white/10 transition-all duration-500 rounded-lg overflow-hidden h-full">
                   <div className="p-6 sm:p-8">
                     <div
                       className="w-14 h-14 rounded-lg flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110"
@@ -99,7 +99,7 @@ export default function TargetAudienceSection() {
                     <h3 className="text-xl font-medium tracking-wide text-white mb-3">
                       {t(audience.titleKey)}
                     </h3>
-                    <p className="text-sm text-[#D4C5A0] leading-relaxed">
+                    <p className="text-sm text-omni-cream leading-relaxed">
                       {t(audience.descKey)}
                     </p>
                     <div

@@ -98,6 +98,12 @@
   --dur-base:  240ms;
   --dur-slow:  420ms;
 
+  @media (prefers-reduced-motion: reduce) {
+    --dur-fast: 0.001ms;
+    --dur-base: 0.001ms;
+    --dur-slow: 0.001ms;
+  }
+
   /* Forest grid overlay (5% white squares 40px) */
   --bg-forest-grid:
     linear-gradient(to right, rgba(247,244,238,0.05) 1px, transparent 1px) 0 0 / 40px 40px,
@@ -652,6 +658,16 @@ img[loading="loaded"], img.complete { opacity: 1; }
 }
 [data-surface="forest"] *:focus-visible {
   outline-color: rgba(195,248,189,0.60);
+}
+
+/* Global prefers-reduced-motion — stop all animations & transitions */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Noise overlay — disabled */
